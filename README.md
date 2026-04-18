@@ -10,7 +10,7 @@ A szoftver különlegessége az objektumorientált (OOP) architektúra, amely le
 - **Videó & Zene:** YouTube trendek és csatorna statisztikák.
 - **Politika:** Magyar választási adatok és részvételi statisztikák (interaktív térképekkel).
 - **Pénzügy & Kripto:** Tőzsdei árfolyamok és kriptovaluta adatok.
-- **Testreszabhatóság:** Egyéni widgetek elrendezése és sötét/világos mód.
+- **Testreszabhatóság:** Egyéni widgetek elrendezése ~~és sötét/világos mód~~.
 
 ## Technológiai Stack
 - **Frontend/Backend:** Next.js 15+ (App Router)
@@ -20,17 +20,6 @@ A szoftver különlegessége az objektumorientált (OOP) architektúra, amely le
 - **Animációk:** Anime.js
 - **Adatkezelés:** Prisma + SQLite (Caching)
 - **Konténerizáció:** Docker
-
-## Telepítés és Futtatás
-A projekt futtatásához telepített **Bun** szükséges.
-
-```bash
-# Függőségek telepítése
-bun install
-
-# Fejlesztői szerver indítása
-bun dev
-```
 
 ## Csapat
 - **Bodolai Richárd Tamás** - Backend fejlesztő / Adatkezelés
