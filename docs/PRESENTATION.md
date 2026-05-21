@@ -4,7 +4,7 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
 
 ---
 
-## 1. Bevezetés (Ricsi) - 1.5 perc
+## 1. Bevezetés (Csongor) - 1.5 perc
 **Téma:** Miért jött létre a projekt és miről szól?
 
 - **Problémafelvetés:** 
@@ -13,24 +13,27 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
 - **A megoldás (A projekt célja):**
     - "A **World Wide Dashboard** célja, hogy ezeket a különálló adatforrásokat egyetlen, modern és letisztult felületen egyesítse."
     - "Egy olyan moduláris rendszert építünk, ahol a felhasználó saját maga döntheti el, milyen adatokat szeretne látni (legyen az gaming, politika vagy pénzügy)."
-- **Főbb kategóriák:** Rövid felsorolás (Steam, YouTube, Magyar választási adatok, Kripto).
+- **Főbb kategóriák:** Rövid felsorolás (Steam, YouTube és Zenei toplisták, Magyar választási adatok, Kripto és Deviza).
 
 ---
 
-## 2. Frontend & Design (Zalán) - 1.5 perc
+## 2. Frontend & Design (Ricsi) - 1.5 perc
 **Téma:** Felhasználói felület és élmény.
 
 - **Technológiai stack:** 
     - "A felületet **Next.js** és **Tailwind CSS** segítségével készítjük el, ami garantálja a sebességet és a modern kinézetet."
     - "Az animációkhoz az **Anime.js** könyvtárat használjuk, hogy a dashboard 'éljen' és reszponzív legyen."
 - **Felhasználói élmény (UX):**
-    - "A dashboard kártyákra (widgetekre) épül, amik sötét és világos módban is jól mutatnak."
-    - "Célunk az átláthatóság: a legfontosabb információk (pl. aktuális játékosszám vagy árfolyam) azonnal szembeötlőek."
-- **Interaktivitás:** Rövid említés a keresési funkcióról és a modulok testreszabhatóságáról.
+    - "A dashboard kártyákra (widgetekre) épül, amelyek egy modern, 
+  - **UI/UX:** Letisztult üveghatás (Glassmorphism), reszponzív kártyák.
+  - Teljes szélességű 3-oszlopos elrendezés (Navigáció, Adatok, Fiók).
+  - Dinamikus sötét/világos téma (Light/Dark mode) üveghatással.
+  - Szigorúan a Coolors.co paletta 5 színére építve (Prussian Blue, Orange, Alabaster Grey, stb.): a legfontosabb információk (pl. aktuális játékosszám, zenei toplista vagy árfolyam) azonnal szembeötlőek."
+- **Interaktivitás:** Rövid említés a modulok testreszabhatóságáról (pl. a YouTube csatornák legördülő választója).
 
 ---
 
-## 3. Backend & Architektúra (Csongor) - 2 perc
+## 3. Backend & Architektúra (Zalán) - 2 perc
 **Téma:** Adatkezelés és technikai háttér.
 
 - **OOP Megközelítés (A tanári követelmény):**

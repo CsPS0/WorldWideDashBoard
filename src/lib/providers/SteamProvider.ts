@@ -34,7 +34,7 @@ export class SteamProvider extends BaseDataSource<SteamPlayerData> {
     }
   }
 
-  validateResponse(data: any): boolean {
-    return typeof data === 'object' && 'player_count' in data && 'result' in data;
+  validateResponse(data: unknown): boolean {
+    return typeof data === 'object' && data !== null && 'player_count' in data && 'result' in data;
   }
 }

@@ -4,25 +4,21 @@
 A **World Wide Dashboard** egy központi felület, ahol a legfontosabb globális és lokális adatokat követheted nyomon. Nem kell külön oldalakat látogatnod a Steam statisztikákért, a YouTube trendekért vagy a választási eredményekért – minden egy helyen van.
 
 ## A Kezdőképernyő Használata
-A weboldal megnyitása után a főoldalon találod a különböző adatmodulokat (widgeteket):
+A weboldal megnyitása után a főoldalon találod a különböző adatmodulokat (widgeteket), melyek egy elegáns, sötét témájú, üveghatású (glassmorphism) felületen jelennek meg:
 
-- **Játékok (Games):** Itt láthatod a Steam-en jelenleg aktív játékosok számát a legnépszerűbb játékoknál.
-- **Videó & Zene (Media):** Friss YouTube trendek és csatorna statisztikák.
-- **Politika (Politics):** Magyar választási részvételi adatok és korábbi eredmények vizualizációja.
-- **Pénzügy (Finance):** Kriptovaluta és tőzsdei árfolyamok valós időben.
+- **Játékok (Games):** A Steam aktuális játékosszámait követheted nyomon (pl. Counter-Strike 2 élő statisztikái).
+- **Videó & Zene (Media):** 
+  - **YouTube Stats:** Választhatsz a legnépszerűbb tartalomgyártók közül (pl. MrBeast, TheVR, Nessaj) egy legördülő menü segítségével, hogy lásd az élő feliratkozóikat, nézettségüket és videóik számát.
+  - **Global Top 10 Music:** Egy összesített globális zenei toplista, ami a Spotify és a SoundCloud streamek alapján rangsorolja a világ legnépszerűbb dalait.
+- **Pénzügy (Finance):** Kriptovaluták (Bitcoin, Ethereum) aktuális dollár és euró árfolyama, valamint a valós idejű EUR/HUF devizaárfolyamok.
+- **Politika (Politics):** A 2026-os magyar országgyűlési választásokkal kapcsolatos statisztikák (részvételi arány, feldolgozottság).
 
-TODO: innen csak kitaláció a dokumentácónak nincs értelme! majd a végén átírni 
-## Navigáció és Keresés
-- **Keresősáv:** A felső sávban található keresővel bármilyen adatforrásra rákereshetsz (pl. egy konkrét játék nevére).
-- **Kategóriák:** Az oldalsó sávban szűrhetsz a kategóriák szerint (pl. csak a politikai adatokat akarod látni).
-
-## Beállítások
-Az oldal jobb felső sarkában tudsz váltani a **Világos (Light)** és **Sötét (Dark)** módok között a kényelmesebb használat érdekében.
+A felület animációkkal (Anime.js) van ellátva, így az adatok betöltésekor vizuálisan is lenyűgöző élményt nyújt.
 
 ## Gyakori Kérdések (FAQ)
 - **Milyen gyakran frissülnek az adatok?**
-  - A legtöbb adat (pl. Steam játékosszám, kripto árak) 5-10 percenként frissül automatikusan.
+  - Az alkalmazás egy beépített gyorsítótárral (Cache) rendelkezik. Az adatok lekérése a háttérben zajlik, és 5 percenként frissülnek automatikusan az API limitációk elkerülése érdekében.
 - **Elérhető mobilról is az oldal?**
-  - Igen, a weboldal reszponzív, így telefonon és tableten is kényelmesen használható.
+  - Igen, a weboldal teljes mértékben reszponzív, így telefonon és tableten is hibátlanul jelenik meg.
 - **Ingyenes a szolgáltatás?**
-  - Igen, a Dashboard minden funkciója ingyenesen elérhető.
+  - Igen, a Dashboard minden funkciója nyílt és ingyenesen elérhető.

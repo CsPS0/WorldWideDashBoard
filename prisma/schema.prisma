@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CacheEntry {
+  id         String   @id @default(cuid())
+  providerId String   @unique
+  data       String   // Storing JSON stringified data
+  updatedAt  DateTime @updatedAt
+}

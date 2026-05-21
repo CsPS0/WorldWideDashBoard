@@ -52,3 +52,5 @@ next-env.d.ts
 
 # images
 *.png
+!img/*.png
+/src/generated/prisma

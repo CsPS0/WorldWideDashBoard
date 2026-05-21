@@ -14,17 +14,35 @@ Mivel a projektet többen fejlesztitek, fontos, hogy mindenkinél ugyanaz a kör
 Klónozd a repository-t, majd futtasd a következő parancsokat a projekt gyökérmappájában:
 
 ```bash
-# Függőségek letöltése
+# 1. Függőségek letöltése
 bun install
 
-# Fejlesztői szerver indítása
+# 2. Környezeti változók beállítása (másold le a példát)
+cp .env.example .env
+
+# 3. Adatbázis (SQLite Cache) inicializálása
+bunx prisma migrate dev
+
+# 4. Fejlesztői szerver indítása
 bun dev
 ```
 A weboldal a [http://localhost:3000](http://localhost:3000) címen lesz elérhető.
 
-## Architektúra (OOP)
+> [!TIP]
+> **Docker futtatás:** Ha nem akarsz Bun-nal bajlódni, csak futtasd a `docker-compose up --build` parancsot, ami felépíti a projektet és futtatja a 3000-es porton!
 
-A tanárok kérésére a projekt **objektumorientált** szemléletben készül. A legfontosabb rész a `src/lib/core` mappában található:
+## Architektúra és Rendszertervek (UML)
+
+A tanárok kérésére a projekt **objektumorientált** szemléletben készül. A rendszer vizuális felépítését és az adatáramlási folyamatokat a `docs/UML/` mappában található diagramok részletezik:
+
+> [!NOTE]
+> A diagramok **Mermaid.js** használatával készültek. A VS Code-ban a megfelelő kiegészítővel (vagy GitHub-on) grafikusan is megjelennek.
+
+- **[Elmetérkép (Mindmap)](./UML/MINDMAP.md):** A projekt teljes technológiai és funkcionális áttekintése.
+- **[Adatlekérési Folyamat (Flowchart)](./UML/FLOWCHART.md):** Az adatáramlás életciklusa a kliens felülettől a külső API-kig.
+- **[Osztálydiagram (Class Diagram)](./UML/CLASS.md):** Részletes OOP terv a Strategy Pattern megvalósításáról.
+
+A legfontosabb kódok a `src/lib/core` mappában találhatók:
 
 - **`IDataSource`**: Egy interfész, ami leírja, hogyan kell kinéznie egy adatforrásnak.
 - **`BaseDataSource`**: Egy absztrakt osztály, ami alapértelmezett hibakezelést és funkciókat biztosít.

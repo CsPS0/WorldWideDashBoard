@@ -3,7 +3,7 @@ export interface IDataSource<T> {
   name: string;
   category: string;
   fetchData(): Promise<T>;
-  validateResponse(data: any): boolean;
+  validateResponse(data: unknown): boolean;
   getCacheKey(): string;
 }
 
@@ -13,14 +13,15 @@ export abstract class BaseDataSource<T> implements IDataSource<T> {
   abstract category: string;
 
   abstract fetchData(): Promise<T>;
-  abstract validateResponse(data: any): boolean;
+  abstract validateResponse(data: unknown): boolean;
 
   getCacheKey(): string {
     return `cache_${this.category}_${this.id}`;
   }
 
-  protected async handleFetchError(error: any): Promise<never> {
+  protected async handleFetchError(error: unknown): Promise<never> {
     console.error(`[${this.name}] Fetch Error:`, error);
-    throw new Error(`Failed to fetch data from ${this.name}: ${error.message || 'Unknown error'}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to fetch data from ${this.name}: ${errorMessage}`);
   }
 }
