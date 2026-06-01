@@ -4,7 +4,7 @@
 public sealed class Test1
 {
     [TestMethod]
-    private static Mock<IDataSource<object>> Provider(
+    private static Mock<IDataSource<object>> CreateProvider(
         string id, object data, bool valid = true)
     {
         var m = new Mock<IDataSource<object>>();
@@ -15,6 +15,23 @@ public sealed class Test1
         m.Setup(p => p.FetchDataAsync()).ReturnsAsync(data);
         m.Setup(p => p.ValidateResponse(It.IsAny<object>())).Returns(valid);
         return m;
+    }
+    
+    [TestMethod]
+    public async Task FrissAdatBetoltes_MindenProviderMegjelenik_HaCacheUres()
+    {
+        var manager = new DashboardManager(new InMemoryCacheRepository());
+        var pA = CreateProvider("widget-a", new { Value = 1 });
+        var pB = CreateProvider("widget-b", new { Value = 2 });
+        manager.RegisterProvider(pA.Object);
+        manager.RegisterProvider(pB.Object);
+ 
+        var results = await manager.FetchAllDataAsync();
+ 
+        Assert.IsTrue(results.ContainsKey("widget-a"));
+        Assert.IsTrue(results.ContainsKey("widget-b"));
+        pA.Verify(p => p.FetchDataAsync(), Times.Once);
+        pB.Verify(p => p.FetchDataAsync(), Times.Once);
     }
     
     [TestMethod]
@@ -29,6 +46,4 @@ public sealed class Test1
  
         provider.Verify(p => p.FetchDataAsync(), Times.Never);
     }
- 
-    
 }
