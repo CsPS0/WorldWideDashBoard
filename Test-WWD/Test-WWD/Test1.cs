@@ -4,8 +4,7 @@
 public sealed class Test1
 {
     [TestMethod]
-    private static Mock<IDataSource<object>> CreateProvider(
-        string id, object data, bool valid = true)
+    private static Mock<IDataSource<object>> CreateProvider(string id, object data, bool valid = true)
     {
         var m = new Mock<IDataSource<object>>();
         m.Setup(p => p.Id).Returns(id);
@@ -25,9 +24,7 @@ public sealed class Test1
         var pB = CreateProvider("widget-b", new { Value = 2 });
         manager.RegisterProvider(pA.Object);
         manager.RegisterProvider(pB.Object);
- 
         var results = await manager.FetchAllDataAsync();
- 
         Assert.IsTrue(results.ContainsKey("widget-a"));
         Assert.IsTrue(results.ContainsKey("widget-b"));
         pA.Verify(p => p.FetchDataAsync(), Times.Once);
@@ -41,9 +38,18 @@ public sealed class Test1
         var manager = new DashboardManager(new InMemoryCacheRepository(entry));
         var provider = CreateProvider("w", new { });
         manager.RegisterProvider(provider.Object);
- 
         await manager.FetchByProviderIdAsync("w");
- 
         provider.Verify(p => p.FetchDataAsync(), Times.Never);
+    }
+    
+    [TestMethod]
+    public async Task ErvenytelenAdat_Visszaesik_RegiCacheAdatra_HaValidacioMeghiusul()
+    {
+        var stale = new CacheEntry { ProviderId = "w", Data = "{\"v\":1}", UpdatedAt = DateTime.UtcNow.AddHours(-2) };
+        var manager = new DashboardManager(new InMemoryCacheRepository(stale));
+        manager.RegisterProvider(CreateProvider("w", new { v = 99 }, valid: false).Object);
+        var result = await manager.FetchByProviderIdAsync("w");
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, ((System.Text.Json.JsonElement)result).GetProperty("v").GetInt32());
     }
 }
