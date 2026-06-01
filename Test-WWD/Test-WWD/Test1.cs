@@ -1,7 +1,7 @@
 ﻿namespace Test_WWD;
 
 [TestClass]
-public sealed class Test1
+public class Test1
 {
     [TestMethod]
     private static Mock<IDataSource<object>> CreateProvider(string id, object data, bool valid = true)
