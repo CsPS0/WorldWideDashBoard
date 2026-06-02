@@ -1,5 +1,0 @@
-C:\Users\Zalan PC\Desktop\IKT\IKT - wwd\Test-WWD\Test-WWD\obj\Debug\net9.0\Test-WWD.csproj.AssemblyReference.cache
-C:\Users\Zalan PC\Desktop\IKT\IKT - wwd\Test-WWD\Test-WWD\obj\Debug\net9.0\Test-WWD.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Zalan PC\Desktop\IKT\IKT - wwd\Test-WWD\Test-WWD\obj\Debug\net9.0\Test-WWD.AssemblyInfoInputs.cache
-C:\Users\Zalan PC\Desktop\IKT\IKT - wwd\Test-WWD\Test-WWD\obj\Debug\net9.0\Test-WWD.AssemblyInfo.cs
-C:\Users\Zalan PC\Desktop\IKT\IKT - wwd\Test-WWD\Test-WWD\obj\Debug\net9.0\Test-WWD.csproj.CoreCompileInputs.cache
