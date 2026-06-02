@@ -54,3 +54,7 @@ next-env.d.ts
 *.png
 !img/*.png
 /src/generated/prisma
+
+# .NET Tests
+Dashboard.Tests/bin/
+Dashboard.Tests/obj/
