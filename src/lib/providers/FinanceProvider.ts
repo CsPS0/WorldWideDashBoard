@@ -1,6 +1,5 @@
 import { BaseDataSource } from '../core/DataSource';
 import axios from 'axios';
-
 export interface FinanceData {
   crypto: {
     bitcoin: { usd: number; eur: number };
@@ -11,24 +10,18 @@ export interface FinanceData {
     EUR_TO_USD: number;
   };
 }
-
 export class FinanceProvider extends BaseDataSource<FinanceData> {
   id = 'finance_markets';
   name = 'Global Finance Markets';
   category = 'Finance';
-
   async fetchData(): Promise<FinanceData> {
     try {
-      // Fetch Crypto Prices
       const cryptoRes = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd,eur'
       );
-
-      // Fetch Currency Exchange Rates
       const currencyRes = await axios.get(
         'https://api.frankfurter.app/latest?from=EUR&to=HUF,USD'
       );
-
       return {
         crypto: {
           bitcoin: {
@@ -49,11 +42,9 @@ export class FinanceProvider extends BaseDataSource<FinanceData> {
       return this.handleFetchError(error);
     }
   }
-
   validateResponse(data: unknown): boolean {
     if (typeof data !== 'object' || data === null) return false;
     const d = data as Record<string, unknown>;
-    
     return (
       'crypto' in d &&
       'currency' in d &&

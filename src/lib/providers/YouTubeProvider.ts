@@ -1,29 +1,23 @@
 import { BaseDataSource } from '../core/DataSource';
-
 export interface ChannelInfo {
   name: string;
   id: string;
 }
-
 export type YouTubeData = Record<string, {
   name: string;
   subscriberCount: number;
   viewCount: number;
   videoCount: number;
 }>;
-
 export class YouTubeProvider extends BaseDataSource<YouTubeData> {
   id = 'youtube_stats';
   name = 'YouTube Channel Stats';
   category = 'Video';
-
   private channels: ChannelInfo[];
-
   constructor(channels: ChannelInfo[]) {
     super();
     this.channels = channels;
   }
-
   async fetchData(): Promise<YouTubeData> {
     try {
       const apiKey = process.env.YOUTUBE_API_KEY;
@@ -38,19 +32,15 @@ export class YouTubeProvider extends BaseDataSource<YouTubeData> {
           }
         }), {} as YouTubeData);
       }
-
       const ids = this.channels.map(c => c.id).join(',');
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${ids}&key=${apiKey}`
       );
-
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status}`);
       }
-
       const data = await response.json();
       const results: YouTubeData = {};
-
       data.items?.forEach((item: Record<string, unknown>) => {
         const id = item.id as string;
         const stats = item.statistics as Record<string, string>;
@@ -64,20 +54,16 @@ export class YouTubeProvider extends BaseDataSource<YouTubeData> {
           };
         }
       });
-
       if (Object.keys(results).length === 0) {
         throw new Error('No statistics found for the channels.');
       }
-
       return results;
     } catch (error) {
       return this.handleFetchError(error);
     }
   }
-
   validateResponse(data: unknown): boolean {
     if (typeof data !== 'object' || data === null) return false;
-    // Just a basic check that it's an object with keys
     return Object.keys(data).length > 0;
   }
 }

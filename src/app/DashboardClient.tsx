@@ -1,50 +1,17 @@
 "use client";
-
 import React, { useEffect, useState } from 'react';
 import { WidgetCard } from './components/WidgetCard';
-import { 
-  Gamepad2, 
-  MonitorPlay, 
-  TrendingUp, 
-  Bitcoin, 
-  Landmark, 
-  Users, 
-  Activity,
+import {
+  Gamepad2,
+  MonitorPlay,
+  TrendingUp,
+  Bitcoin,
+  Landmark,
+  Users,
   Music,
-  Sun,
-  Moon
+  Star
 } from 'lucide-react';
-
-interface SteamData {
-  player_count: number;
-}
-
-interface YouTubeData {
-  [key: string]: {
-    name: string;
-    subscriberCount: number;
-    viewCount: number;
-    videoCount: number;
-  };
-}
-
-interface FinanceData {
-  crypto: {
-    bitcoin: { usd: number; eur: number };
-    ethereum: { usd: number; eur: number };
-  };
-  currency: {
-    EUR_TO_HUF: number;
-    EUR_TO_USD: number;
-  };
-}
-
-interface PoliticsData {
-  turnoutPercentage: number;
-  processedPercentage: number;
-  leadingParty: string;
-}
-
+import CurrencyChart from './components/CurrencyChart';
 export interface MusicTrack {
   rank: number;
   title: string;
@@ -53,295 +20,265 @@ export interface MusicTrack {
   soundcloudStreams: number;
   totalStreams: number;
 }
-
 interface DashboardData {
-  steam_players?: SteamData;
-  youtube_stats?: YouTubeData;
-  finance_markets?: FinanceData;
-  hungarian_elections?: PoliticsData;
+  steam_players?: { player_count: number };
+  youtube_stats?: Record<string, { subscriberCount: number; viewCount: number; videoCount: number }>;
+  finance_markets?: {
+    crypto: { bitcoin: { usd: number; eur: number }; ethereum: { usd: number; eur: number } };
+    currency: { EUR_TO_HUF: number; EUR_TO_USD: number };
+  };
+  hungarian_elections?: {
+    turnoutPercentage: number;
+    processedPercentage: number;
+    parties: {
+      name: string;
+      listMandates: number;
+      individualMandates: number;
+      totalMandates: number;
+      listVotesPercentage: number;
+    }[];
+  };
   global_music?: MusicTrack[];
+  personal_data?: {
+    youtube?: Record<string, { name: string; subscriberCount: number }>;
+    steam?: { username: string; inventoryValue: number; hoursPlayed: number };
+    artist?: { name: string; monthlyListeners: number };
+  };
 }
-
 export default function DashboardClient() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedYoutuber, setSelectedYoutuber] = useState('MrBeast');
-  const [isLightMode, setIsLightMode] = useState(false);
-
-  useEffect(() => {
-    // Check local storage for theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      // eslint-disable-next-line
-      setIsLightMode(true);
-      document.body.classList.add('light');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (isLightMode) {
-      document.body.classList.remove('light');
-      localStorage.setItem('theme', 'dark');
-      setIsLightMode(false);
-    } else {
-      document.body.classList.add('light');
-      localStorage.setItem('theme', 'light');
-      setIsLightMode(true);
-    }
-  };
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  };
-
+  const [preferences, setPreferences] = useState<{ dashboardStyle: string; hiddenWidgets: string[] }>({
+    dashboardStyle: 'grid',
+    hiddenWidgets: [],
+  });
   useEffect(() => {
     fetch('/api/dashboard')
       .then((res) => res.json())
-      .then((data) => {
-        setData(data);
+      .then((d) => {
+        setData(d);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
+    fetch('/api/auth/preferences')
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error('Not logged in');
+      })
+      .then((prefData) => {
+        setPreferences({
+          dashboardStyle: prefData.dashboardStyle || 'grid',
+          hiddenWidgets: prefData.hiddenWidgets ? JSON.parse(prefData.hiddenWidgets) : [],
+        });
+      })
+      .catch(() => {});
   }, []);
-
+  const fmt = (num: number) => {
+    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + 'B';
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
+    if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
+    return num.toString();
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-16 h-16 border-4 border-transparent/20 border-t-white rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-[3px] border-white/10 border-t-orange rounded-full animate-spin" />
       </div>
     );
   }
-
-  const steam = data?.['steam_players'];
-  const youtube = data?.['youtube_stats'];
-  const finance = data?.['finance_markets'];
-  const politics = data?.['hungarian_elections'];
-  const music = data?.['global_music'];
-
+  const steam = data?.steam_players;
+  const youtube = data?.youtube_stats;
+  const finance = data?.finance_markets;
+  const politics = data?.hungarian_elections;
+  const music = data?.global_music;
+  const personal = data?.personal_data;
+  const isGrid = preferences.dashboardStyle === 'grid';
+  const { hiddenWidgets } = preferences;
   return (
-    <div className="w-full px-4 lg:px-8 xl:px-12 flex flex-col xl:flex-row gap-8 pb-12">
-      
-      {/* Left Sidebar - Navigation */}
-      <div className="hidden xl:flex w-64 flex-col shrink-0 sticky top-8 h-fit">
-        <div className="glass-panel p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Segments</h2>
-          <nav className="flex flex-col gap-2">
-            {[
-              { id: 'steam', icon: Gamepad2, label: 'Steam' },
-              { id: 'youtube', icon: MonitorPlay, label: 'YouTube' },
-              { id: 'music', icon: Music, label: 'Music' },
-              { id: 'crypto', icon: Bitcoin, label: 'Crypto' },
-              { id: 'exchange', icon: TrendingUp, label: 'Exchange Rates' },
-              { id: 'politics', icon: Landmark, label: 'Politics' },
-            ].map((item) => (
-              <a 
-                key={item.id}
-                href={`#${item.id}`}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-alabaster hover:bg-black/30 hover:text-orange transition-colors"
-              >
-                <item.icon size={18} />
-                <span className="font-medium">{item.label}</span>
-              </a>
+    <div className="w-full space-y-6">
+      {personal && Object.keys(personal).length > 0 && (
+        <section>
+          <h2 className="text-sm font-semibold text-alabaster/50 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <Star size={14} className="text-orange" />
+            Personal Showcase
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {personal.youtube && Object.values(personal.youtube).map((ch: { name: string; subscriberCount: number }) => (
+              <div key={ch.name} className="glass-card p-5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
+                  <MonitorPlay size={20} className="text-orange" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{ch.name}</p>
+                  <p className="text-xs text-alabaster/60">YouTube · {fmt(ch.subscriberCount)} subs</p>
+                </div>
+              </div>
             ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 min-w-0 space-y-8">
-        {/* Header */}
-        <div className="glass-panel p-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-orange to-alabaster mb-2">
-            World Wide Dashboard
-          </h1>
-          <p className="text-alabaster">Real-time global insights at a glance.</p>
-        </div>
-        <div className="mt-4 sm:mt-0 flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-alabaster bg-black/30 px-4 py-2 rounded-full">
-            <Activity size={16} className="text-white" />
-            Live Updates Active
+            {personal.steam && (
+              <div className="glass-card p-5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
+                  <Gamepad2 size={20} className="text-orange" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{personal.steam.username}</p>
+                  <p className="text-xs text-alabaster/60">Steam · ${personal.steam.inventoryValue.toLocaleString()}</p>
+                </div>
+              </div>
+            )}
+            {personal.artist && (
+              <div className="glass-card p-5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
+                  <Music size={20} className="text-orange" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{personal.artist.name}</p>
+                  <p className="text-xs text-alabaster/60">{fmt(personal.artist.monthlyListeners)} monthly listeners</p>
+                </div>
+              </div>
+            )}
           </div>
-          <button 
-            onClick={toggleTheme}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-black/30 text-orange hover:bg-black/50 transition-colors"
-            title="Toggle Light/Dark Theme"
-          >
-            {isLightMode ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        
-        {/* Steam Widget */}
-        <WidgetCard id="steam" title="CS2 Players" icon={Gamepad2} delay={100} className="col-span-1 md:col-span-2 lg:col-span-1">
-          {steam ? (
-            <div className="text-center">
-              <div className="text-5xl font-bold text-white mb-2">{steam.player_count.toLocaleString()}</div>
-              <div className="text-sm text-alabaster">Current Online Players</div>
-            </div>
-          ) : (
-            <div className="text-alabaster text-center">Data unavailable</div>
-          )}
-        </WidgetCard>
-
-        {/* YouTube Widget */}
-        <WidgetCard id="youtube" title="YouTube Stats" icon={MonitorPlay} delay={200} className="col-span-1 md:col-span-2 lg:col-span-2">
-          {youtube ? (
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-start items-center">
-                <select 
-                  className="bg-black/50 text-white rounded-lg px-4 py-2 text-sm border border-white/10 outline-none focus:border-orange transition-colors cursor-pointer"
+        </section>
+      )}
+      <div className={
+        isGrid
+          ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+          : "flex flex-col gap-4"
+      }>
+        {!hiddenWidgets.includes('steam') && (
+          <WidgetCard id="steam" title="CS2 Players" icon={Gamepad2} delay={100}>
+            {steam ? (
+              <div className="text-center py-4">
+                <div className="text-4xl font-bold text-white mb-1">{steam.player_count.toLocaleString()}</div>
+                <div className="text-xs text-alabaster/60">Current Online Players</div>
+              </div>
+            ) : (
+              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+            )}
+          </WidgetCard>
+        )}
+        {!hiddenWidgets.includes('youtube') && (
+          <WidgetCard id="youtube" title="YouTube Stats" icon={MonitorPlay} delay={200} className="md:col-span-2 xl:col-span-2">
+            {youtube ? (
+              <div className="flex flex-col gap-4">
+                <select
+                  className="self-start bg-white/[0.06] text-white text-sm rounded-lg px-3 py-2 border border-white/[0.08] outline-none focus:border-orange/50 transition-colors cursor-pointer"
                   value={selectedYoutuber}
                   onChange={(e) => setSelectedYoutuber(e.target.value)}
                 >
                   {Object.keys(youtube).map((name) => (
-                    <option key={name} value={name}>{name}</option>
+                    <option key={name} value={name} className="bg-[#14213d] text-white">{name}</option>
                   ))}
                 </select>
+                {youtube[selectedYoutuber] ? (
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { label: 'Subscribers', value: fmt(youtube[selectedYoutuber].subscriberCount) },
+                      { label: 'Total Views', value: fmt(youtube[selectedYoutuber].viewCount) },
+                      { label: 'Videos', value: youtube[selectedYoutuber].videoCount.toLocaleString() },
+                    ].map((stat) => (
+                      <div key={stat.label} className="bg-white/[0.03] p-3 rounded-lg text-center">
+                        <div className="text-xl font-bold text-white">{stat.value}</div>
+                        <div className="text-[11px] text-alabaster/50 mt-0.5">{stat.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-alabaster/50 text-center py-4 text-sm">No data for {selectedYoutuber}</div>
+                )}
               </div>
-              {youtube[selectedYoutuber] ? (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                  <div className="bg-black/30 p-4 rounded-xl">
-                    <div className="text-3xl font-bold text-white">{formatNumber(youtube[selectedYoutuber].subscriberCount)}</div>
-                    <div className="text-xs text-alabaster mt-1">Subscribers</div>
+            ) : (
+              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+            )}
+          </WidgetCard>
+        )}
+        {!hiddenWidgets.includes('music') && (
+          <WidgetCard id="music" title="Global Top 10" icon={Music} delay={450} className="xl:row-span-2 flex flex-col max-h-[600px]">
+            {music ? (
+              <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
+                {music.map((track) => (
+                  <div key={track.rank} className="flex items-center gap-3 bg-white/[0.03] p-2.5 rounded-lg hover:bg-white/[0.06] transition-colors">
+                    <div className="w-6 text-center text-sm font-bold text-alabaster/40">{track.rank}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-white truncate">{track.title}</div>
+                      <div className="text-[11px] text-alabaster/50 truncate">{track.artist}</div>
+                    </div>
+                    <div className="text-xs font-semibold text-orange shrink-0">{fmt(track.totalStreams)}</div>
                   </div>
-                  <div className="bg-black/30 p-4 rounded-xl">
-                    <div className="text-3xl font-bold text-white">{formatNumber(youtube[selectedYoutuber].viewCount)}</div>
-                    <div className="text-xs text-alabaster mt-1">Total Views</div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+            )}
+          </WidgetCard>
+        )}
+        {!hiddenWidgets.includes('crypto') && (
+          <WidgetCard id="crypto" title="Crypto Markets" icon={Bitcoin} delay={300} className="md:col-span-2 xl:col-span-1">
+            {finance ? (
+              <div className="space-y-2">
+                {[
+                  { symbol: '₿', name: 'Bitcoin', price: finance.crypto.bitcoin.usd },
+                  { symbol: 'Ξ', name: 'Ethereum', price: finance.crypto.ethereum.usd },
+                ].map((coin) => (
+                  <div key={coin.name} className="flex items-center justify-between bg-white/[0.03] p-3.5 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-orange text-sm font-bold">{coin.symbol}</div>
+                      <span className="text-sm font-medium text-white">{coin.name}</span>
+                    </div>
+                    <span className="text-base font-bold text-white">${coin.price.toLocaleString()}</span>
                   </div>
-                  <div className="bg-black/30 p-4 rounded-xl">
-                    <div className="text-3xl font-bold text-white">{youtube[selectedYoutuber].videoCount.toLocaleString()}</div>
-                    <div className="text-xs text-alabaster mt-1">Videos</div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+            )}
+          </WidgetCard>
+        )}
+        {!hiddenWidgets.includes('exchange') && (
+          <WidgetCard id="exchange" title="Currency Explorer" icon={TrendingUp} delay={400} className="md:col-span-2">
+            <CurrencyChart height={220} />
+          </WidgetCard>
+        )}
+        {!hiddenWidgets.includes('politics') && (
+          <WidgetCard id="politics" title="Election 2026" icon={Landmark} delay={500} className="md:col-span-2 xl:col-span-3">
+            {politics ? (
+              <div className="flex flex-col gap-4 py-2">
+                <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Users size={16} className="text-orange" />
+                    <span className="text-sm text-alabaster/60">Voter Turnout</span>
                   </div>
+                  <span className="text-sm font-bold text-white">{politics.turnoutPercentage}%</span>
                 </div>
-              ) : (
-                <div className="text-alabaster text-center py-4">No data for {selectedYoutuber}</div>
-              )}
-            </div>
-          ) : (
-            <div className="text-alabaster text-center py-4">Data unavailable</div>
-          )}
-        </WidgetCard>
-
-        {/* Music Widget */}
-        <WidgetCard id="music" title="Global Top 10 Music" icon={Music} delay={450} className="col-span-1 lg:col-span-1 row-span-2 flex flex-col max-h-150">
-          {music ? (
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3">
-              {music.map((track) => (
-                <div key={track.rank} className="flex items-center gap-3 bg-black/30 p-3 rounded-xl hover:bg-black/50 transition-colors">
-                  <div className="w-8 shrink-0 text-center font-bold text-xl text-alabaster">
-                    {track.rank}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-white truncate">{track.title}</div>
-                    <div className="text-xs text-alabaster truncate">{track.artist}</div>
-                  </div>
-                  <div className="flex flex-col items-end text-xs shrink-0">
-                    <div className="font-bold text-orange">{formatNumber(track.totalStreams)}</div>
-                    <div className="text-[10px] text-alabaster">Comb.</div>
-                  </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="text-[11px] text-alabaster/50 uppercase border-b border-white/[0.08]">
+                      <tr>
+                        <th className="pb-2 font-medium">Party</th>
+                        <th className="pb-2 font-medium text-right">List</th>
+                        <th className="pb-2 font-medium text-right">Individual</th>
+                        <th className="pb-2 font-medium text-right">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.04]">
+                      {politics.parties.map((party: any) => (
+                        <tr key={party.name}>
+                          <td className="py-2.5 font-semibold text-white">{party.name}</td>
+                          <td className="py-2.5 text-right text-alabaster/70">{party.listMandates}</td>
+                          <td className="py-2.5 text-right text-alabaster/70">{party.individualMandates}</td>
+                          <td className="py-2.5 text-right font-bold text-orange">{party.totalMandates}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-alabaster text-center py-4">Data unavailable</div>
-          )}
-        </WidgetCard>
-
-        {/* Finance Widget - Crypto */}
-        <WidgetCard id="crypto" title="Crypto Markets" icon={Bitcoin} delay={300} className="col-span-1 md:col-span-2">
-          {finance ? (
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center bg-black/30 p-4 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-orange/20 flex items-center justify-center text-orange">₿</div>
-                  <span className="font-medium text-white">Bitcoin</span>
-                </div>
-                <div className="text-xl font-bold text-white">${finance.crypto.bitcoin.usd.toLocaleString()}</div>
               </div>
-              <div className="flex justify-between items-center bg-black/30 p-4 rounded-xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-orange/20 flex items-center justify-center text-orange">Ξ</div>
-                  <span className="font-medium text-white">Ethereum</span>
-                </div>
-                <div className="text-xl font-bold text-white">${finance.crypto.ethereum.usd.toLocaleString()}</div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-alabaster text-center">Data unavailable</div>
-          )}
-        </WidgetCard>
-
-        {/* Finance Widget - Currency */}
-        <WidgetCard id="exchange" title="Exchange Rates" icon={TrendingUp} delay={400} className="col-span-1">
-          {finance ? (
-            <div className="flex flex-col gap-4">
-              <div className="text-center bg-black/30 p-4 rounded-xl">
-                <div className="text-2xl font-bold text-white">{finance.currency.EUR_TO_HUF.toFixed(2)} Ft</div>
-                <div className="text-xs text-alabaster mt-1">1 EUR</div>
-              </div>
-              <div className="text-center bg-black/30 p-4 rounded-xl">
-                <div className="text-2xl font-bold text-white">${finance.currency.EUR_TO_USD.toFixed(2)}</div>
-                <div className="text-xs text-alabaster mt-1">1 EUR</div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-alabaster text-center">Data unavailable</div>
-          )}
-        </WidgetCard>
-
-        {/* Politics Widget */}
-        <WidgetCard id="politics" title="Election 2026" icon={Landmark} delay={500} className="col-span-1 md:col-span-3 lg:col-span-1 xl:col-span-4">
-          {politics ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="flex flex-col justify-center items-center">
-                <div className="text-4xl font-bold text-white mb-2">{politics.turnoutPercentage}%</div>
-                <div className="text-sm text-alabaster flex items-center gap-2"><Users size={14}/> Voter Turnout</div>
-              </div>
-              <div className="flex flex-col justify-center items-center">
-                <div className="text-4xl font-bold text-orange mb-2">{politics.leadingParty}</div>
-                <div className="text-sm text-alabaster">Leading Party</div>
-              </div>
-              <div className="flex flex-col justify-center items-center">
-                <div className="text-4xl font-bold text-orange mb-2">{politics.processedPercentage}%</div>
-                <div className="text-sm text-alabaster">Processed Votes</div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-alabaster text-center">Data unavailable</div>
-          )}
-        </WidgetCard>
-
+            ) : (
+              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+            )}
+          </WidgetCard>
+        )}
       </div>
-      </div>
-
-      {/* Right Sidebar - Account */}
-      <div className="hidden xl:flex w-72 flex-col shrink-0 sticky top-8 h-fit">
-        <div className="glass-panel p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Account</h2>
-          <div className="flex flex-col gap-3">
-            <button className="w-full py-3 px-4 bg-orange text-black font-bold rounded-lg hover:brightness-110 transition-all text-center">
-              Sign Up
-            </button>
-            <button className="w-full py-3 px-4 bg-black/30 border border-white/10 text-white font-bold rounded-lg hover:bg-black/50 transition-all text-center">
-              Login
-            </button>
-          </div>
-          <p className="mt-4 text-xs text-center text-alabaster">
-            Create an account to save your dashboard preferences.
-          </p>
-        </div>
-      </div>
-
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { BaseDataSource } from '../core/DataSource';
-
 export interface MusicTrack {
   rank: number;
   title: string;
@@ -8,12 +7,10 @@ export interface MusicTrack {
   soundcloudStreams: number;
   totalStreams: number;
 }
-
 export class MusicProvider extends BaseDataSource<MusicTrack[]> {
   id = 'global_music';
   name = 'Global Top 10 Music';
   category = 'Entertainment';
-
   async fetchData(): Promise<MusicTrack[]> {
     try {
       const tracks = [
@@ -28,28 +25,22 @@ export class MusicProvider extends BaseDataSource<MusicTrack[]> {
         { title: 'STAY', artist: 'The Kid LAROI & Justin Bieber', spotify: 2800000000, soundcloud: 150000000 },
         { title: 'rockstar', artist: 'Post Malone', spotify: 2800000000, soundcloud: 350000000 },
       ];
-
-      // Calculate totals and sort
       const processedTracks: MusicTrack[] = tracks.map((t) => ({
-        rank: 0, // Will be set after sorting
+        rank: 0, 
         title: t.title,
         artist: t.artist,
         spotifyStreams: t.spotify,
         soundcloudStreams: t.soundcloud,
         totalStreams: t.spotify + t.soundcloud,
       })).sort((a, b) => b.totalStreams - a.totalStreams);
-
-      // Assign ranks based on the combined sum
       processedTracks.forEach((track, index) => {
         track.rank = index + 1;
       });
-
       return processedTracks;
     } catch (error) {
       return this.handleFetchError(error);
     }
   }
-
   validateResponse(data: unknown): boolean {
     if (!Array.isArray(data)) return false;
     if (data.length === 0) return false;

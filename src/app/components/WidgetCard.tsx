@@ -1,9 +1,7 @@
 "use client";
-
 import React, { useEffect, useRef } from 'react';
 import { animate } from 'animejs';
 import { LucideIcon } from 'lucide-react';
-
 interface WidgetCardProps {
   title: string;
   icon: LucideIcon;
@@ -12,10 +10,8 @@ interface WidgetCardProps {
   className?: string;
   id?: string;
 }
-
 export function WidgetCard({ title, icon: Icon, children, delay = 0, className = '', id }: WidgetCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (cardRef.current) {
       animate(cardRef.current, {
@@ -27,7 +23,6 @@ export function WidgetCard({ title, icon: Icon, children, delay = 0, className =
       });
     }
   }, [delay]);
-
   return (
     <div id={id} ref={cardRef} className={`glass-card p-6 flex flex-col h-full opacity-0 scroll-mt-24 ${className}`}>
       <div className="flex items-center gap-3 mb-4">
