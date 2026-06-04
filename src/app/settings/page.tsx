@@ -138,7 +138,7 @@ export default function SettingsPage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-10 h-10 border-[3px] border-white/10 border-t-orange rounded-full animate-spin" />
+        <div className="w-10 h-10 border-[3px] border-border-subtle border-t-accent rounded-full animate-spin" />
       </div>
     );
   }
@@ -149,15 +149,15 @@ export default function SettingsPage() {
   ];
   return (
     <div className="w-full max-w-2xl">
-      <div className="flex gap-1 p-1 bg-white/[0.04] rounded-lg mb-6 w-fit">
+      <div className="flex gap-1 p-1 bg-surface-inset rounded-lg mb-6 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => { setActiveTab(tab.id); setMessage(null); }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab.id
-                ? 'bg-white/[0.08] text-white'
-                : 'text-alabaster/50 hover:text-white'
+                ? 'bg-accent/10 text-accent'
+                : 'text-muted hover:text-primary'
             }`}
           >
             <tab.icon size={15} />
@@ -169,8 +169,8 @@ export default function SettingsPage() {
         <div
           className={`flex items-center gap-2.5 p-3 rounded-lg mb-4 text-sm font-medium border ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-              : 'bg-red-500/10 border-red-500/20 text-red-400'
+              ? 'bg-success/10 border-success/20 text-success'
+              : 'bg-danger/10 border-danger/20 text-danger'
           }`}
         >
           {message.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
@@ -184,15 +184,15 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="relative w-20 h-20 rounded-full shrink-0 bg-white/[0.06] border-2 border-dashed border-white/[0.12] hover:border-orange/40 transition-colors flex items-center justify-center group overflow-hidden"
+                className="relative w-20 h-20 rounded-full shrink-0 bg-surface-inset border-2 border-dashed border-border-subtle hover:border-accent transition-colors flex items-center justify-center group overflow-hidden"
               >
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-full" />
                 ) : (
-                  <UserIcon size={28} className="text-alabaster/30" />
+                  <UserIcon size={28} className="text-muted" />
                 )}
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-full">
-                  <Camera size={18} className="text-white" />
+                  <Camera size={18} className="text-primary" />
                 </div>
               </button>
               <input
@@ -216,11 +216,11 @@ export default function SettingsPage() {
                 }}
               />
               <div className="min-w-0">
-                <div className="text-sm font-medium text-white">{user.username}</div>
+                <div className="text-sm font-medium text-primary">{user.username}</div>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-xs text-orange hover:underline mt-0.5"
+                  className="text-xs text-accent hover:underline mt-0.5"
                 >
                   {avatarUrl ? 'Change photo' : 'Upload photo'}
                 </button>
@@ -228,7 +228,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => { setAvatarUrl(null); setAvatarDirty(true); }}
-                    className="text-xs text-red-400 hover:underline mt-0.5 ml-3"
+                    className="text-xs text-danger hover:underline mt-0.5 ml-3"
                   >
                     Remove
                   </button>
@@ -237,23 +237,23 @@ export default function SettingsPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider">New Password</label>
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider">New Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter new password"
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-alabaster/30 outline-none focus:border-orange/50 transition-colors"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider">Confirm Password</label>
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider">Confirm Password</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm password"
-                  className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-alabaster/30 outline-none focus:border-orange/50 transition-colors"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
                 />
               </div>
             </div>
@@ -261,9 +261,9 @@ export default function SettingsPage() {
         )}
         {activeTab === 'integrations' && (
           <div className="space-y-5">
-            <p className="text-sm text-alabaster/40">Paste the full URL from your browser&apos;s address bar for each service.</p>
+            <p className="text-sm text-secondary">Paste the full URL from your browser&apos;s address bar for each service.</p>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <Gamepad2 size={13} /> Steam Profile URL
               </label>
               <input
@@ -271,12 +271,12 @@ export default function SettingsPage() {
                 value={steamId}
                 onChange={(e) => setSteamId(e.target.value)}
                 placeholder="https://steamcommunity.com/id/chonya"
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-alabaster/30 outline-none focus:border-orange/50 transition-colors"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
               />
-              <p className="text-[11px] text-alabaster/30">e.g. https://steamcommunity.com/id/yourname</p>
+              <p className="text-[11px] text-muted">e.g. https://steamcommunity.com/id/yourname</p>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <MonitorPlay size={13} /> YouTube Channel URL
               </label>
               <input
@@ -284,12 +284,12 @@ export default function SettingsPage() {
                 value={youtubeHandle}
                 onChange={(e) => setYoutubeHandle(e.target.value)}
                 placeholder="https://www.youtube.com/@CsPS0"
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-alabaster/30 outline-none focus:border-orange/50 transition-colors"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
               />
-              <p className="text-[11px] text-alabaster/30">e.g. https://www.youtube.com/@YourChannel</p>
+              <p className="text-[11px] text-muted">e.g. https://www.youtube.com/@YourChannel</p>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <Music size={13} /> Spotify Artist URL
               </label>
               <input
@@ -297,16 +297,16 @@ export default function SettingsPage() {
                 value={favoriteArtist}
                 onChange={(e) => setFavoriteArtist(e.target.value)}
                 placeholder="https://open.spotify.com/artist/4LZ4De2MoO3lP6QaNCfvcu"
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-alabaster/30 outline-none focus:border-orange/50 transition-colors"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
               />
-              <p className="text-[11px] text-alabaster/30">Open the artist on Spotify, click Share → Copy link, and paste it here.</p>
+              <p className="text-[11px] text-muted">Open the artist on Spotify, click Share → Copy link, and paste it here.</p>
             </div>
           </div>
         )}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
             <div>
-              <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider mb-3 block">Layout</label>
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Layout</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { id: 'grid', label: 'Grid', icon: LayoutGrid },
@@ -318,12 +318,12 @@ export default function SettingsPage() {
                     onClick={() => setDashboardStyle(opt.id)}
                     className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors ${
                       dashboardStyle === opt.id
-                        ? 'border-orange/40 bg-orange/[0.06]'
-                        : 'border-white/[0.06] bg-white/[0.02] hover:border-white/10'
+                        ? 'border-accent bg-accent/10'
+                        : 'border-border-default bg-surface-inset hover:border-border-subtle'
                     }`}
                   >
-                    <opt.icon size={24} className={dashboardStyle === opt.id ? 'text-orange' : 'text-alabaster/40'} />
-                    <span className={`text-sm font-medium ${dashboardStyle === opt.id ? 'text-white' : 'text-alabaster/60'}`}>
+                    <opt.icon size={24} className={dashboardStyle === opt.id ? 'text-accent' : 'text-secondary'} />
+                    <span className={`text-sm font-medium ${dashboardStyle === opt.id ? 'text-primary' : 'text-secondary'}`}>
                       {opt.label}
                     </span>
                   </button>
@@ -331,22 +331,22 @@ export default function SettingsPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium text-alabaster/50 uppercase tracking-wider mb-3 block">Visible Widgets</label>
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Visible Widgets</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {widgets.map((w) => {
                   const visible = !hiddenWidgets.includes(w.id);
                   return (
                     <label
                       key={w.id}
-                      className="flex items-center gap-3 bg-white/[0.03] px-3 py-2.5 rounded-lg cursor-pointer hover:bg-white/[0.05] transition-colors"
+                      className="flex items-center gap-3 bg-surface-inset px-3 py-2.5 rounded-lg cursor-pointer hover:bg-surface-card-hover transition-colors"
                     >
                       <input
                         type="checkbox"
                         checked={visible}
                         onChange={() => toggleWidget(w.id)}
-                        className="w-4 h-4 accent-orange rounded"
+                        className="w-4 h-4 accent-accent rounded"
                       />
-                      <span className={`text-sm ${visible ? 'text-white' : 'text-alabaster/40'}`}>{w.label}</span>
+                      <span className={`text-sm ${visible ? 'text-primary' : 'text-secondary'}`}>{w.label}</span>
                     </label>
                   );
                 })}
@@ -359,10 +359,10 @@ export default function SettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 bg-orange hover:bg-orange/90 text-black text-sm font-semibold py-2.5 px-5 rounded-lg transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-surface-base text-sm font-semibold py-2.5 px-5 rounded-lg transition-colors disabled:opacity-50"
         >
           {saving ? (
-            <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-surface-base/20 border-t-surface-base rounded-full animate-spin" />
           ) : (
             <Save size={15} />
           )}

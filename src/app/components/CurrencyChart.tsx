@@ -93,44 +93,44 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
     <div className={`w-full flex flex-col ${showCalculator ? 'lg:flex-row' : ''} gap-8`}>
       <div className="flex-1 w-full flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 bg-black/30 p-2 rounded-xl border border-white/10">
+          <div className="flex items-center gap-3 bg-surface-inset p-2 rounded-xl border border-border-subtle">
             <select 
               value={base} 
               onChange={(e) => setBase(e.target.value)}
-              className="bg-transparent text-white font-bold outline-none cursor-pointer p-2"
+              className="bg-transparent text-primary font-bold outline-none cursor-pointer p-2"
             >
-              {CURRENCIES.map(c => <option key={`base-${c}`} value={c} className="bg-[#023047] text-white">{c}</option>)}
+              {CURRENCIES.map(c => <option key={`base-${c}`} value={c} className="bg-surface-inset text-primary">{c}</option>)}
             </select>
-            <span className="text-alabaster font-medium">to</span>
+            <span className="text-secondary font-medium">to</span>
             <select 
               value={target} 
               onChange={(e) => setTarget(e.target.value)}
-              className="bg-transparent text-white font-bold outline-none cursor-pointer p-2"
+              className="bg-transparent text-primary font-bold outline-none cursor-pointer p-2"
             >
-              {CURRENCIES.map(c => <option key={`target-${c}`} value={c} className="bg-[#023047] text-white">{c}</option>)}
+              {CURRENCIES.map(c => <option key={`target-${c}`} value={c} className="bg-surface-inset text-primary">{c}</option>)}
             </select>
           </div>
           {currentRate !== null && (
             <div className="text-right">
-              <div className="text-3xl font-bold text-white">
+              <div className="text-3xl font-bold text-primary">
                 {currentRate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
               </div>
-              <div className="text-sm text-orange font-medium tracking-wide">Current Rate</div>
+              <div className="text-sm text-accent-warm font-medium tracking-wide">Current Rate</div>
             </div>
           )}
         </div>
         {loading ? (
           <div className={`w-full flex items-center justify-center`} style={{ height }}>
-            <div className="w-8 h-8 border-4 border-transparent/20 border-t-orange rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-4 border-transparent/20 border-t-accent rounded-full animate-spin"></div>
           </div>
         ) : chartData.length > 0 ? (
           <div className="w-full" style={{ height }}>
             <ResponsiveContainer width="100%" height={height}>
               <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff15" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#ffffff50" 
+                  stroke="var(--text-muted)" 
                   fontSize={12} 
                   tickMargin={10}
                   tickFormatter={(val) => {
@@ -141,37 +141,37 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
                 />
                 <YAxis 
                   domain={['auto', 'auto']} 
-                  stroke="#ffffff50" 
+                  stroke="var(--text-muted)" 
                   fontSize={12} 
                   tickFormatter={(val) => val.toFixed(2)}
                   width={50}
                 />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#023047', borderColor: '#ffb703', borderRadius: '8px', color: '#fff' }}
-                  itemStyle={{ color: '#ffb703', fontWeight: 'bold' }}
-                  labelStyle={{ color: '#8ecae6', marginBottom: '4px' }}
+                  contentStyle={{ backgroundColor: 'var(--surface-card)', borderColor: 'var(--accent)', borderRadius: '8px', color: 'var(--text-primary)' }}
+                  itemStyle={{ color: 'var(--accent-warm)', fontWeight: 'bold' }}
+                  labelStyle={{ color: 'var(--text-secondary)', marginBottom: '4px' }}
                   formatter={(value: any) => [Number(value).toLocaleString(undefined, { maximumFractionDigits: 4 }), 'Rate']}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="rate" 
-                  stroke="#ffb703" 
+                  stroke="var(--accent)" 
                   strokeWidth={3} 
                   dot={false}
-                  activeDot={{ r: 6, fill: '#ffb703', stroke: '#023047', strokeWidth: 2 }}
+                  activeDot={{ r: 6, fill: 'var(--accent)', stroke: 'var(--surface-card)', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className={`w-full flex items-center justify-center text-alabaster`} style={{ height }}>
+          <div className={`w-full flex items-center justify-center text-secondary`} style={{ height }}>
             No data available for this pair.
           </div>
         )}
         {}
         <div className="flex flex-col gap-2 mt-2">
           <div className="flex justify-between px-2">
-            <span className="text-xs font-bold text-alabaster">Timeframe: <span className="text-orange">{TIMEFRAMES[timeIndex].label}</span></span>
+            <span className="text-xs font-bold text-secondary">Timeframe: <span className="text-accent">{TIMEFRAMES[timeIndex].label}</span></span>
           </div>
           <input 
             type="range" 
@@ -180,36 +180,36 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
             step={1} 
             value={timeIndex}
             onChange={(e) => setTimeIndex(Number(e.target.value))}
-            className="w-full h-2 bg-black/50 rounded-lg appearance-none cursor-pointer accent-orange"
+            className="w-full h-2 bg-surface-inset rounded-lg appearance-none cursor-pointer accent-[#38bdf8]"
           />
-          <div className="flex justify-between px-1 text-[10px] text-white/40 font-medium mt-1">
+          <div className="flex justify-between px-1 text-[10px] text-muted font-medium mt-1">
             {TIMEFRAMES.map((t, i) => (
-              <span key={i} className={i === timeIndex ? 'text-orange' : ''}>{t.label.replace(' Days', 'D').replace(' Month', 'M').replace(' Months', 'M').replace(' Year', 'Y').replace(' Years', 'Y')}</span>
+              <span key={i} className={i === timeIndex ? 'text-accent' : ''}>{t.label.replace(' Days', 'D').replace(' Month', 'M').replace(' Months', 'M').replace(' Year', 'Y').replace(' Years', 'Y')}</span>
             ))}
           </div>
         </div>
       </div>
       {showCalculator && currentRate !== null && (
-        <div className="w-full lg:w-72 flex flex-col gap-6 bg-black/20 p-6 rounded-2xl border border-white/5 h-fit">
-          <h3 className="text-white font-bold flex items-center gap-2 text-lg">
-            <Calculator size={20} className="text-orange"/> Quick Calculator
+        <div className="w-full lg:w-72 flex flex-col gap-6 bg-surface-inset p-6 rounded-2xl border border-border-subtle h-fit">
+          <h3 className="text-primary font-bold flex items-center gap-2 text-lg">
+            <Calculator size={20} className="text-accent"/> Quick Calculator
           </h3>
           <div className="flex flex-col gap-2">
-            <label className="text-sm text-alabaster font-medium">Amount in {base}</label>
+            <label className="text-sm text-secondary font-medium">Amount in {base}</label>
             <input 
               type="number" 
               value={calcAmount} 
               onChange={(e) => setCalcAmount(e.target.value)}
-              className="bg-black/40 border border-white/10 rounded-lg p-4 text-white font-bold outline-none focus:border-orange transition-colors"
+              className="bg-surface-card border border-border-subtle rounded-lg p-4 text-primary font-bold outline-none focus:border-accent transition-colors"
               min="0"
             />
           </div>
           <div className="flex justify-center -my-1">
-            <ArrowDown size={24} className="text-alabaster/40" />
+            <ArrowDown size={24} className="text-muted" />
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-sm text-alabaster font-medium">Converted to {target}</label>
-            <div className="bg-[#023047] border border-orange/30 shadow-[0_0_15px_rgba(255,165,0,0.15)] rounded-lg p-5 text-white font-bold text-2xl break-all">
+            <label className="text-sm text-secondary font-medium">Converted to {target}</label>
+            <div className="bg-surface-card border border-accent glow-accent rounded-lg p-5 text-primary font-bold text-2xl break-all">
               {((parseFloat(calcAmount) || 0) * currentRate).toLocaleString(undefined, { maximumFractionDigits: 2 })} {target}
             </div>
           </div>

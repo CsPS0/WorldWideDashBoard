@@ -83,7 +83,7 @@ export default function DashboardClient() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 border-[3px] border-white/10 border-t-orange rounded-full animate-spin" />
+        <div className="w-10 h-10 border-[3px] border-border-subtle border-t-accent rounded-full animate-spin" />
       </div>
     );
   }
@@ -99,41 +99,41 @@ export default function DashboardClient() {
     <div className="w-full space-y-6">
       {personal && Object.keys(personal).length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-alabaster/50 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Star size={14} className="text-orange" />
+          <h2 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
+            <Star size={14} className="text-accent-warm" />
             Personal Showcase
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {personal.youtube && Object.values(personal.youtube).map((ch: { name: string; subscriberCount: number }) => (
               <div key={ch.name} className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
-                  <MonitorPlay size={20} className="text-orange" />
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                  <MonitorPlay size={20} className="text-accent" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">{ch.name}</p>
-                  <p className="text-xs text-alabaster/60">YouTube · {fmt(ch.subscriberCount)} subs</p>
+                  <p className="text-sm font-semibold text-primary truncate">{ch.name}</p>
+                  <p className="text-xs text-secondary">YouTube · {fmt(ch.subscriberCount)} subs</p>
                 </div>
               </div>
             ))}
             {personal.steam && (
               <div className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
-                  <Gamepad2 size={20} className="text-orange" />
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                  <Gamepad2 size={20} className="text-accent" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">{personal.steam.username}</p>
-                  <p className="text-xs text-alabaster/60">Steam · ${personal.steam.inventoryValue.toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-primary truncate">{personal.steam.username}</p>
+                  <p className="text-xs text-secondary">Steam · ${personal.steam.inventoryValue.toLocaleString()}</p>
                 </div>
               </div>
             )}
             {personal.artist && (
               <div className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center shrink-0">
-                  <Music size={20} className="text-orange" />
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                  <Music size={20} className="text-accent" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">{personal.artist.name}</p>
-                  <p className="text-xs text-alabaster/60">{fmt(personal.artist.monthlyListeners)} monthly listeners</p>
+                  <p className="text-sm font-semibold text-primary truncate">{personal.artist.name}</p>
+                  <p className="text-xs text-secondary">{fmt(personal.artist.monthlyListeners)} monthly listeners</p>
                 </div>
               </div>
             )}
@@ -146,28 +146,28 @@ export default function DashboardClient() {
           : "flex flex-col gap-4"
       }>
         {!hiddenWidgets.includes('steam') && (
-          <WidgetCard id="steam" title="CS2 Players" icon={Gamepad2} delay={100}>
+          <WidgetCard id="steam" title="CS2 Players" icon={Gamepad2} delay={100} theme="dark">
             {steam ? (
               <div className="text-center py-4">
-                <div className="text-4xl font-bold text-white mb-1">{steam.player_count.toLocaleString()}</div>
-                <div className="text-xs text-alabaster/60">Current Online Players</div>
+                <div className="text-4xl font-bold text-primary mb-1">{steam.player_count.toLocaleString()}</div>
+                <div className="text-xs text-secondary">Current Online Players</div>
               </div>
             ) : (
-              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
             )}
           </WidgetCard>
         )}
         {!hiddenWidgets.includes('youtube') && (
-          <WidgetCard id="youtube" title="YouTube Stats" icon={MonitorPlay} delay={200} className="md:col-span-2 xl:col-span-2">
+          <WidgetCard id="youtube" title="YouTube Stats" icon={MonitorPlay} delay={200} className="md:col-span-2 xl:col-span-2" theme="light">
             {youtube ? (
               <div className="flex flex-col gap-4">
                 <select
-                  className="self-start bg-white/[0.06] text-white text-sm rounded-lg px-3 py-2 border border-white/[0.08] outline-none focus:border-orange/50 transition-colors cursor-pointer"
+                  className="self-start bg-surface-inset text-primary text-sm rounded-lg px-3 py-2 border border-border-subtle outline-none focus:border-accent transition-colors cursor-pointer"
                   value={selectedYoutuber}
                   onChange={(e) => setSelectedYoutuber(e.target.value)}
                 >
                   {Object.keys(youtube).map((name) => (
-                    <option key={name} value={name} className="bg-[#14213d] text-white">{name}</option>
+                    <option key={name} value={name} className="bg-surface-inset text-primary">{name}</option>
                   ))}
                 </select>
                 {youtube[selectedYoutuber] ? (
@@ -177,18 +177,18 @@ export default function DashboardClient() {
                       { label: 'Total Views', value: fmt(youtube[selectedYoutuber].viewCount) },
                       { label: 'Videos', value: youtube[selectedYoutuber].videoCount.toLocaleString() },
                     ].map((stat) => (
-                      <div key={stat.label} className="bg-white/[0.03] p-3 rounded-lg text-center">
-                        <div className="text-xl font-bold text-white">{stat.value}</div>
-                        <div className="text-[11px] text-alabaster/50 mt-0.5">{stat.label}</div>
+                      <div key={stat.label} className="bg-surface-inset p-3 rounded-lg text-center border border-border-subtle">
+                        <div className="text-xl font-bold text-primary">{stat.value}</div>
+                        <div className="text-[11px] text-secondary mt-0.5">{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-alabaster/50 text-center py-4 text-sm">No data for {selectedYoutuber}</div>
+                  <div className="text-muted text-center py-4 text-sm">No data for {selectedYoutuber}</div>
                 )}
               </div>
             ) : (
-              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
             )}
           </WidgetCard>
         )}
@@ -197,40 +197,42 @@ export default function DashboardClient() {
             {music ? (
               <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
                 {music.map((track) => (
-                  <div key={track.rank} className="flex items-center gap-3 bg-white/[0.03] p-2.5 rounded-lg hover:bg-white/[0.06] transition-colors">
-                    <div className="w-6 text-center text-sm font-bold text-alabaster/40">{track.rank}</div>
+                  <div key={track.rank} className="flex items-center gap-3 bg-surface-inset p-2.5 rounded-lg hover:bg-surface-card-hover transition-colors border border-border-subtle">
+                    <div className="w-6 text-center text-sm font-bold text-muted">{track.rank}</div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-white truncate">{track.title}</div>
-                      <div className="text-[11px] text-alabaster/50 truncate">{track.artist}</div>
+                      <div className="text-sm font-medium text-primary truncate">{track.title}</div>
+                      <div className="text-[11px] text-secondary truncate">{track.artist}</div>
                     </div>
-                    <div className="text-xs font-semibold text-orange shrink-0">{fmt(track.totalStreams)}</div>
+                    <div className="text-xs font-semibold text-accent-warm shrink-0">{fmt(track.totalStreams)}</div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
             )}
           </WidgetCard>
         )}
         {!hiddenWidgets.includes('crypto') && (
-          <WidgetCard id="crypto" title="Crypto Markets" icon={Bitcoin} delay={300} className="md:col-span-2 xl:col-span-1">
-            {finance ? (
-              <div className="space-y-2">
+          <WidgetCard id="crypto" title="Crypto Markets" icon={Bitcoin} delay={300} className="md:col-span-2 xl:col-span-1" theme="accent">
+            {finance?.crypto ? (
+              <div className="space-y-4">
                 {[
-                  { symbol: '₿', name: 'Bitcoin', price: finance.crypto.bitcoin.usd },
-                  { symbol: 'Ξ', name: 'Ethereum', price: finance.crypto.ethereum.usd },
+                  { name: 'Bitcoin', symbol: 'BTC', price: finance.crypto.bitcoin.usd },
+                  { name: 'Ethereum', symbol: 'ETH', price: finance.crypto.ethereum.usd },
                 ].map((coin) => (
-                  <div key={coin.name} className="flex items-center justify-between bg-white/[0.03] p-3.5 rounded-lg">
+                  <div key={coin.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-inset border border-border-subtle">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-orange text-sm font-bold">{coin.symbol}</div>
-                      <span className="text-sm font-medium text-white">{coin.name}</span>
+                      <div className="w-8 h-8 rounded-full bg-accent-warm/15 flex items-center justify-center font-bold text-xs text-accent-warm">
+                        {coin.symbol}
+                      </div>
+                      <span className="text-sm font-medium text-primary">{coin.name}</span>
                     </div>
-                    <span className="text-base font-bold text-white">${coin.price.toLocaleString()}</span>
+                    <span className="text-base font-bold text-primary">${coin.price.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
             )}
           </WidgetCard>
         )}
@@ -243,16 +245,16 @@ export default function DashboardClient() {
           <WidgetCard id="politics" title="Election 2026" icon={Landmark} delay={500} className="md:col-span-2 xl:col-span-3">
             {politics ? (
               <div className="flex flex-col gap-4 py-2">
-                <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-lg">
+                <div className="flex justify-between items-center bg-surface-inset p-3 rounded-lg border border-border-subtle">
                   <div className="flex items-center gap-2">
-                    <Users size={16} className="text-orange" />
-                    <span className="text-sm text-alabaster/60">Voter Turnout</span>
+                    <Users size={16} className="text-accent" />
+                    <span className="text-sm text-secondary">Voter Turnout</span>
                   </div>
-                  <span className="text-sm font-bold text-white">{politics.turnoutPercentage}%</span>
+                  <span className="text-sm font-bold text-primary">{politics.turnoutPercentage}%</span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left">
-                    <thead className="text-[11px] text-alabaster/50 uppercase border-b border-white/[0.08]">
+                    <thead className="text-[11px] text-muted uppercase border-b border-border-subtle">
                       <tr>
                         <th className="pb-2 font-medium">Party</th>
                         <th className="pb-2 font-medium text-right">List</th>
@@ -260,13 +262,13 @@ export default function DashboardClient() {
                         <th className="pb-2 font-medium text-right">Total</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/[0.04]">
+                    <tbody className="divide-y divide-border-subtle">
                       {politics.parties.map((party: any) => (
                         <tr key={party.name}>
-                          <td className="py-2.5 font-semibold text-white">{party.name}</td>
-                          <td className="py-2.5 text-right text-alabaster/70">{party.listMandates}</td>
-                          <td className="py-2.5 text-right text-alabaster/70">{party.individualMandates}</td>
-                          <td className="py-2.5 text-right font-bold text-orange">{party.totalMandates}</td>
+                          <td className="py-2.5 font-semibold text-primary">{party.name}</td>
+                          <td className="py-2.5 text-right text-secondary">{party.listMandates}</td>
+                          <td className="py-2.5 text-right text-secondary">{party.individualMandates}</td>
+                          <td className="py-2.5 text-right font-bold text-accent-warm">{party.totalMandates}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -274,7 +276,7 @@ export default function DashboardClient() {
                 </div>
               </div>
             ) : (
-              <div className="text-alabaster/50 text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
             )}
           </WidgetCard>
         )}

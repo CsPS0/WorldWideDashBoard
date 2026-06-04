@@ -18,7 +18,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 const NAV_ITEMS = [
-  { id: 'home', icon: LayoutDashboard, label: 'Overview', path: '/' },
+  { id: 'home', icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
   { id: 'steam', icon: Gamepad2, label: 'Steam', path: '/steam' },
   { id: 'youtube', icon: MonitorPlay, label: 'YouTube', path: '/youtube' },
   { id: 'music', icon: Music, label: 'Music', path: '/music' },
@@ -51,17 +51,17 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const sidebarContent = (
     <>
       <div className="flex items-center justify-between px-4 pt-5 pb-6">
-        <Link href="/" className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-orange/15 flex items-center justify-center shrink-0">
-            <span className="text-orange font-bold text-sm">WD</span>
+        <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
+            <span className="text-accent font-bold text-sm">WD</span>
           </div>
           {!collapsed && (
-            <span className="text-sm font-semibold text-white truncate">World Wide Dashboard</span>
+            <span className="text-sm font-bold text-primary tracking-wide truncate">WorldWideDashBoard</span>
           )}
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden xl:flex items-center justify-center w-6 h-6 rounded text-alabaster/50 hover:text-white transition-colors"
+          className="hidden xl:flex items-center justify-center w-6 h-6 rounded text-muted hover:text-primary transition-colors"
         >
           <ChevronLeft size={14} className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
@@ -76,8 +76,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               onClick={closeMobile}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors ${
                 active
-                  ? 'bg-orange/10 text-orange'
-                  : 'text-alabaster/70 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-accent/10 text-accent'
+                  : 'text-secondary hover:text-primary'
               }`}
               title={collapsed ? item.label : undefined}
             >
@@ -95,8 +95,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               onClick={closeMobile}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors ${
                 isActive('/settings')
-                  ? 'bg-orange/10 text-orange'
-                  : 'text-alabaster/70 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-accent/10 text-accent'
+                  : 'text-secondary hover:text-primary'
               }`}
               title={collapsed ? 'Settings' : undefined}
             >
@@ -104,22 +104,22 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               {!collapsed && <span>Settings</span>}
             </Link>
             <div className={`flex items-center gap-3 px-3 py-2.5 ${collapsed ? 'justify-center' : ''}`}>
-              <div className="w-7 h-7 rounded-full bg-orange/15 flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center shrink-0 overflow-hidden">
                 {user.avatarUrl ? (
                   <img src={user.avatarUrl} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <UserIcon size={14} className="text-orange" />
+                  <UserIcon size={14} className="text-accent" />
                 )}
               </div>
               {!collapsed && (
-                <span className="text-[13px] font-medium text-white truncate flex-1">
+                <span className="text-[13px] font-medium text-primary truncate flex-1">
                   {user.username}
                 </span>
               )}
               {!collapsed && (
                 <button
                   onClick={handleLogout}
-                  className="text-alabaster/40 hover:text-red-400 transition-colors"
+                  className="text-muted hover:text-danger transition-colors"
                   title="Logout"
                 >
                   <LogOut size={15} />
@@ -129,7 +129,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             {collapsed && (
               <button
                 onClick={handleLogout}
-                className="flex items-center justify-center w-full px-3 py-2 text-alabaster/40 hover:text-red-400 transition-colors"
+                className="flex items-center justify-center w-full px-3 py-2 text-muted hover:text-danger transition-colors"
                 title="Logout"
               >
                 <LogOut size={16} />
@@ -140,7 +140,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           <div className={`flex ${collapsed ? 'flex-col' : ''} gap-2 px-1`}>
             <Link
               href="/login"
-              className={`flex items-center justify-center gap-2 bg-orange text-black font-semibold rounded-lg transition-colors hover:bg-orange/90 ${
+              className={`flex items-center justify-center gap-2 bg-accent text-surface-base font-semibold rounded-lg transition-colors hover:bg-accent/90 ${
                 collapsed ? 'w-full p-2' : 'flex-1 py-2 text-[13px]'
               }`}
               title={collapsed ? 'Login' : undefined}
@@ -150,7 +150,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             {!collapsed && (
               <Link
                 href="/signup"
-                className="flex-1 flex items-center justify-center py-2 text-[13px] font-semibold text-white border border-white/10 rounded-lg hover:bg-white/[0.04] transition-colors"
+                className="flex-1 flex items-center justify-center py-2 text-[13px] font-semibold text-primary border border-border-default rounded-lg hover:bg-surface-inset transition-colors"
               >
                 Sign Up
               </Link>
@@ -161,7 +161,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     </>
   );
   return (
-    <div className="flex h-full min-h-screen">
+    <div className="flex h-full min-h-screen bg-surface-base">
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 xl:hidden"
@@ -169,34 +169,34 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         />
       )}
       <aside
-        className={`fixed xl:sticky top-0 left-0 h-screen z-50 flex flex-col border-r border-white/[0.06] bg-[#0a0a0f]/95 backdrop-blur-xl transition-all duration-200 ${
+        className={`fixed xl:sticky top-0 left-0 h-screen z-50 flex flex-col bg-surface-sidebar border-r border-border-subtle transition-all duration-200 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'
         } ${collapsed ? 'w-[68px]' : 'w-60'}`}
       >
         <button
           onClick={() => setMobileOpen(false)}
-          className="absolute top-4 right-4 xl:hidden text-alabaster/50 hover:text-white"
+          className="absolute top-4 right-4 xl:hidden text-muted hover:text-primary"
         >
           <X size={20} />
         </button>
         {sidebarContent}
       </aside>
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 sm:px-6 lg:px-8 h-14 border-b border-white/[0.06] bg-[#0a0a0f]/80 backdrop-blur-lg">
+      <div className="flex-1 min-w-0 flex flex-col bg-surface-base">
+        <header className="sticky top-0 z-30 flex items-center gap-4 px-4 sm:px-6 lg:px-8 h-16 bg-surface-base border-b border-border-subtle">
           <button
             onClick={() => setMobileOpen(true)}
-            className="xl:hidden text-alabaster/70 hover:text-white transition-colors"
+            className="xl:hidden text-secondary hover:text-primary transition-colors"
           >
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-base font-semibold text-white">
+            <h1 className="text-2xl font-bold text-primary">
               {NAV_ITEMS.find((i) => isActive(i.path))?.label ||
                 (pathname === '/settings' ? 'Settings' : 'Dashboard')}
             </h1>
           </div>
-          <div className="ml-auto flex items-center gap-2 text-xs text-alabaster/50">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 status-dot" />
+          <div className="ml-auto flex items-center gap-2 text-sm text-secondary">
+            <span className="w-2 h-2 rounded-full bg-accent status-dot" />
             Live
           </div>
         </header>

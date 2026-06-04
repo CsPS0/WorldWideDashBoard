@@ -17,7 +17,7 @@ export default function SteamPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-10 h-10 border-[3px] border-white/10 border-t-orange rounded-full animate-spin" />
+        <div className="w-10 h-10 border-[3px] border-border-subtle border-t-accent rounded-full animate-spin" />
       </div>
     );
   }
@@ -26,11 +26,11 @@ export default function SteamPage() {
       <WidgetCard id="steam-detail" title="CS2 Live Player Count" icon={Gamepad2} delay={100}>
         {playerCount !== null ? (
           <div className="text-center py-8">
-            <div className="text-6xl font-bold text-white mb-2">{playerCount.toLocaleString()}</div>
-            <div className="text-sm text-alabaster/50">players online right now</div>
+            <div className="text-6xl font-bold text-primary mb-2">{playerCount.toLocaleString()}</div>
+            <div className="text-sm text-secondary">players online right now</div>
           </div>
         ) : (
-          <div className="text-alabaster/50 text-center py-8 text-sm">Data unavailable</div>
+          <div className="text-muted text-center py-8 text-sm">Data unavailable</div>
         )}
       </WidgetCard>
     </div>
