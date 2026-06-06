@@ -21,12 +21,22 @@ export async function GET() {
         username: true,
         avatarUrl: true,
         steamId: true,
+        steamApiKey: true,
+        exophaseUsername: true,
         youtubeHandle: true,
         favoriteArtist: true,
+        lastFmUsername: true,
+        trackerUrlR6: true,
+        trackerUrlRL: true,
+        trackerUrlLoL: true,
+        trackerUrlBF6: true,
+        trackerUrlFortnite: true,
       }
     });
     if (!user) {
-      return NextResponse.json({ user: null }, { status: 200 });
+      const response = NextResponse.json({ user: null }, { status: 200 });
+      response.cookies.delete('auth_token');
+      return response;
     }
     return NextResponse.json({ user });
   } catch (error) {
@@ -46,15 +56,26 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const body = await req.json();
-    const { password, avatarUrl, steamId, youtubeHandle, favoriteArtist } = body;
+    const { 
+      password, avatarUrl, steamId, steamApiKey, exophaseUsername, youtubeHandle, favoriteArtist, lastFmUsername,
+      trackerUrlR6, trackerUrlRL, trackerUrlLoL, trackerUrlBF6, trackerUrlFortnite 
+    } = body;
     const updateData: Record<string, string | null> = {};
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
     if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl === '' ? null : avatarUrl;
     if (steamId !== undefined) updateData.steamId = steamId === '' ? null : steamId;
+    if (steamApiKey !== undefined) updateData.steamApiKey = steamApiKey === '' ? null : steamApiKey;
+    if (exophaseUsername !== undefined) updateData.exophaseUsername = exophaseUsername === '' ? null : exophaseUsername;
     if (youtubeHandle !== undefined) updateData.youtubeHandle = youtubeHandle === '' ? null : youtubeHandle;
     if (favoriteArtist !== undefined) updateData.favoriteArtist = favoriteArtist === '' ? null : favoriteArtist;
+    if (lastFmUsername !== undefined) updateData.lastFmUsername = lastFmUsername === '' ? null : lastFmUsername;
+    if (trackerUrlR6 !== undefined) updateData.trackerUrlR6 = trackerUrlR6 === '' ? null : trackerUrlR6;
+    if (trackerUrlRL !== undefined) updateData.trackerUrlRL = trackerUrlRL === '' ? null : trackerUrlRL;
+    if (trackerUrlLoL !== undefined) updateData.trackerUrlLoL = trackerUrlLoL === '' ? null : trackerUrlLoL;
+    if (trackerUrlBF6 !== undefined) updateData.trackerUrlBF6 = trackerUrlBF6 === '' ? null : trackerUrlBF6;
+    if (trackerUrlFortnite !== undefined) updateData.trackerUrlFortnite = trackerUrlFortnite === '' ? null : trackerUrlFortnite;
     const updatedUser = await prisma.user.update({
       where: { id: payload.id as string },
       data: updateData,
@@ -63,8 +84,15 @@ export async function PUT(req: Request) {
         username: true,
         avatarUrl: true,
         steamId: true,
+        exophaseUsername: true,
         youtubeHandle: true,
         favoriteArtist: true,
+        lastFmUsername: true,
+        trackerUrlR6: true,
+        trackerUrlRL: true,
+        trackerUrlLoL: true,
+        trackerUrlBF6: true,
+        trackerUrlFortnite: true,
       }
     });
     return NextResponse.json({ success: true, user: updatedUser });

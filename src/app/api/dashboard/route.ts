@@ -5,20 +5,34 @@ import { YouTubeProvider } from '@/lib/providers/YouTubeProvider';
 import { FinanceProvider } from '@/lib/providers/FinanceProvider';
 import { PoliticsProvider } from '@/lib/providers/PoliticsProvider';
 import { MusicProvider } from '@/lib/providers/MusicProvider';
+import { TRNProvider } from '@/lib/providers/TRNProvider';
+import { LastFmPersonalProvider } from '@/lib/providers/LastFmPersonalProvider';
+import { SteamPersonalProvider } from '@/lib/providers/SteamPersonalProvider';
+import { ExophaseProvider } from '@/lib/providers/ExophaseProvider';
+import { SteamTopGamesProvider } from '@/lib/providers/SteamTopGamesProvider';
+import { YouTubePersonalProvider } from '@/lib/providers/YouTubePersonalProvider';
 export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const musicCountry = url.searchParams.get('music_country') || 'Global';
     const manager = new DashboardManager();
-    manager.registerProvider(new SteamProvider(730)); 
+    manager.registerProvider(new SteamTopGamesProvider());
+    manager.registerProvider(new SteamProvider([0, 730, 570, 359550, 386940])); 
     manager.registerProvider(new YouTubeProvider([
       { name: 'MrBeast', id: 'UCX6OQ3DkcsbYNE6H8uQQuVA' },
-      { name: 'Pearoo', id: 'UCsBw4YIB40Zpiw4yVIqxtbg' },
-      { name: 'chewiebutbetter', id: 'UCQ-A-kiSu1ADgUrJ58d4G0A' },
-      { name: 'TheVR', id: 'UCrpWCVp9FuGA8OnGtA0rgsw' },
-      { name: 'Nessaj', id: 'UCcSAt9uIqRHK8dEV2wVY1dQ' }
+      { name: 'T-Series', id: 'UCq-Fj5jknLsUf-MWSy4_brA' },
+      { name: 'Cocomelon - Nursery Rhymes', id: 'UCbCmjCuTUZos6Inko4u57UQ' },
+      { name: 'SET India', id: 'UCpEhnqL0y41EpW2TvWAHD7Q' },
+      { name: '✿ Kids Diana Show', id: 'UCk8GzjMOrta8yxDcKfylJYw' },
+      { name: 'PewDiePie', id: 'UC-lHJZR3Gqxm24_Vd_AJ5Yw' },
+      { name: 'Like Nastya', id: 'UCJplp5SjeGSdVdwsfb9Q7lQ' },
+      { name: 'Vlad and Niki', id: 'UCvlE5gTbOvjiolFlEm-c_Ow' },
+      { name: 'Zee Music Company', id: 'UCFFbwnve3yF62-tVXkTyHqg' },
+      { name: 'WWE', id: 'UCJ5v_MCY6GNUBTO8-D3XoAg' }
     ]));
     manager.registerProvider(new FinanceProvider());
     manager.registerProvider(new PoliticsProvider());
-    manager.registerProvider(new MusicProvider());
+    manager.registerProvider(new MusicProvider(musicCountry));
     const data = await manager.fetchAllData();
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();
@@ -36,60 +50,42 @@ export async function GET(req: Request) {
           if (user.youtubeHandle) {
             try {
               let ytId = user.youtubeHandle;
-              let ytDisplayName = ytId;
               const handleMatch = ytId.match(/youtube\.com\/@([^/?]+)/);
               const channelMatch = ytId.match(/youtube\.com\/channel\/(UC[^/?]+)/);
               if (channelMatch) {
                 ytId = channelMatch[1];
-                ytDisplayName = ytId;
               } else if (handleMatch) {
-                ytDisplayName = handleMatch[1];
                 ytId = handleMatch[1];
               }
-              const apiKey = process.env.YOUTUBE_API_KEY;
-              if (apiKey && apiKey !== 'your_youtube_api_key_here' && !ytId.startsWith('UC')) {
-                const handleRes = await fetch(
-                  `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&forHandle=${ytId}&key=${apiKey}`
-                );
-                if (handleRes.ok) {
-                  const handleData = await handleRes.json();
-                  if (handleData.items?.[0]) {
-                    const item = handleData.items[0];
-                    const stats = item.statistics;
-                    personalData.youtube = {
-                      [ytDisplayName]: {
-                        name: item.snippet?.title || ytDisplayName,
-                        subscriberCount: parseInt(stats.subscriberCount, 10),
-                        viewCount: parseInt(stats.viewCount, 10),
-                        videoCount: parseInt(stats.videoCount, 10),
-                      }
-                    };
-                  }
-                }
+              const personalYt = new YouTubePersonalProvider(ytId);
+              const ytData = await personalYt.fetchData();
+              if (ytData) {
+                personalData.youtube = { [ytData.name]: ytData };
               }
-              if (!personalData.youtube) {
-                const personalYt = new YouTubeProvider([{ name: ytDisplayName, id: ytId }]);
-                personalData.youtube = await personalYt.fetchData();
-              }
-            } catch {
+            } catch (e) {
+              console.error('Failed to fetch personal YouTube', e);
             }
           }
           if (user.steamId) {
             try {
-              let steamName = user.steamId;
-              const vanityMatch = steamName.match(/steamcommunity\.com\/id\/([^/?]+)/);
-              const profileMatch = steamName.match(/steamcommunity\.com\/profiles\/(\d+)/);
-              if (vanityMatch) {
-                steamName = vanityMatch[1];
-              } else if (profileMatch) {
-                steamName = profileMatch[1];
+              const steamPersonal = new SteamPersonalProvider(user.steamId);
+              const steamData = await steamPersonal.fetchData();
+              if (steamData) {
+                personalData.steam = steamData;
               }
-              personalData.steam = {
-                username: steamName,
-                inventoryValue: Math.floor(Math.random() * 5000) + 100,
-                hoursPlayed: Math.floor(Math.random() * 3000) + 500,
-              };
-            } catch {
+            } catch (e) {
+              console.error('Failed to fetch Steam Personal Data', e);
+            }
+          }
+          if (user.exophaseUsername) {
+            try {
+              const exophase = new ExophaseProvider(user.exophaseUsername);
+              const exoData = await exophase.fetchData();
+              if (exoData) {
+                data['exophase_stats'] = exoData;
+              }
+            } catch (e) {
+              console.error('Failed to fetch Exophase Data', e);
             }
           }
           if (user.favoriteArtist) {
@@ -104,6 +100,62 @@ export async function GET(req: Request) {
                 monthlyListeners: Math.floor(Math.random() * 50000000) + 1000000,
               };
             } catch {
+            }
+          }
+          if (user.trackerUrlR6 || user.trackerUrlRL || user.trackerUrlLoL || user.trackerUrlBF6 || user.trackerUrlFortnite) {
+            try {
+              const trnUrls = {
+                r6: user.trackerUrlR6,
+                rl: user.trackerUrlRL,
+                lol: user.trackerUrlLoL,
+                bf2042: user.trackerUrlBF6,
+                fortnite: user.trackerUrlFortnite
+              };
+              const trn = new TRNProvider(trnUrls);
+              const trnData = await trn.fetchData();
+              if (trnData) {
+                data['trn_gaming'] = trnData;
+              }
+            } catch (e) {
+              console.error('Failed to fetch TRN Data', e);
+            }
+          }
+          if (user.steamId) {
+            try {
+              const steamPersonal = new SteamPersonalProvider(user.steamId, user.steamApiKey);
+              const steamPersonalData = await steamPersonal.fetchData();
+              if (steamPersonalData) {
+                data['steam_personal'] = steamPersonalData;
+              }
+            } catch (e) {
+              console.error('Failed to fetch Steam Personal Data', e);
+            }
+          }
+          let lastFmUsername = user.lastFmUsername;
+          if (!lastFmUsername) {
+            try {
+              const rawUser: any = await prisma.$queryRaw`SELECT lastFmUsername FROM User WHERE id = ${payload.id}`;
+              if (rawUser && rawUser.length > 0) {
+                lastFmUsername = rawUser[0].lastFmUsername;
+              }
+            } catch (e) {
+              console.error('Raw query failed', e);
+            }
+          }
+          if (lastFmUsername) {
+            try {
+              let parsedUsername = lastFmUsername;
+              const match = lastFmUsername.match(/last\.fm\/user\/([^/?]+)/);
+              if (match) {
+                parsedUsername = match[1];
+              }
+              const lastFm = new LastFmPersonalProvider(parsedUsername);
+              const lastFmData = await lastFm.fetchData();
+              if (lastFmData) {
+                data['lastfm_personal'] = lastFmData;
+              }
+            } catch (e) {
+              console.error('Failed to fetch Last.fm Data', e);
             }
           }
           if (Object.keys(personalData).length > 0) {

@@ -24,7 +24,7 @@ export default function SignupPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        window.location.href = '/dashboard';
+        window.location.href = '/overview';
       } else {
         setError(data.error || 'Sign up failed');
       }

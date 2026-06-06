@@ -62,12 +62,38 @@ classDiagram
         +getExchangeRates() any
     }
 
+    class MusicProvider {
+        -String defaultCountry
+        +fetchData() Promise~any~
+    }
+
+    class TRNProvider {
+        -String trnApiKey
+        +fetchData() Promise~any~
+    }
+
+    class ExophaseProvider {
+        -String username
+        +fetchData() Promise~any~
+    }
+
+    class PersonalProviders {
+        <<group>>
+        SteamPersonalProvider
+        LastFmPersonalProvider
+        YouTubePersonalProvider
+    }
+
 
     IDataSource <|.. BaseDataSource : Megvalósítja (Realization)
     DashboardManager "1" o-- "*" IDataSource : Aggregál (1-to-Many)
     
-    BaseDataSource <|-- SteamProvider : Öröklődés (Inheritance)
-    BaseDataSource <|-- YouTubeProvider : Öröklődés (Inheritance)
-    BaseDataSource <|-- PoliticsProvider : Öröklődés (Inheritance)
-    BaseDataSource <|-- FinanceProvider : Öröklődés (Inheritance)
+    BaseDataSource <|-- SteamProvider : Öröklődés
+    BaseDataSource <|-- YouTubeProvider : Öröklődés
+    BaseDataSource <|-- PoliticsProvider : Öröklődés
+    BaseDataSource <|-- FinanceProvider : Öröklődés
+    BaseDataSource <|-- MusicProvider : Öröklődés
+    BaseDataSource <|-- TRNProvider : Öröklődés
+    BaseDataSource <|-- ExophaseProvider : Öröklődés
+    BaseDataSource <|-- PersonalProviders : Öröklődés
 ```

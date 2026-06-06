@@ -3,9 +3,7 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 async function main() {
   const users = [
-    { username: 'csps', password: 'mockpassword123' },
-    { username: 'dr_captain_c', password: 'mockpassword456' },
-    { username: 'ricsko0428', password: 'mockpassword789' },
+    { username: 'csps', password: 'mockpassword123' }
   ];
   for (const user of users) {
     const existingUser = await prisma.user.findUnique({

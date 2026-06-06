@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { WidgetCard } from '../components/WidgetCard';
 import { Bitcoin } from 'lucide-react';
+import CryptoChart from '../components/CryptoChart';
+import HawkIcon from '../components/HawkIcon';
 export default function CryptoPage() {
   const [finance, setFinance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -21,34 +23,37 @@ export default function CryptoPage() {
       </div>
     );
   }
+  const cryptoCoins = finance?.crypto ? [
+    { key: 'bitcoin', name: 'Bitcoin', symbol: 'BTC', icon: '₿', data: finance.crypto.bitcoin },
+    { key: 'ethereum', name: 'Ethereum', symbol: 'ETH', icon: 'Ξ', data: finance.crypto.ethereum },
+    { key: 'solana', name: 'Solana', symbol: 'SOL', icon: '◎', data: finance.crypto.solana },
+    { key: 'binancecoin', name: 'Binance Coin', symbol: 'BNB', icon: 'BNB', data: finance.crypto.binancecoin },
+    { key: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: 'Ð', data: finance.crypto.dogecoin },
+    { key: 'hawkTuah', name: 'Hawk Tuah', symbol: 'HAWK', icon: <HawkIcon width={32} height={32} />, data: finance.crypto.hawkTuah },
+  ] : [];
   return (
-    <div className="w-full">
-      <h2 className="text-2xl font-bold text-primary mb-6">Crypto Markets</h2>
-      <WidgetCard id="crypto" title="Cryptocurrency Dashboard" icon={Bitcoin} delay={100} className="w-full max-w-4xl">
+    <div className="w-full space-y-6">
+      <WidgetCard id="crypto-chart" title="Crypto Markets Overview" icon={Bitcoin} delay={100} className="w-full">
+        <div className="p-4">
+          <CryptoChart height={350} />
+        </div>
+      </WidgetCard>
+      <WidgetCard id="crypto-grid" title="Live Prices" icon={Bitcoin} delay={200} className="w-full">
         {finance ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 p-6">
-            <div className="flex flex-col gap-4 bg-surface-inset border border-border-subtle p-8 rounded-2xl">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-full bg-accent-warm/15 flex items-center justify-center text-accent-warm text-3xl font-bold">₿</div>
-                <div>
-                  <h3 className="text-2xl font-bold text-primary">Bitcoin</h3>
-                  <span className="text-secondary">BTC</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+            {cryptoCoins.map((coin) => (
+              <div key={coin.key} className="flex flex-col gap-3 bg-surface-inset border border-border-subtle p-6 rounded-2xl hover:bg-surface-card-hover transition-colors shadow-sm">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-14 h-14 rounded-full bg-accent-warm/15 flex items-center justify-center text-accent-warm text-2xl font-bold">{coin.icon}</div>
+                  <div>
+                    <h3 className="text-xl font-bold text-primary">{coin.name}</h3>
+                    <span className="text-secondary font-medium">{coin.symbol}</span>
+                  </div>
                 </div>
+                <div className="text-3xl font-bold text-primary">${coin.data?.usd?.toLocaleString(undefined, { minimumFractionDigits: coin.data.usd < 1 ? 4 : 2, maximumFractionDigits: coin.data.usd < 1 ? 4 : 2 })}</div>
+                <div className="text-lg text-secondary">€{coin.data?.eur?.toLocaleString(undefined, { minimumFractionDigits: coin.data.eur < 1 ? 4 : 2, maximumFractionDigits: coin.data.eur < 1 ? 4 : 2 })}</div>
               </div>
-              <div className="text-5xl font-bold text-primary mb-2">${finance.crypto.bitcoin.usd.toLocaleString()}</div>
-              <div className="text-xl text-secondary">€{finance.crypto.bitcoin.eur.toLocaleString()}</div>
-            </div>
-            <div className="flex flex-col gap-4 bg-surface-inset border border-border-subtle p-8 rounded-2xl">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-full bg-accent-warm/15 flex items-center justify-center text-accent-warm text-3xl font-bold">Ξ</div>
-                <div>
-                  <h3 className="text-2xl font-bold text-primary">Ethereum</h3>
-                  <span className="text-secondary">ETH</span>
-                </div>
-              </div>
-              <div className="text-5xl font-bold text-primary mb-2">${finance.crypto.ethereum.usd.toLocaleString()}</div>
-              <div className="text-xl text-secondary">€{finance.crypto.ethereum.eur.toLocaleString()}</div>
-            </div>
+            ))}
           </div>
         ) : (
           <div className="text-muted text-center py-12">Data unavailable</div>

@@ -26,8 +26,16 @@ export default function SettingsPage() {
   const [avatarDirty, setAvatarDirty] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [steamId, setSteamId] = useState('');
+  const [steamApiKey, setSteamApiKey] = useState('');
+  const [exophaseUsername, setExophaseUsername] = useState('');
   const [youtubeHandle, setYoutubeHandle] = useState('');
   const [favoriteArtist, setFavoriteArtist] = useState('');
+  const [lastFmUsername, setLastFmUsername] = useState('');
+  const [trackerUrlR6, setTrackerUrlR6] = useState('');
+  const [trackerUrlRL, setTrackerUrlRL] = useState('');
+  const [trackerUrlLoL, setTrackerUrlLoL] = useState('');
+  const [trackerUrlBF6, setTrackerUrlBF6] = useState('');
+  const [trackerUrlFortnite, setTrackerUrlFortnite] = useState('');
   const [dashboardStyle, setDashboardStyle] = useState('grid');
   const [hiddenWidgets, setHiddenWidgets] = useState<string[]>([]);
   const widgets = [
@@ -46,8 +54,16 @@ export default function SettingsPage() {
           setUser(data.user);
           setAvatarUrl(data.user.avatarUrl || null);
           setSteamId(data.user.steamId || '');
+          setSteamApiKey(data.user.steamApiKey || '');
+          setExophaseUsername(data.user.exophaseUsername || '');
           setYoutubeHandle(data.user.youtubeHandle || '');
           setFavoriteArtist(data.user.favoriteArtist || '');
+          setLastFmUsername(data.user.lastFmUsername || '');
+          setTrackerUrlR6(data.user.trackerUrlR6 || '');
+          setTrackerUrlRL(data.user.trackerUrlRL || '');
+          setTrackerUrlLoL(data.user.trackerUrlLoL || '');
+          setTrackerUrlBF6(data.user.trackerUrlBF6 || '');
+          setTrackerUrlFortnite(data.user.trackerUrlFortnite || '');
         }
       })
       .catch(() => {});
@@ -101,7 +117,19 @@ export default function SettingsPage() {
         const res = await fetch('/api/auth/me', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ steamId, youtubeHandle, favoriteArtist }),
+          body: JSON.stringify({ 
+            steamId, 
+            steamApiKey,
+            exophaseUsername, 
+            youtubeHandle, 
+            favoriteArtist, 
+            lastFmUsername,
+            trackerUrlR6,
+            trackerUrlRL,
+            trackerUrlLoL,
+            trackerUrlBF6,
+            trackerUrlFortnite
+          }),
         });
         if (res.ok) {
           setMessage({ type: 'success', text: 'Integrations saved.' });
@@ -277,6 +305,44 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                <Lock size={13} /> Steam Web API Key
+              </label>
+              <input
+                type="password"
+                value={steamApiKey}
+                onChange={(e) => setSteamApiKey(e.target.value)}
+                placeholder="Optional. Required for exact game count and hours"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+              />
+              <p className="text-[11px] text-muted">Get one for free at https://steamcommunity.com/dev/apikey</p>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                <Gamepad2 size={13} /> Exophase Username
+              </label>
+              <input
+                type="text"
+                value={exophaseUsername}
+                onChange={(e) => setExophaseUsername(e.target.value)}
+                placeholder="e.g. CsPS"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                <Music size={13} /> Last.fm Profile URL
+              </label>
+              <input
+                type="url"
+                value={lastFmUsername}
+                onChange={(e) => setLastFmUsername(e.target.value)}
+                placeholder="https://www.last.fm/user/CsPS0"
+                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+              />
+              <p className="text-[11px] text-muted">e.g. https://www.last.fm/user/yourname</p>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <MonitorPlay size={13} /> YouTube Channel URL
               </label>
               <input
@@ -301,37 +367,89 @@ export default function SettingsPage() {
               />
               <p className="text-[11px] text-muted">Open the artist on Spotify, click Share → Copy link, and paste it here.</p>
             </div>
+            <div className="pt-6 border-t border-border-subtle mt-6 space-y-5">
+              <h3 className="text-primary font-bold tracking-wide">TRN TRACKER.GG</h3>
+              <p className="text-sm text-secondary -mt-3">Provide the full URL to your specific game profiles on tracker.gg</p>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <Gamepad2 size={13} /> R6 Siege Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={trackerUrlR6}
+                  onChange={(e) => setTrackerUrlR6(e.target.value)}
+                  placeholder="https://tracker.gg/r6siege/profile/uplay/yourname/overview"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <Gamepad2 size={13} /> Rocket League Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={trackerUrlRL}
+                  onChange={(e) => setTrackerUrlRL(e.target.value)}
+                  placeholder="https://rocketleague.tracker.network/rocket-league/profile/epic/yourname/overview"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <Gamepad2 size={13} /> League of Legends Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={trackerUrlLoL}
+                  onChange={(e) => setTrackerUrlLoL(e.target.value)}
+                  placeholder="https://tracker.gg/lol/profile/riot/NA/yourname%23TAG/overview"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <Gamepad2 size={13} /> Battlefield 6 Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={trackerUrlBF6}
+                  onChange={(e) => setTrackerUrlBF6(e.target.value)}
+                  placeholder="https://tracker.gg/bf2042/profile/origin/yourname/overview"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                  <Gamepad2 size={13} /> Fortnite Profile URL
+                </label>
+                <input
+                  type="url"
+                  value={trackerUrlFortnite}
+                  onChange={(e) => setTrackerUrlFortnite(e.target.value)}
+                  placeholder="https://fortnitetracker.com/profile/all/yourname"
+                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                />
+              </div>
+            </div>
           </div>
         )}
         {activeTab === 'dashboard' && (
           <div className="space-y-6">
-            <div>
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Layout</label>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { id: 'grid', label: 'Grid', icon: LayoutGrid },
-                  { id: 'stacked', label: 'Stacked', icon: List },
-                ].map((opt) => (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setDashboardStyle(opt.id)}
-                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors ${
-                      dashboardStyle === opt.id
-                        ? 'border-accent bg-accent/10'
-                        : 'border-border-default bg-surface-inset hover:border-border-subtle'
-                    }`}
-                  >
-                    <opt.icon size={24} className={dashboardStyle === opt.id ? 'text-accent' : 'text-secondary'} />
-                    <span className={`text-sm font-medium ${dashboardStyle === opt.id ? 'text-primary' : 'text-secondary'}`}>
-                      {opt.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
+            <div className="mb-6">
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Dashboard Layout Options</label>
+              <label className="flex items-center gap-3 bg-surface-inset px-3 py-2.5 rounded-lg cursor-pointer hover:bg-surface-card-hover transition-colors w-fit border border-border-subtle">
+                <input
+                  type="checkbox"
+                  checked={dashboardStyle === 'compact'}
+                  onChange={(e) => setDashboardStyle(e.target.checked ? 'compact' : 'grid')}
+                  className="w-4 h-4 accent-accent rounded cursor-pointer"
+                />
+                <span className={`text-sm font-semibold ${dashboardStyle === 'compact' ? 'text-primary' : 'text-secondary'}`}>Enable Compact Cards</span>
+              </label>
+              <p className="text-xs text-muted mt-2">When disabled, cards stretch to fill the entire screen width.</p>
             </div>
             <div>
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Visible Widgets</label>
+              <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Visible Highlight Cards (Overview)</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {widgets.map((w) => {
                   const visible = !hiddenWidgets.includes(w.id);

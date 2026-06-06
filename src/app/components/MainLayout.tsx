@@ -14,13 +14,15 @@ import {
   Menu,
   X,
   ChevronLeft,
+  Lock,
+  BarChart2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 const NAV_ITEMS = [
-  { id: 'home', icon: LayoutDashboard, label: 'Overview', path: '/dashboard' },
-  { id: 'steam', icon: Gamepad2, label: 'Steam', path: '/steam' },
-  { id: 'youtube', icon: MonitorPlay, label: 'YouTube', path: '/youtube' },
+  { id: 'home', icon: LayoutDashboard, label: 'Overview', path: '/overview' },
+  { id: 'steam', icon: Gamepad2, label: 'Gaming', path: '/gaming' },
+  { id: 'youtube', icon: MonitorPlay, label: 'Entertainment', path: '/entertainment' },
   { id: 'music', icon: Music, label: 'Music', path: '/music' },
   { id: 'crypto', icon: Bitcoin, label: 'Crypto', path: '/crypto' },
   { id: 'exchange', icon: TrendingUp, label: 'Exchange', path: '/exchange' },
@@ -29,8 +31,24 @@ const NAV_ITEMS = [
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<{ id: string; username: string; avatarUrl?: string | null } | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [apiStatuses, setApiStatuses] = useState<any[]>([]);
+  const [showLockWarning, setShowLockWarning] = useState(false);
   const pathname = usePathname();
+  useEffect(() => {
+    fetch('/api/dashboard')
+      .then(res => res.json())
+      .then(data => {
+        if (data.system_status) {
+          const statuses: any[] = Object.values(data.system_status);
+          statuses.push({ id: 'crypto', name: 'Crypto (CoinGecko)', isMock: false, category: 'Finance' });
+          statuses.push({ id: 'hawk-tuah', name: 'Hawk Tuah Coin', isMock: true, category: 'Finance' });
+          setApiStatuses(statuses);
+        }
+      })
+      .catch(() => {});
+  }, []);
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
@@ -51,24 +69,44 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const sidebarContent = (
     <>
       <div className="flex items-center justify-between px-4 pt-5 pb-6">
-        <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center shrink-0">
-            <span className="text-accent font-bold text-sm">WD</span>
-          </div>
+        <Link href={user ? '/overview' : '/'} className="flex items-center gap-2.5 min-w-0">
           {!collapsed && (
-            <span className="text-sm font-bold text-primary tracking-wide truncate">WorldWideDashBoard</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-accent to-accent-warm rounded-lg flex items-center justify-center transform rotate-3 shrink-0">
+              <BarChart2 size={18} className="text-surface-base transform -rotate-3" />
+            </div>
+          )}
+          {!collapsed && (
+            <span className="text-sm font-bold text-primary tracking-wide truncate">WorldWideDB</span>
           )}
         </Link>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden xl:flex items-center justify-center w-6 h-6 rounded text-muted hover:text-primary transition-colors"
+          className="hidden xl:flex items-center justify-center w-7 h-7 rounded-full bg-surface-inset border border-border-subtle shadow-sm text-secondary hover:text-accent hover:border-accent/30 hover:bg-accent/10 transition-all duration-300 group"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <ChevronLeft size={14} className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+          <ChevronLeft size={14} className={`transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-x-0.5 ${collapsed ? 'rotate-180 group-hover:translate-x-0.5' : ''}`} />
         </button>
       </div>
       <nav className="flex-1 px-3 space-y-0.5">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.path);
+          const isLocked = !user && item.id !== 'home';
+          if (isLocked) {
+            return (
+              <button
+                key={item.id}
+                onClick={(e) => { e.preventDefault(); setShowLockWarning(true); }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors text-muted hover:text-secondary hover:bg-surface-inset`}
+                title={collapsed ? item.label : undefined}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon size={18} className="shrink-0 opacity-50" />
+                  {!collapsed && <span className="opacity-70">{item.label}</span>}
+                </div>
+                {!collapsed && <Lock size={14} className="opacity-50 text-secondary" />}
+              </button>
+            );
+          }
           return (
             <Link
               key={item.id}
@@ -195,15 +233,88 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 (pathname === '/settings' ? 'Settings' : 'Dashboard')}
             </h1>
           </div>
-          <div className="ml-auto flex items-center gap-2 text-sm text-secondary">
-            <span className="w-2 h-2 rounded-full bg-accent status-dot" />
-            Live
+          <div className="ml-auto relative">
+            <button 
+              onClick={() => setStatusOpen(!statusOpen)}
+              className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors cursor-pointer outline-none bg-surface-inset px-3 py-1.5 rounded-full border border-border-subtle hover:border-accent/50"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <span className="w-2 h-2 rounded-full bg-accent status-dot" />
+              Live
+            </button>
+            {statusOpen && (
+              <div className="absolute right-0 top-full mt-3 w-72 glass-card bg-[#1a1a1a] border border-[#292929] rounded-xl shadow-2xl p-5 z-50 animate-slideUp">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="text-sm font-bold text-primary">System Status</h4>
+                  <button onClick={() => setStatusOpen(false)} className="text-secondary hover:text-primary transition-colors"><X size={16}/></button>
+                </div>
+                <div className="flex flex-col gap-3 text-xs font-medium">
+                  {apiStatuses.filter(s => !s.isMock).map(s => (
+                    <div key={s.id} className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2">
+                        {s.category === 'Games' || s.category === 'Gaming' ? <Gamepad2 size={14}/> :
+                         s.category === 'Entertainment' ? <MonitorPlay size={14}/> :
+                         s.category === 'Music' ? <Music size={14}/> :
+                         s.category === 'Finance' || s.category === 'Exchange' || s.id === 'crypto' ? <Bitcoin size={14}/> :
+                         <Landmark size={14}/>}
+                        {s.name}
+                      </span>
+                      <span className="text-accent font-bold">Live</span>
+                    </div>
+                  ))}
+                  {apiStatuses.filter(s => s.isMock).length > 0 && apiStatuses.filter(s => !s.isMock).length > 0 && (
+                    <div className="h-px w-full bg-[#292929] my-1"></div>
+                  )}
+                  {apiStatuses.filter(s => s.isMock).map(s => (
+                    <div key={s.id} className="flex justify-between items-center">
+                      <span className="text-secondary flex items-center gap-2">
+                        {s.category === 'Games' || s.category === 'Gaming' ? <Gamepad2 size={14}/> :
+                         s.category === 'Entertainment' ? <MonitorPlay size={14}/> :
+                         s.category === 'Music' ? <Music size={14}/> :
+                         s.category === 'Finance' || s.category === 'Exchange' || s.id === 'hawk-tuah' ? <Bitcoin size={14}/> :
+                         <Landmark size={14}/>}
+                        {s.name}
+                      </span>
+                      <span className="text-yellow-500 font-bold">Mock Data</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </header>
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>
+      {showLockWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <div className="bg-surface-base border border-border-default rounded-xl shadow-2xl p-6 max-w-sm w-full text-center">
+            <div className="w-12 h-12 rounded-full bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
+              <Lock size={24} />
+            </div>
+            <h3 className="text-xl font-bold text-primary mb-2">Login Required</h3>
+            <p className="text-secondary mb-6 text-sm">
+              You need to be logged in to access this section and view personalized statistics.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowLockWarning(false)}
+                className="flex-1 px-4 py-2 rounded-lg font-bold text-sm bg-surface-inset text-primary hover:bg-border-subtle transition-colors"
+              >
+                Close
+              </button>
+              <Link 
+                href="/login"
+                onClick={() => setShowLockWarning(false)}
+                className="flex-1 px-4 py-2 rounded-lg font-bold text-sm bg-accent text-surface-base hover:bg-accent-warm transition-colors"
+              >
+                Log In
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

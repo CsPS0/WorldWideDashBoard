@@ -18,7 +18,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        window.location.href = '/dashboard';
+        window.location.href = '/overview';
       } else {
         setError(data.error || 'Login failed');
       }

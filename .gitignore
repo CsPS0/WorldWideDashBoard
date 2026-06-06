@@ -56,5 +56,13 @@ next-env.d.ts
 /src/generated/prisma
 
 # .NET Tests
+tests/Dashboard.Tests/bin/
+tests/Dashboard.Tests/obj/
 Dashboard.Tests/bin/
 Dashboard.Tests/obj/
+
+# custom ignores
+TODO.md
+clean_users.js
+search.js
+exophase_test.html

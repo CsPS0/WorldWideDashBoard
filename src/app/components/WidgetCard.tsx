@@ -24,24 +24,9 @@ export function WidgetCard({ title, icon: Icon, children, delay = 0, className =
       });
     }
   }, [delay]);
-
-  let themeClasses = 'bg-surface-card border-border-subtle text-primary';
-  let iconBg = 'bg-accent/15 text-accent';
-  let titleColor = 'text-primary';
-
-  if (theme === 'dark') {
-    themeClasses = '!bg-surface-inset !border-accent/20 text-primary glow-accent';
-    iconBg = 'bg-accent/10 text-accent';
-    titleColor = 'text-primary';
-  } else if (theme === 'accent') {
-    themeClasses = 'gradient-border text-primary';
-    iconBg = 'bg-accent-warm/15 text-accent-warm';
-    titleColor = 'text-primary';
-  } else if (theme === 'light') {
-    themeClasses = '!bg-surface-card !border-border-default text-primary';
-    titleColor = 'text-primary';
-  }
-
+  const themeClasses = 'bg-[#1a1a1a] border-[#292929] border text-primary';
+  const iconBg = 'bg-accent/15 text-accent';
+  const titleColor = 'text-primary';
   return (
     <div id={id} ref={cardRef} className={`glass-card p-6 flex flex-col h-full opacity-0 scroll-mt-24 ${themeClasses} ${className}`}>
       <div className="flex items-center gap-3 mb-4">

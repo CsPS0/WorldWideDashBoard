@@ -6,14 +6,19 @@ A **World Wide Dashboard** egy központi felület, ahol a legfontosabb globális
 ## A Kezdőképernyő Használata
 A weboldal megnyitása után a főoldalon találod a különböző adatmodulokat (widgeteket), melyek egy elegáns, sötét témájú, üveghatású (glassmorphism) felületen jelennek meg:
 
-- **Játékok (Games):** A Steam aktuális játékosszámait követheted nyomon (pl. Counter-Strike 2 élő statisztikái).
+- **Játékok (Games):** A Steam aktuális játékosszámait követheted nyomon (globális statisztikák). Ha megadod a Steam azonosítódat, a saját Last Played adataidat is láthatod! Támogatja a Tracker.gg és az Exophase fiókok bekötését is cross-platform statisztikákhoz.
 - **Videó & Zene (Media):** 
-  - **YouTube Stats:** Választhatsz a legnépszerűbb tartalomgyártók közül (pl. MrBeast, TheVR, Nessaj) egy legördülő menü segítségével, hogy lásd az élő feliratkozóikat, nézettségüket és videóik számát.
-  - **Global Top 10 Music:** Egy összesített globális zenei toplista, ami a Spotify és a SoundCloud streamek alapján rangsorolja a világ legnépszerűbb dalait.
-- **Pénzügy (Finance):** Kriptovaluták (Bitcoin, Ethereum) aktuális dollár és euró árfolyama, valamint a valós idejű EUR/HUF devizaárfolyamok.
-- **Politika (Politics):** A 2026-os magyar országgyűlési választásokkal kapcsolatos statisztikák (részvételi arány, feldolgozottság).
+  - **YouTube Stats:** Választhatsz a legnépszerűbb tartalomgyártók közül, de beállíthatod a saját YouTube csatornádat is.
+  - **Zene:** Globális toplisták követése (Spotify/SoundCloud/Last.fm alapon), illetve a saját "Most játszott" (Now Playing) Last.fm profilod összekötése.
+- **Pénzügy (Finance):** Kriptovaluták (Bitcoin, Ethereum, Hawk Tuah Coin) aktuális dollár és euró árfolyama, valamint a valós idejű EUR/HUF devizaárfolyamok.
+- **Politika (Politics):** A magyar választási adatokkal kapcsolatos statisztikák, illetve a világ vezetőinek profiljai.
 
-A felület animációkkal (Anime.js) van ellátva, így az adatok betöltésekor vizuálisan is lenyűgöző élményt nyújt.
+A felület animációkkal (Anime.js) van ellátva, és egy egyedi Narnia témájú 404 hibaoldallal rendelkezik.
+
+## Beállítások és Testreszabhatóság
+Az új **Beállítások (Settings)** fülön személyre szabhatod a Dashboardod működését:
+- **Kompakt Nézet:** A "Dashboard Layout Options" menüben bekapcsolhatod a kompakt kártyanézetet, vagy hagyhatod, hogy az oldal teljesen kitöltse a képernyőt (Full-width).
+- **Személyes Fiókok (API Kulcsok):** Megadhatod a saját Steam azonosítódat, YouTube csatornádat, Last.fm nevedet és Tracker.gg linkjeidet (R6, LoL, RL). A megadott linkek automatikusan betöltik a te személyes adataidat a főoldalon lévő kártyákra!
 
 ## Gyakori Kérdések (FAQ)
 - **Milyen gyakran frissülnek az adatok?**

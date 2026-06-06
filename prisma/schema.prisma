@@ -17,8 +17,16 @@ model User {
   password        String
   avatarUrl       String?
   steamId         String?
+  steamApiKey     String?
   youtubeHandle   String?
   favoriteArtist  String?
+  trackerUrlR6    String?
+  trackerUrlRL    String?
+  trackerUrlLoL   String?
+  trackerUrlBF6   String?
+  trackerUrlFortnite String?
+  lastFmUsername  String?
+  exophaseUsername String?
   dashboardStyle  String   @default("grid")
   hiddenWidgets   String   @default("[]")
   createdAt       DateTime @default(now())

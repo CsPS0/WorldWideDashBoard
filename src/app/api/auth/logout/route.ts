@@ -7,7 +7,7 @@ export async function POST() {
       value: '',
       httpOnly: true,
       path: '/',
-      expires: new Date(0), // Expire immediately
+      expires: new Date(0), 
     });
     return response;
   } catch (error) {

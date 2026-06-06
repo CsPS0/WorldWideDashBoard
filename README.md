@@ -6,11 +6,12 @@ A **World Wide Dashboard** egy modern, moduláris adatgyűjtő platform, amely e
 A szoftver különlegessége az objektumorientált (OOP) architektúra, amely lehetővé teszi új adatforrások (modulok) gyors és biztonságos hozzáadását.
 
 ## Funkciók
-- **Játékok:** Steam játékosszámok és népszerűségi trendek valós idejű követése.
-- **Videó & Zene:** YouTube csatorna statisztikák (legördülő választóval) és globális Top 10 zenei toplista (Spotify + SoundCloud összesített adatokkal).
-- **Politika:** Magyar választási adatok és részvételi statisztikák (interaktív térképekkel).
-- **Pénzügy & Kripto:** Tőzsdei árfolyamok és kriptovaluta adatok.
-- **Testreszabhatóság:** Prémium, üveg hatású (glassmorphism) sötét téma, fluid animációkkal.
+- **Játékok és Személyes Statisztikák:** Steam játékosszámok globális trendjei, valamint személyes Tracker.gg (R6, LoL, RL stb.) és Exophase (cross-platform játékidő) integrációk.
+- **Videó & Zene:** YouTube csatorna statisztikák és globális Top 10 zenei toplista (Last.fm, Spotify, SoundCloud adatokkal), plusz személyes Last.fm "Now Playing" követés.
+- **Politika:** Magyar választási adatok és globális vezetői statisztikák.
+- **Pénzügy & Kripto:** Tőzsdei árfolyamok és kriptovaluta adatok (beleértve az egyedi Hawk Tuah Coint).
+- **Testreszabhatóság:** Dinamikus elrendezés (Kompakt vagy Teljes szélesség), dedikált Beállítások oldal a személyes API kulcsoknak.
+- **Design:** Prémium, üveg hatású (glassmorphism) sötét téma fluid Anime.js animációkkal és egyedi vizuális 404 hibaoldallal.
 
 ## Technológiai Stack
 - **Frontend/Backend:** Next.js 15+ (App Router)
@@ -32,18 +33,7 @@ A projekt részletes technikai és vizuális terveit külön dokumentumok tartal
 - **[Osztálydiagram (Class Diagram)](./docs/UML/CLASS.md):** Objektumorientált (OOP) architektúra
 - **[Stílusútmutató (Style Guide)](./docs/STYLE.md):** Vizuális szabályok és design sablonok
 
-## Csapat
-- **Bodolai Richárd Tamás** - Backend fejlesztő / Adatkezelés
-- **Páva Zalán** - UI/UX design / Frontend fejlesztő
-- **Solti Csongor Péter** - Lead fejlesztő / Architektúra
 
-## Projekt Ütemterv
-- **Április 14:** Ötlet prezentáció
-- **Április 21:** Design és arculat tervezése
-- **Április 28:** UML és részletes rendszertervezés
-- **Május 12:** Fejlesztési szakasz lezárása
-- **Május 19:** Tesztelés és dokumentáció véglegesítése
-- **Május 25:** Projekt leadása
 
 ## Hogyan futtasd a projektet?
 
@@ -70,3 +60,8 @@ Ha Docker-t használsz, egyetlen paranccsal elindíthatod a teljes rendszert (No
 docker-compose up --build
 ```
 A weboldal a `http://localhost:3000` címen lesz elérhető.
+
+## Csapat
+- **Solti Csongor Péter** - Lead fejlesztő / Fő Architektúra
+- **Páva Zalán** - Backend fejlesztő / Tesztelés
+- **Bodolai Richárd Tamás** - Fejlesztő segéd / Legidősebb csapattag

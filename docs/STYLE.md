@@ -61,13 +61,16 @@ Ezek a színek a JSX/TSX komponensekben közvetlenül használhatóak osztályok
 A modern és letisztult megjelenés érdekében (a Next.js / Tailwind stackhez igazodva) ajánlott az alábbi megközelítés:
 - **Elsődleges betűtípus**: `Inter`, `Roboto`, `Outfit`, vagy `Geist` (alapértelmezett).
 - **Karakter**: Minimalista, jól olvasható, határozott hierarchiával (vastag címsorok, vékonyabb szövegtörzsek).
+- **Egyedi Ikonok**: Az operációs rendszer szintű emojik (pl. 🦅) helyett CSS által színezhető szöveges karaktereket (pl. Ħ) vagy nyers SVG-ket (`fill="currentColor"`) használunk, hogy minden tökéletesen illeszkedjen az `--accent` színhez.
 
 ## Formák és Elrendezés (Layout & Shapes)
 
 A projekt a **Dark Mode Glassmorphism** & **Modern Flat** dizájnelveket követi:
 - **Kártya alapú elrendezés (Panel Layout)**: Az adatok, grafikonok és widgetek egyértelműen elkülönített, letisztult kártyákban jelennek meg (`.glass-card` osztály).
+- **Dinamikus Szélesség (Layout Constraints)**: A Dashboard támogatja a teljes képernyős (fluid) elrendezést, valamint a fókuszáltabb Kompakt nézetet is (amely a `max-w-6xl mx-auto` tailwind osztályokkal van középre igazítva).
 - **Sarokkerekítés (Corner Radius)**: Határozott, barátságos lekerekítések, például `rounded-xl` vagy `rounded-2xl`.
 - **Belső mélység (Inset)**: Használjunk `bg-surface-inset`-et a kártyákon belüli adatblokkok elkülönítéséhez.
+- **Különleges Nézetek (404 Page)**: A hibaoldalak szakítanak a hagyományos elrendezéssel; például a 404-es oldal egy teljesen egyedi, középre igazított "beszélő oroszlán" elrendezést használ, saját független animációkkal.
 
 ## Animációk és Interakciók
 

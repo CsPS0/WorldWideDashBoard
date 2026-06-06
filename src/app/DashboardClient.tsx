@@ -1,17 +1,16 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { WidgetCard } from './components/WidgetCard';
+import Link from 'next/link';
 import {
   Gamepad2,
   MonitorPlay,
-  TrendingUp,
   Bitcoin,
   Landmark,
-  Users,
   Music,
-  Star
+  ArrowRight,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
-import CurrencyChart from './components/CurrencyChart';
 export interface MusicTrack {
   rank: number;
   title: string;
@@ -19,266 +18,285 @@ export interface MusicTrack {
   spotifyStreams: number;
   soundcloudStreams: number;
   totalStreams: number;
+  imageUrl?: string;
+  releaseDate?: string;
 }
 interface DashboardData {
-  steam_players?: { player_count: number };
-  youtube_stats?: Record<string, { subscriberCount: number; viewCount: number; videoCount: number }>;
+  trn_gaming?: any;
+  steam_players?: Record<string, { player_count: number; result: number }>;
+  youtube_stats?: Record<string, { name: string; subscriberCount: number; viewCount: number; videoCount: number; thumbnailUrl?: string }>;
   finance_markets?: {
-    crypto: { bitcoin: { usd: number; eur: number }; ethereum: { usd: number; eur: number } };
+    crypto: { 
+      bitcoin: { usd: number; eur: number }; 
+      ethereum: { usd: number; eur: number };
+    };
     currency: { EUR_TO_HUF: number; EUR_TO_USD: number };
   };
-  hungarian_elections?: {
+  world_politics?: {
     turnoutPercentage: number;
-    processedPercentage: number;
-    parties: {
+    globalLeaders: { id: string }[];
+  };
+  global_music_Global?: MusicTrack[];
+  lastfm_personal?: {
+    username: string;
+    recentTracks: {
       name: string;
-      listMandates: number;
-      individualMandates: number;
-      totalMandates: number;
-      listVotesPercentage: number;
+      artist: string;
+      nowPlaying: boolean;
+      imageUrl?: string;
     }[];
   };
-  global_music?: MusicTrack[];
   personal_data?: {
-    youtube?: Record<string, { name: string; subscriberCount: number }>;
-    steam?: { username: string; inventoryValue: number; hoursPlayed: number };
-    artist?: { name: string; monthlyListeners: number };
+    youtube?: Record<string, { name: string; subscriberCount: number; viewCount: number; videoCount: number; thumbnailUrl?: string }>;
+    steam?: { username: string; avatarUrl: string };
   };
 }
 export default function DashboardClient() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const [hiddenWidgets, setHiddenWidgets] = useState<string[]>([]);
+  const [dashboardStyle, setDashboardStyle] = useState<string>('grid');
   const [loading, setLoading] = useState(true);
-  const [selectedYoutuber, setSelectedYoutuber] = useState('MrBeast');
-  const [preferences, setPreferences] = useState<{ dashboardStyle: string; hiddenWidgets: string[] }>({
-    dashboardStyle: 'grid',
-    hiddenWidgets: [],
-  });
   useEffect(() => {
-    fetch('/api/dashboard')
-      .then((res) => res.json())
-      .then((d) => {
-        setData(d);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-    fetch('/api/auth/preferences')
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error('Not logged in');
-      })
-      .then((prefData) => {
-        setPreferences({
-          dashboardStyle: prefData.dashboardStyle || 'grid',
-          hiddenWidgets: prefData.hiddenWidgets ? JSON.parse(prefData.hiddenWidgets) : [],
-        });
-      })
-      .catch(() => {});
+    Promise.all([
+      fetch('/api/dashboard').then(res => res.json()),
+      fetch('/api/auth/preferences').then(res => res.ok ? res.json() : {}) as Promise<any>
+    ])
+    .then(([dashboardData, prefData]) => {
+      setData(dashboardData);
+      if (prefData.dashboardStyle) {
+        setDashboardStyle(prefData.dashboardStyle);
+      }
+      try {
+        setHiddenWidgets(JSON.parse(prefData.hiddenWidgets || '[]'));
+      } catch {
+        setHiddenWidgets([]);
+      }
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error(err);
+      setLoading(false);
+    });
   }, []);
-  const fmt = (num: number) => {
-    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + 'B';
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
-    if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
+  const formatNumber = (num: number) => {
+    if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
   };
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 border-[3px] border-border-subtle border-t-accent rounded-full animate-spin" />
+        <div className="w-12 h-12 border-4 border-transparent/20 border-t-accent rounded-full animate-spin"></div>
       </div>
     );
   }
-  const steam = data?.steam_players;
-  const youtube = data?.youtube_stats;
-  const finance = data?.finance_markets;
-  const politics = data?.hungarian_elections;
-  const music = data?.global_music;
-  const personal = data?.personal_data;
-  const isGrid = preferences.dashboardStyle === 'grid';
-  const { hiddenWidgets } = preferences;
+  const btc = data?.finance_markets?.crypto?.bitcoin?.usd;
+  const eth = data?.finance_markets?.crypto?.ethereum?.usd;
+  const eurToHuf = data?.finance_markets?.currency?.EUR_TO_HUF;
+  const steamPlayers = data?.steam_players?.['0']?.player_count;
+  const topYoutuber = data?.youtube_stats ? Object.values(data.youtube_stats).sort((a, b) => b.subscriberCount - a.subscriberCount)[0] : null;
+  const personalYoutuber = data?.personal_data?.youtube ? Object.values(data.personal_data.youtube)[0] : null;
+  const personalMusic = data?.lastfm_personal;
+  const topGlobalTrack = data?.global_music_Global?.[0];
+  const globalLeadersCount = data?.world_politics?.globalLeaders?.length || 0;
   return (
-    <div className="w-full space-y-6">
-      {personal && Object.keys(personal).length > 0 && (
-        <section>
-          <h2 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Star size={14} className="text-accent-warm" />
-            Personal Showcase
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {personal.youtube && Object.values(personal.youtube).map((ch: { name: string; subscriberCount: number }) => (
-              <div key={ch.name} className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                  <MonitorPlay size={20} className="text-accent" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-primary truncate">{ch.name}</p>
-                  <p className="text-xs text-secondary">YouTube · {fmt(ch.subscriberCount)} subs</p>
+    <div className={`w-full space-y-8 pb-20 ${dashboardStyle === 'compact' ? 'max-w-6xl mx-auto' : ''}`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-row-dense">
+        {!hiddenWidgets.includes('crypto') && (
+          <Link href="/crypto" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <Bitcoin size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-primary">Crypto Markets</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-surface-base p-4 rounded-xl border border-border-subtle flex justify-between items-center group-hover:border-accent/30 transition-colors">
+                <span className="font-bold text-secondary">Bitcoin</span>
+                <div className="text-right">
+                  <span className="text-lg font-bold text-primary block">${btc?.toLocaleString() || '---'}</span>
+                  <span className="text-xs text-accent flex items-center gap-1 justify-end"><TrendingUp size={12}/> +2.4%</span>
                 </div>
               </div>
-            ))}
-            {personal.steam && (
-              <div className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                  <Gamepad2 size={20} className="text-accent" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-primary truncate">{personal.steam.username}</p>
-                  <p className="text-xs text-secondary">Steam · ${personal.steam.inventoryValue.toLocaleString()}</p>
+              <div className="bg-surface-base p-4 rounded-xl border border-border-subtle flex justify-between items-center group-hover:border-accent/30 transition-colors">
+                <span className="font-bold text-secondary">Ethereum</span>
+                <div className="text-right">
+                  <span className="text-lg font-bold text-primary block">${eth?.toLocaleString() || '---'}</span>
+                  <span className="text-xs text-accent flex items-center gap-1 justify-end"><TrendingDown size={12}/> -0.8%</span>
                 </div>
               </div>
-            )}
-            {personal.artist && (
-              <div className="glass-card p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                  <Music size={20} className="text-accent" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-primary truncate">{personal.artist.name}</p>
-                  <p className="text-xs text-secondary">{fmt(personal.artist.monthlyListeners)} monthly listeners</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-      <div className={
-        isGrid
-          ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
-          : "flex flex-col gap-4"
-      }>
+            </div>
+          </Link>
+        )}
         {!hiddenWidgets.includes('steam') && (
-          <WidgetCard id="steam" title="CS2 Players" icon={Gamepad2} delay={100} theme="dark">
-            {steam ? (
-              <div className="text-center py-4">
-                <div className="text-4xl font-bold text-primary mb-1">{steam.player_count.toLocaleString()}</div>
-                <div className="text-xs text-secondary">Current Online Players</div>
+          <Link href="/gaming" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <Gamepad2 size={24} />
               </div>
-            ) : (
-              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
-            )}
-          </WidgetCard>
+              <h2 className="text-xl font-bold text-primary">Gaming Pulse</h2>
+            </div>
+            <div className="flex flex-col h-[calc(100%-4rem)] justify-center gap-4">
+              <div className="text-center bg-surface-base py-6 rounded-xl border border-border-subtle group-hover:border-accent/30 transition-colors">
+                <div className="text-4xl font-bold text-primary mb-1">{steamPlayers ? formatNumber(steamPlayers) : '---'}</div>
+                <div className="text-xs text-secondary font-bold uppercase tracking-wider">Players Online</div>
+              </div>
+              <div className="text-center text-sm text-muted">
+                Click to view detailed charts, top games, and your personal tracker stats.
+              </div>
+            </div>
+          </Link>
         )}
         {!hiddenWidgets.includes('youtube') && (
-          <WidgetCard id="youtube" title="YouTube Stats" icon={MonitorPlay} delay={200} className="md:col-span-2 xl:col-span-2" theme="light">
-            {youtube ? (
-              <div className="flex flex-col gap-4">
-                <select
-                  className="self-start bg-surface-inset text-primary text-sm rounded-lg px-3 py-2 border border-border-subtle outline-none focus:border-accent transition-colors cursor-pointer"
-                  value={selectedYoutuber}
-                  onChange={(e) => setSelectedYoutuber(e.target.value)}
-                >
-                  {Object.keys(youtube).map((name) => (
-                    <option key={name} value={name} className="bg-surface-inset text-primary">{name}</option>
-                  ))}
-                </select>
-                {youtube[selectedYoutuber] ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { label: 'Subscribers', value: fmt(youtube[selectedYoutuber].subscriberCount) },
-                      { label: 'Total Views', value: fmt(youtube[selectedYoutuber].viewCount) },
-                      { label: 'Videos', value: youtube[selectedYoutuber].videoCount.toLocaleString() },
-                    ].map((stat) => (
-                      <div key={stat.label} className="bg-surface-inset p-3 rounded-lg text-center border border-border-subtle">
-                        <div className="text-xl font-bold text-primary">{stat.value}</div>
-                        <div className="text-[11px] text-secondary mt-0.5">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-muted text-center py-4 text-sm">No data for {selectedYoutuber}</div>
+          <Link href="/entertainment" className="lg:col-span-1 lg:row-span-2 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <MonitorPlay size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-primary">YouTube Stats</h2>
+            </div>
+            {personalYoutuber ? (
+              <div className="bg-surface-base border border-border-subtle p-4 rounded-xl text-center flex flex-col items-center gap-3 group-hover:border-accent/30 transition-colors">
+                {personalYoutuber.thumbnailUrl && (<img src={personalYoutuber.thumbnailUrl} alt="Your Avatar" className="w-16 h-16 rounded-full border-2 border-border-subtle" />
                 )}
+                <div className="w-full mt-2">
+                  <h3 className="font-bold text-xl text-primary mb-4">{personalYoutuber.name}</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Subscribers</span>
+                      <span className="text-accent-warm font-bold">{formatNumber(personalYoutuber.subscriberCount)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Total Views</span>
+                      <span className="text-primary font-bold">{formatNumber(personalYoutuber.viewCount)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Videos</span>
+                      <span className="text-primary font-bold">{formatNumber(personalYoutuber.videoCount)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : topYoutuber ? (
+              <div className="bg-surface-base border border-border-subtle p-4 rounded-xl text-center flex flex-col items-center gap-3 group-hover:border-accent/30 transition-colors">
+                {topYoutuber.thumbnailUrl && (<img src={topYoutuber.thumbnailUrl} alt="Top Avatar" className="w-16 h-16 rounded-full border-2 border-border-subtle" />
+                )}
+                <div className="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded font-bold uppercase">#1 Global</div>
+                <div className="w-full mt-2">
+                  <h3 className="font-bold text-xl text-primary mb-4">{topYoutuber.name}</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Subscribers</span>
+                      <span className="text-accent-warm font-bold">{formatNumber(topYoutuber.subscriberCount)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Total Views</span>
+                      <span className="text-primary font-bold">{formatNumber(topYoutuber.viewCount)}</span>
+                    </div>
+                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                      <span className="text-secondary text-xs font-bold uppercase">Videos</span>
+                      <span className="text-primary font-bold">{formatNumber(topYoutuber.videoCount)}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : (
-              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
+               <div className="text-muted text-center py-6 text-sm">Loading YouTube...</div>
             )}
-          </WidgetCard>
+          </Link>
         )}
         {!hiddenWidgets.includes('music') && (
-          <WidgetCard id="music" title="Global Top 10" icon={Music} delay={450} className="xl:row-span-2 flex flex-col max-h-[600px]">
-            {music ? (
-              <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
-                {music.map((track) => (
-                  <div key={track.rank} className="flex items-center gap-3 bg-surface-inset p-2.5 rounded-lg hover:bg-surface-card-hover transition-colors border border-border-subtle">
-                    <div className="w-6 text-center text-sm font-bold text-muted">{track.rank}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-primary truncate">{track.title}</div>
-                      <div className="text-[11px] text-secondary truncate">{track.artist}</div>
-                    </div>
-                    <div className="text-xs font-semibold text-accent-warm shrink-0">{fmt(track.totalStreams)}</div>
+          <Link href="/music" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <Music size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-primary">Music Hub</h2>
+            </div>
+            {personalMusic && personalMusic.recentTracks.length > 0 ? (
+              <div className="bg-surface-base border border-border-subtle p-4 rounded-xl flex items-center gap-4 group-hover:border-accent/30 transition-colors">
+                {personalMusic.recentTracks[0].imageUrl ? (<img src={personalMusic.recentTracks[0].imageUrl} alt="Album Art" className="w-14 h-14 rounded shadow-sm object-cover" />
+                ) : (
+                  <div className="w-14 h-14 rounded bg-surface-inset flex items-center justify-center"><Music size={20} className="text-muted"/></div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                    {personalMusic.recentTracks[0].nowPlaying ? <><span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span> Now Playing</> : 'Last Played'}
                   </div>
-                ))}
+                  <div className="font-bold text-primary truncate">{personalMusic.recentTracks[0].name}</div>
+                  <div className="text-sm text-secondary truncate">{personalMusic.recentTracks[0].artist}</div>
+                </div>
+              </div>
+            ) : topGlobalTrack ? (
+              <div className="bg-surface-base border border-border-subtle p-4 rounded-xl flex items-center gap-4 group-hover:border-accent/30 transition-colors">
+                {topGlobalTrack.imageUrl ? (<img src={topGlobalTrack.imageUrl} alt="Album Art" className="w-14 h-14 rounded shadow-sm object-cover" />
+                ) : (
+                  <div className="w-14 h-14 rounded bg-surface-inset flex items-center justify-center"><Music size={20} className="text-muted"/></div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">Global #1</div>
+                  <div className="font-bold text-primary truncate">{topGlobalTrack.title}</div>
+                  <div className="text-sm text-secondary truncate">{topGlobalTrack.artist}</div>
+                </div>
               </div>
             ) : (
-              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
+              <div className="text-muted text-center py-6 text-sm">Loading Music...</div>
             )}
-          </WidgetCard>
-        )}
-        {!hiddenWidgets.includes('crypto') && (
-          <WidgetCard id="crypto" title="Crypto Markets" icon={Bitcoin} delay={300} className="md:col-span-2 xl:col-span-1" theme="accent">
-            {finance?.crypto ? (
-              <div className="space-y-4">
-                {[
-                  { name: 'Bitcoin', symbol: 'BTC', price: finance.crypto.bitcoin.usd },
-                  { name: 'Ethereum', symbol: 'ETH', price: finance.crypto.ethereum.usd },
-                ].map((coin) => (
-                  <div key={coin.name} className="flex items-center justify-between p-3 rounded-lg bg-surface-inset border border-border-subtle">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-accent-warm/15 flex items-center justify-center font-bold text-xs text-accent-warm">
-                        {coin.symbol}
-                      </div>
-                      <span className="text-sm font-medium text-primary">{coin.name}</span>
-                    </div>
-                    <span className="text-base font-bold text-primary">${coin.price.toLocaleString()}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
-            )}
-          </WidgetCard>
-        )}
-        {!hiddenWidgets.includes('exchange') && (
-          <WidgetCard id="exchange" title="Currency Explorer" icon={TrendingUp} delay={400} className="md:col-span-2">
-            <CurrencyChart height={220} />
-          </WidgetCard>
+          </Link>
         )}
         {!hiddenWidgets.includes('politics') && (
-          <WidgetCard id="politics" title="Election 2026" icon={Landmark} delay={500} className="md:col-span-2 xl:col-span-3">
-            {politics ? (
-              <div className="flex flex-col gap-4 py-2">
-                <div className="flex justify-between items-center bg-surface-inset p-3 rounded-lg border border-border-subtle">
-                  <div className="flex items-center gap-2">
-                    <Users size={16} className="text-accent" />
-                    <span className="text-sm text-secondary">Voter Turnout</span>
-                  </div>
-                  <span className="text-sm font-bold text-primary">{politics.turnoutPercentage}%</span>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-[11px] text-muted uppercase border-b border-border-subtle">
-                      <tr>
-                        <th className="pb-2 font-medium">Party</th>
-                        <th className="pb-2 font-medium text-right">List</th>
-                        <th className="pb-2 font-medium text-right">Individual</th>
-                        <th className="pb-2 font-medium text-right">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border-subtle">
-                      {politics.parties.map((party: any) => (
-                        <tr key={party.name}>
-                          <td className="py-2.5 font-semibold text-primary">{party.name}</td>
-                          <td className="py-2.5 text-right text-secondary">{party.listMandates}</td>
-                          <td className="py-2.5 text-right text-secondary">{party.individualMandates}</td>
-                          <td className="py-2.5 text-right font-bold text-accent-warm">{party.totalMandates}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+          <Link href="/politics" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <Landmark size={24} />
               </div>
-            ) : (
-              <div className="text-muted text-center py-4 text-sm">Data unavailable</div>
-            )}
-          </WidgetCard>
+              <h2 className="text-xl font-bold text-primary">World Politics</h2>
+            </div>
+            <div className="flex flex-col h-[calc(100%-4rem)] justify-center gap-4">
+              <div className="text-center bg-surface-base py-6 rounded-xl border border-border-subtle group-hover:border-accent/30 transition-colors">
+                <div className="text-4xl font-bold text-primary mb-1">{globalLeadersCount}</div>
+                <div className="text-xs text-secondary font-bold uppercase tracking-wider">World Leaders Tracked</div>
+              </div>
+            </div>
+          </Link>
+        )}
+        {!hiddenWidgets.includes('exchange') && (
+          <Link href="/exchange" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
+              <ArrowRight className="text-accent" />
+            </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-accent/10 text-accent flex items-center justify-center">
+                <TrendingUp size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-primary">Exchange Rates</h2>
+            </div>
+            <div className="flex flex-col h-[calc(100%-4rem)] justify-center gap-4">
+              <div className="bg-surface-base p-4 rounded-xl border border-border-subtle flex justify-between items-center group-hover:border-accent/30 transition-colors">
+                <span className="font-bold text-secondary text-lg">EUR / HUF</span>
+                <span className="text-2xl font-bold text-primary">{eurToHuf ? eurToHuf.toFixed(2) : '---'}</span>
+              </div>
+              <div className="text-center text-sm text-muted">
+                Click to view full currency exchange data and historical charts.
+              </div>
+            </div>
+          </Link>
         )}
       </div>
     </div>

@@ -5,9 +5,11 @@ export interface ChannelInfo {
 }
 export type YouTubeData = Record<string, {
   name: string;
+  id: string;
   subscriberCount: number;
   viewCount: number;
   videoCount: number;
+  thumbnailUrl?: string;
 }>;
 export class YouTubeProvider extends BaseDataSource<YouTubeData> {
   id = 'youtube_stats';
@@ -26,31 +28,36 @@ export class YouTubeProvider extends BaseDataSource<YouTubeData> {
           ...acc,
           [ch.name]: {
             name: ch.name,
+            id: ch.id,
             subscriberCount: 260000000,
             viewCount: 45000000000,
             videoCount: 800,
+            thumbnailUrl: 'https://via.placeholder.com/150'
           }
         }), {} as YouTubeData);
       }
       const ids = this.channels.map(c => c.id).join(',');
       const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${ids}&key=${apiKey}`
+        `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=${ids}&key=${apiKey}`
       );
       if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status}`);
       }
       const data = await response.json();
       const results: YouTubeData = {};
-      data.items?.forEach((item: Record<string, unknown>) => {
+      data.items?.forEach((item: any) => {
         const id = item.id as string;
         const stats = item.statistics as Record<string, string>;
+        const snippet = item.snippet;
         const chInfo = this.channels.find(c => c.id === id);
         if (chInfo && stats) {
           results[chInfo.name] = {
             name: chInfo.name,
+            id: chInfo.id,
             subscriberCount: parseInt(stats.subscriberCount, 10),
             viewCount: parseInt(stats.viewCount, 10),
             videoCount: parseInt(stats.videoCount, 10),
+            thumbnailUrl: snippet?.thumbnails?.default?.url
           };
         }
       });

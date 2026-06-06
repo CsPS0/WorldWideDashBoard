@@ -11,17 +11,21 @@ export class DashboardManager {
   }
   async fetchAllData(): Promise<Record<string, unknown>> {
     const results: Record<string, unknown> = {};
+    const system_status: Record<string, { id: string; name: string; isMock: boolean }> = {};
     const fetchPromises = Array.from(this.providers.values()).map(async (provider) => {
       try {
         const data = await this.fetchWithCache(provider);
         if (data !== null) {
           results[provider.id] = data;
         }
+        system_status[provider.id] = { id: provider.id, name: provider.name, isMock: provider.isMock };
       } catch (error) {
         console.error(`Error in provider ${provider.name}:`, error);
+        system_status[provider.id] = { id: provider.id, name: provider.name, isMock: true };
       }
     });
     await Promise.all(fetchPromises);
+    results['system_status'] = system_status;
     return results;
   }
   async fetchByProviderId(id: string): Promise<unknown | null> {
