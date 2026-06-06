@@ -1,40 +1,1 @@
-import { BaseDataSource } from '../core/DataSource';
-
-export interface SteamPlayerData {
-  player_count: number;
-  result: number;
-}
-
-export class SteamProvider extends BaseDataSource<SteamPlayerData> {
-  id = 'steam_players';
-  name = 'Steam Player Count';
-  category = 'Games';
-
-  private appId: number;
-
-  constructor(appId: number) {
-    super();
-    this.appId = appId;
-  }
-
-  async fetchData(): Promise<SteamPlayerData> {
-    try {
-      const response = await fetch(
-        `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${this.appId}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.response as SteamPlayerData;
-    } catch (error) {
-      return this.handleFetchError(error);
-    }
-  }
-
-  validateResponse(data: unknown): boolean {
-    return typeof data === 'object' && data !== null && 'player_count' in data && 'result' in data;
-  }
-}
+import { BaseDataSource } from '../core/DataSource';export interface SteamPlayerData {  [appId: number]: { player_count: number; result: number };}export class SteamProvider extends BaseDataSource<SteamPlayerData> {  id = 'steam_players';  name = 'Steam Player Counts';  category = 'Games';  private appIds: number[];  constructor(appIds: number[]) {    super();    this.appIds = appIds;  }  async fetchData(): Promise<SteamPlayerData> {    try {      const results: SteamPlayerData = {};      await Promise.all(this.appIds.map(async (appId) => {        try {          const response = await fetch(            `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${appId}`,            { next: { revalidate: 3600 } }          );          if (response.ok) {            const data = await response.json();            results[appId] = data.response;          }        } catch (err) {          console.error(`Failed to fetch steam player count for app ${appId}`);        }      }));      return results;    } catch (error) {      return this.handleFetchError(error);    }  }  validateResponse(data: unknown): boolean {    return typeof data === 'object' && data !== null;  }}

@@ -40,7 +40,10 @@ A tanárok kérésére a projekt **objektumorientált** szemléletben készül. 
 
 - **[Elmetérkép (Mindmap)](./UML/MINDMAP.md):** A projekt teljes technológiai és funkcionális áttekintése.
 - **[Adatlekérési Folyamat (Flowchart)](./UML/FLOWCHART.md):** Az adatáramlás életciklusa a kliens felülettől a külső API-kig.
-- **[Osztálydiagram (Class Diagram)](./UML/CLASS.md):** Részletes OOP terv a Strategy Pattern megvalósításáról.
+- **[Osztálydiagram (Class Diagram)](./UML/CLASS.md):** Részletes OOP terv a Strategy Pattern megvalósításáról (11 regisztrált adatforrással).
+
+> [!IMPORTANT]
+> Zalán elkészítette a backend architektúra C# alapú tesztjeit (xUnit). A teszt mappa a `tests/Dashboard.Tests` alatt található, a futtatási jegyzőkönyv pedig a `docs/Tesztelesi Jegyzokonyv/tesztelési_jegyzőkönyv.md` fájlban érhető el!
 
 A legfontosabb kódok a `src/lib/core` mappában találhatók:
 
@@ -52,7 +55,8 @@ A legfontosabb kódok a `src/lib/core` mappában találhatók:
 Ha új adatforrást akarsz hozzáadni, hozz létre egy új fájlt a `src/lib/providers/` mappában, ami kiterjeszti a `BaseDataSource` osztályt.
 
 ## Kódolási Szabályok
-- **Nyelv:** A kód (változók, osztályok, kommentek a kódban) **angolul** készül.
+- **Nyelv:** A kódváltozók és osztályok **angolul** készülnek.
+- **Szigorú Szabály (NINCS KOMMENT):** A projektben **SZIGORÚAN TILOS** bármilyen jellegű komment (// vagy /* */) elhelyezése a kódbázisban! Ennek érdekében a Next.js linter szabályai is módosításra kerültek az `.eslintrc.json` fájlban.
 - **Dokumentáció:** A README és a `docs/` mappa tartalma **magyarul** van a tanári követelmények miatt.
 - **Stílus:** Használjuk a Tailwind CSS-t a gyors és egységes UI érdekében.
 

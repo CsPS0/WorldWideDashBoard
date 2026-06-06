@@ -21,6 +21,13 @@ mindmap
       YouTubeProvider (Videók)
       PoliticsProvider (Választások)
       FinanceProvider (Árfolyamok)
+      MusicProvider (Zene)
+      TRNProvider (Tracker Network)
+      ExophaseProvider (Exophase)
+      SteamPersonalProvider (Saját Steam)
+      LastFmPersonalProvider (Saját LastFM)
+      YouTubePersonalProvider (Saját YouTube)
+      SteamTopGamesProvider (Top Játékok)
     Adatbázis & Backend
       Prisma ORM
       SQLite

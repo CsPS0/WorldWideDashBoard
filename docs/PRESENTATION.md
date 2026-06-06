@@ -12,8 +12,8 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
     - "Sokszor nehézkes a navigáció, és az adatok nem egy helyen érhetők el."
 - **A megoldás (A projekt célja):**
     - "A **World Wide Dashboard** célja, hogy ezeket a különálló adatforrásokat egyetlen, modern és letisztult felületen egyesítse."
-    - "Egy olyan moduláris rendszert építünk, ahol a felhasználó saját maga döntheti el, milyen adatokat szeretne látni (legyen az gaming, politika vagy pénzügy)."
-- **Főbb kategóriák:** Rövid felsorolás (Steam, YouTube és Zenei toplisták, Magyar választási adatok, Kripto és Deviza).
+    - "Egy olyan moduláris rendszert építünk, ahol a felhasználó saját maga döntheti el, milyen adatokat szeretne látni, és még a saját személyes fiókjait (Steam, Last.fm, Tracker.gg) is bekötheti."
+- **Főbb kategóriák:** Rövid felsorolás (Steam, YouTube és Zenei toplisták, Magyar választási adatok, Kripto és Deviza, Személyes Exophase adatok).
 
 ---
 
@@ -24,12 +24,11 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
     - "A felületet **Next.js** és **Tailwind CSS** segítségével készítjük el, ami garantálja a sebességet és a modern kinézetet."
     - "Az animációkhoz az **Anime.js** könyvtárat használjuk, hogy a dashboard 'éljen' és reszponzív legyen."
 - **Felhasználói élmény (UX):**
-    - "A dashboard kártyákra (widgetekre) épül, amelyek egy modern, 
-  - **UI/UX:** Letisztult üveghatás (Glassmorphism), reszponzív kártyák.
-  - Teljes szélességű 3-oszlopos elrendezés (Navigáció, Adatok, Fiók).
+    - "A dashboard kártyákra (widgetekre) épül. Letisztult üveghatás (Glassmorphism), és reszponzív dizájn jellemzi."
+    - "Készítettem egy dedikált Beállítások (Settings) oldalt, ahol a felhasználók átkapcsolhatnak a kompakt és a teljes képernyős nézet között, valamint megadhatják az API kulcsaikat."
   - Dinamikus sötét/világos téma (Light/Dark mode) üveghatással.
   - Szigorúan a Coolors.co paletta 5 színére építve (Prussian Blue, Orange, Alabaster Grey, stb.): a legfontosabb információk (pl. aktuális játékosszám, zenei toplista vagy árfolyam) azonnal szembeötlőek."
-- **Interaktivitás:** Rövid említés a modulok testreszabhatóságáról (pl. a YouTube csatornák legördülő választója).
+- **Interaktivitás:** Rövid említés a modulok testreszabhatóságáról és az új, egyedi (oroszlános) 404 hibaoldalról.
 
 ---
 
@@ -42,8 +41,10 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
 - **Technikai háttér:**
     - "A futtatáshoz a modern **Bun** runtime-ot használjuk, az adatok tárolására és gyorsítótárazására (caching) pedig a **Prisma** és **SQLite** párost."
 - **Adatgyűjtés:**
-    - "Ahol van hivatalos API (pl. Steam, YouTube), ott azt használjuk. Ahol nincs (pl. bizonyos politikai adatok), ott egyedi adatgyűjtő algoritmusokat (scraping) írunk."
-- **Zárás:** "A rendszer Docker-kompatibilis, így bármilyen környezetben könnyen telepíthető."
+    - "Ahol van hivatalos API (pl. Steam, YouTube), ott azt használjuk. Ahol nincs (pl. Exophase), ott egyedi adatgyűjtő algoritmusokat (scraping) írunk."
+- **Tesztelés (Kiemelt rész):** 
+    - "Készítettem egy C# alapú (xUnit) tesztkörnyezetet is, ami 30 különböző automatizált teszttel garantálja az OOP architektúrában lévő adatszolgáltatóink minőségét."
+- **Zárás:** "A rendszer Docker-kompatibilis, és a kód szigorúan mentes a kommentektől a tiszta Clean Code alapelvek miatt."
 
 ---
 

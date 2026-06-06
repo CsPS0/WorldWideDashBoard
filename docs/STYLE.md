@@ -4,20 +4,21 @@ Ez a dokumentum a projekt vizuális megjelenéséhez használt alapvető dizájn
 
 ## Színpaletta
 
-A projekt egy modern, letisztult, és határozott színvilágot használ.
-🔗 **[Megtekintés Coolors.co-n](https://coolors.co/palette/000000-14213d-fca311-e5e5e5-ffffff)**
+A projekt egy modern, letisztult, sötét témájú (Dark Theme) színvilágot használ, amely a következőképpen épül fel:
 
 <div align="left">
 
-| Szín (Név) | HEX Kód | CSS Változó | Szerep (Sötét Mód) | Szerep (Világos Mód) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Black** | `#000000` | `--black` | Háttér (szél) / Inner Card | Szöveg (kiemelt) |
-| **Prussian Blue** | `#14213D` | `--prussian-blue` | Kártyák / Háttér (közép) | Háttér (szél) / Inner Card |
-| **Orange** | `#FCA311` | `--orange` | Kiemelés / Gombok / Ikonok | Kiemelés / Gombok / Ikonok |
-| **Alabaster Grey** | `#E5E5E5` | `--alabaster-grey`| Másodlagos Szöveg | Kártyák / Háttér (közép) |
-| **White** | `#FFFFFF` | `--white` | Elsődleges Szöveg | Másodlagos Szöveg / Keretek |
+| Szín (Név) | HEX Kód | CSS Változó / Tailwind Token | Szerep |
+| :--- | :--- | :--- | :--- |
+| **Very Dark Gray** | `#111111` | `--surface-base` | Alkalmazás fő háttere |
+| **Dark Gray** | `#1a1a1a` | `--surface-card` | Kártyák, panelek háttere |
+| **Hover Gray** | `#222222` | `--surface-card-hover` | Kártyák interaktív (hover) állapota |
+| **Deep Border** | `#2a2a2a` | `--border-default` | Kártyák és elemek szegélyei |
+| **Orange** | `#e05a2b` | `--accent` | Kiemelés, gombok, ikonok, interakciók |
+| **Light Gray** | `#e0e0e0` | `--text-primary` | Elsődleges szöveg (Címsorok, fő tartalom) |
+| **Dim Gray** | `#888888` | `--text-secondary` | Másodlagos szöveg, metaadatok, ikonok |
 
-> **Szigorú Szabály:** A UI felületen *kizárólag* ez az 5 szín szerepelhet, semmilyen más Tailwind szín (pl. kék, smaragd zöld) nem engedélyezett a szemantikus elemeken sem. Az élénk kiemelésekért kizárólag a Brand Orange felel.
+> **Szigorú Szabály:** A UI felületen *kizárólag* ezek az alapszínek és a belőlük származtatott transzparenciák szerepelhetnek. A rendszer ezeket automatikusan leképezi a Tailwind v4 szintaxisba.
 
 </div>
 
@@ -25,85 +26,55 @@ A projekt egy modern, letisztult, és határozott színvilágot használ.
 
 ## Használat a kódban
 
-### 1. Tailwind CSS (`tailwind.config.ts`)
+### Tailwind CSS v4 & `globals.css`
 
-Másold be az alábbi objektumot a Tailwind konfigurációba a színek kiterjesztéséhez (`theme.extend.colors`):
-
-```javascript
-{
-  'black': { DEFAULT: '#000000', 100: '#000000', 200: '#000000', 300: '#000000', 400: '#000000', 500: '#000000', 600: '#333333', 700: '#666666', 800: '#999999', 900: '#cccccc' },
-  'prussian_blue': { DEFAULT: '#14213d', 100: '#04070c', 200: '#080d19', 300: '#0c1425', 400: '#101b31', 500: '#14213d', 600: '#29447e', 700: '#3e67bf', 800: '#7e99d5', 900: '#beccea' },
-  'orange': { DEFAULT: '#fca311', 100: '#362101', 200: '#6b4201', 300: '#a16402', 400: '#d68502', 500: '#fca311', 600: '#fdb541', 700: '#fec871', 800: '#fedaa0', 900: '#ffedd0' },
-  'alabaster_grey': { DEFAULT: '#e5e5e5', 100: '#2e2e2e', 200: '#5c5c5c', 300: '#8a8a8a', 400: '#b8b8b8', 500: '#e5e5e5', 600: '#ebebeb', 700: '#f0f0f0', 800: '#f5f5f5', 900: '#fafafa' },
-  'white': { DEFAULT: '#ffffff', 100: '#333333', 200: '#666666', 300: '#999999', 400: '#cccccc', 500: '#ffffff', 600: '#ffffff', 700: '#ffffff', 800: '#ffffff', 900: '#ffffff' }
-}
-```
-
-### 2. Vanilla CSS (`globals.css`)
-
-Normál CSS alapú stílusozáshoz használd az alábbi gyökér változókat:
+A projekt a **Tailwind CSS v4** verzióját használja, így a színek egyenesen a `src/app/globals.css` fájlban vannak definiálva `@theme inline` segítségével, így nincs szükség külön `tailwind.config.ts` fájlra.
 
 ```css
-:root {
-  /* Alapszínek */
-  --black: #000000;
-  --prussian-blue: #14213d;
-  --orange: #fca311;
-  --alabaster-grey: #e5e5e5;
-  --white: #ffffff;
-
-  /* RGB a transzparenciához (glassmorphism) */
-  --black-rgb: 0, 0, 0;
-  --prussian-rgb: 20, 33, 61;
-}
-
-/* Világos mód (Light Theme) inverzió */
-.light {
-  --black: #ffffff;
-  --prussian-blue: #e5e5e5;
-  --alabaster-grey: #14213d;
-  --white: #000000;
+@theme inline {
+  --color-surface-base: var(--surface-base);
+  --color-surface-sidebar: var(--surface-sidebar);
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-hover: var(--surface-card-hover);
+  --color-surface-inset: var(--surface-inset);
   
-  --black-rgb: 255, 255, 255;
-  --prussian-rgb: 229, 229, 229;
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  
+  --color-accent: var(--accent);
 }
 ```
+
+Ezek a színek a JSX/TSX komponensekben közvetlenül használhatóak osztályokként, például:
+- Háttérhez: `bg-surface-card`, `bg-surface-base`
+- Szöveghez: `text-primary`, `text-secondary`, `text-accent`
+- Szegélyekhez: `border-border-default`
 
 ---
 
 ## Tipográfia (Typography)
 
 A modern és letisztult megjelenés érdekében (a Next.js / Tailwind stackhez igazodva) ajánlott az alábbi megközelítés:
-- **Elsődleges betűtípus**: `Inter`, `Roboto`, vagy `Outfit` (Google Fonts).
+- **Elsődleges betűtípus**: `Inter`, `Roboto`, `Outfit`, vagy `Geist` (alapértelmezett).
 - **Karakter**: Minimalista, jól olvasható, határozott hierarchiával (vastag címsorok, vékonyabb szövegtörzsek).
+- **Egyedi Ikonok**: Az operációs rendszer szintű emojik (pl. 🦅) helyett CSS által színezhető szöveges karaktereket (pl. Ħ) vagy nyers SVG-ket (`fill="currentColor"`) használunk, hogy minden tökéletesen illeszkedjen az `--accent` színhez.
 
 ## Formák és Elrendezés (Layout & Shapes)
 
-A projekt a **Monochrome Flat & Modern** dizájnelveket követi, amit helyenként enyhe **Glassmorphism** (üveghatás) egészíthet ki:
-- **Kártya alapú elrendezés (Panel Layout)**: Az adatok, grafikonok és widgetek egyértelműen elkülönített, letisztult kártyákban (panelekben) jelennek meg.
-- **Sarokkerekítés (Corner Radius)**: Határozott, barátságos lekerekítések. Használjunk kifejezett görbületeket, pl. `border-radius: 24px` vagy 25% a kisebb elemeknél (Tailwind: `rounded-2xl` vagy `rounded-3xl`), hogy lágyítsuk a monokróm ridegséget.
-- **Hátterek**: A panelek háttere monokróm, de enyhén áttetsző is lehet sötét háttér előtt (backdrop-blur), ezzel modern rétegződést létrehozva.
+A projekt a **Dark Mode Glassmorphism** & **Modern Flat** dizájnelveket követi:
+- **Kártya alapú elrendezés (Panel Layout)**: Az adatok, grafikonok és widgetek egyértelműen elkülönített, letisztult kártyákban jelennek meg (`.glass-card` osztály).
+- **Dinamikus Szélesség (Layout Constraints)**: A Dashboard támogatja a teljes képernyős (fluid) elrendezést, valamint a fókuszáltabb Kompakt nézetet is (amely a `max-w-6xl mx-auto` tailwind osztályokkal van középre igazítva).
+- **Sarokkerekítés (Corner Radius)**: Határozott, barátságos lekerekítések, például `rounded-xl` vagy `rounded-2xl`.
+- **Belső mélység (Inset)**: Használjunk `bg-surface-inset`-et a kártyákon belüli adatblokkok elkülönítéséhez.
+- **Különleges Nézetek (404 Page)**: A hibaoldalak szakítanak a hagyományos elrendezéssel; például a 404-es oldal egy teljesen egyedi, középre igazított "beszélő oroszlán" elrendezést használ, saját független animációkkal.
 
 ## Animációk és Interakciók
 
 Mivel a projekt használja az **Anime.js**-t és a Tailwindet, az UI-nak "élnie" kell:
-- **Mikro-animációk**: Gombokra és kártyákra történő rámutatáskor (hover) finom interakciók, pl. enyhe emelkedés (`hover:-translate-y-1`) és mélyülő árnyék.
-- **Tranzíciók**: Minden állapotváltozás (pl. betöltés, navigáció) finom és sima (smooth) átmenettel történjen.
-
-## Árnyékok és Mélység (Shadows & Depth)
-
-A flat design ellenére a mélységérzet fontos:
-- **Lágy, sötét árnyékok (Soft Shadows)**: Kerüljük a kemény határokat, használjunk elmosott, terjedelmes árnyékokat (Tailwind: `shadow-xl`, `shadow-black/40`), amelyek elemelik a paneleket a háttértől.
-- **Finom keretek (Subtle Borders)**: 1px vastag, alig észrevehető szegélyek a paneleken (pl. `border border-white/5`), ami megadja az élek kontúrját a sötét módban.
-
----
-
-## Referencia Tervek (Templates)
-
-A fent említett vizuális elvek (kártyás elrendezés, monokróm árnyalatok, lekerekítések) megvalósulását az alábbi sablonképek szemléltetik:
-
-### Dashboard Sablon
-![Dashboard Sablon](../img/dashboard-template.png)
-
-### Általános UI Sablon
-![Általános UI Sablon](../img/template.png)
+- **Kártya hover (Micro-interactions)**: A kártyákra történő rámutatáskor (hover) a szegély színe élénkebbé válik és a dobozárnyék megnő (a `glass-card` beépített effektjei).
+- **Tranzíciók**: Tailwind tranzíciók használata (pl. `transition-colors`, `duration-200`) gomboknál és linkeknél.
+- **Neon effektek**: A `.glow-accent` osztállyal különleges, fénylő árnyékhatást érhetünk el a kiemelt adatok körül.

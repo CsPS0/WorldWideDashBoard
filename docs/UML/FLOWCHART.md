@@ -14,6 +14,9 @@ flowchart TD
         YT[YouTube API]
         Pol[Politics API]
         Fin[Finance API]
+        Mus[Last.fm API]
+        Trn[Tracker.gg API]
+        Exo[Exophase Scraper]
     end
 
 
@@ -22,17 +25,20 @@ flowchart TD
     Manager -->|Keresés ID alapján| Cache
     
     Cache -- Adat friss és érvényes --> Manager
-    Cache -- Adat hiányzik vagy lejárt --> Steam & YT & Pol & Fin
+    Cache -- Adat hiányzik vagy lejárt --> Steam & YT & Pol & Fin & Mus & Trn & Exo
     
-    Steam -->|Nyers JSON válasz| Manager
-    YT -->|Nyers JSON válasz| Manager
-    Pol -->|Nyers JSON válasz| Manager
-    Fin -->|Nyers JSON válasz| Manager
+    Steam -->|Nyers adat| Manager
+    YT -->|Nyers adat| Manager
+    Pol -->|Nyers adat| Manager
+    Fin -->|Nyers adat| Manager
+    Mus -->|Nyers adat| Manager
+    Trn -->|Nyers adat| Manager
+    Exo -->|Scraped HTML| Manager
     
     Manager -.->|Új adat mentése| Cache
     Manager -->|Formázott objektumok| UI
     UI -->|Animált renderelés Anime.js használatával| User
     
     classDef api fill:#14213d,stroke:#fca311,stroke-width:2px,color:#fff;
-    class Steam,YT,Pol,Fin api;
+    class Steam,YT,Pol,Fin,Mus,Trn,Exo api;
 ```
