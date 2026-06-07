@@ -57,11 +57,25 @@ export async function PUT(req: Request) {
     }
     const body = await req.json();
     const { 
-      password, avatarUrl, steamId, steamApiKey, exophaseUsername, youtubeHandle, favoriteArtist, lastFmUsername,
+      originalPassword, password, avatarUrl, steamId, steamApiKey, exophaseUsername, youtubeHandle, favoriteArtist, lastFmUsername,
       trackerUrlR6, trackerUrlRL, trackerUrlLoL, trackerUrlBF6, trackerUrlFortnite 
     } = body;
     const updateData: Record<string, string | null> = {};
     if (password) {
+      if (!originalPassword) {
+        return NextResponse.json({ error: 'Original password is required' }, { status: 400 });
+      }
+      const existingUser = await prisma.user.findUnique({
+        where: { id: payload.id as string },
+        select: { password: true }
+      });
+      if (!existingUser || !existingUser.password) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+      const isMatch = await bcrypt.compare(originalPassword, existingUser.password);
+      if (!isMatch) {
+        return NextResponse.json({ error: 'Incorrect original password' }, { status: 400 });
+      }
       updateData.password = await bcrypt.hash(password, 10);
     }
     if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl === '' ? null : avatarUrl;
