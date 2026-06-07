@@ -20,6 +20,10 @@ Az új **Beállítások (Settings)** fülön személyre szabhatod a Dashboardod 
 - **Kompakt Nézet:** A "Dashboard Layout Options" menüben bekapcsolhatod a kompakt kártyanézetet, vagy hagyhatod, hogy az oldal teljesen kitöltse a képernyőt (Full-width).
 - **Személyes Fiókok (API Kulcsok):** Megadhatod a saját Steam azonosítódat, YouTube csatornádat, Last.fm nevedet és Tracker.gg linkjeidet (R6, LoL, RL). A megadott linkek automatikusan betöltik a te személyes adataidat a főoldalon lévő kártyákra!
 
+## Adatvédelem és Licenc (Data & Privacy)
+A jobb felső sarokban található **Privacy** gombra kattintva érhető el a részletes Adatvédelmi Irányelvünk. Itt transzparensen látható, hogy mely modulok használnak élő, valódi API kapcsolatot (Steam, YouTube, Last.fm, CoinGecko), és mely modulok dolgoznak pusztán szimulált (Mock) adatokkal a felhasználói biztonság és a projekt jellege miatt (például a 2026-os magyar politikai választások és a hagyományos tőzsde).
+A **License** gombra kattintva a projekt hivatalos, nyílt forráskódú MIT Licenc dokumentációja tekinthető meg egy modern, beépített felületen.
+
 ## Gyakori Kérdések (FAQ)
 - **Milyen gyakran frissülnek az adatok?**
   - Az alkalmazás egy beépített gyorsítótárral (Cache) rendelkezik. Az adatok lekérése a háttérben zajlik, és 5 percenként frissülnek automatikusan az API limitációk elkerülése érdekében.

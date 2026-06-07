@@ -28,7 +28,9 @@ Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció h
     - "Készítettem egy dedikált Beállítások (Settings) oldalt, ahol a felhasználók átkapcsolhatnak a kompakt és a teljes képernyős nézet között, valamint megadhatják az API kulcsaikat."
   - Dinamikus sötét/világos téma (Light/Dark mode) üveghatással.
   - Szigorúan a Coolors.co paletta 5 színére építve (Prussian Blue, Orange, Alabaster Grey, stb.): a legfontosabb információk (pl. aktuális játékosszám, zenei toplista vagy árfolyam) azonnal szembeötlőek."
-- **Interaktivitás:** Rövid említés a modulok testreszabhatóságáról és az új, egyedi (oroszlános) 404 hibaoldalról.
+- **Interaktivitás és Jogosultság:** 
+    - "Kiemelt figyelmet fordítottam a transzparenciára: integráltam egy beépített MIT Licenc megtekintőt és egy dedikált Adatvédelmi Irányelvek (Data & Privacy) oldalt, amely tisztázza az élő és szimulált API-k működését."
+    - "Továbbá egy új, egyedi animált (oroszlános) 404 hibaoldalt is létrehoztam."
 
 ---
 

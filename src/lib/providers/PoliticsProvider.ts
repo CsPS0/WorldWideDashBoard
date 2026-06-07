@@ -11,6 +11,7 @@ export interface GlobalLeader {
   name: string;
   country: string;
   role: string;
+  timeRemaining?: string;
 }
 export interface GlobalParliament {
   country: string;
@@ -19,17 +20,23 @@ export interface GlobalParliament {
   womenPercentage: number;
   nextElection: string;
 }
+export interface Minister {
+  name: string;
+  role: string;
+}
 export interface PoliticsData {
   turnoutPercentage: number;
   processedPercentage: number;
   parties: PartyResult[];
   globalLeaders: GlobalLeader[];
   globalParliaments: GlobalParliament[];
+  ministers: Record<string, Minister[]>;
 }
 export class PoliticsProvider extends BaseDataSource<PoliticsData> {
   id = 'world_politics';
   name = 'World Politics & Elections';
   category = 'Politics';
+  isMock = true;
   async fetchData(): Promise<PoliticsData> {
     let parties: PartyResult[] = [];
     let turnoutPercentage = 0;
@@ -72,32 +79,13 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
         { name: 'Mi Hazánk', listMandates: 6, individualMandates: 0, totalMandates: 6, listVotesPercentage: 5.63 },
       ];
     }
-    let globalLeaders: GlobalLeader[] = [];
-    try {
-      const osRes = await fetch('https://api.opensanctions.org/search/default?q=president&limit=5', {
-        headers: { 'Accept': 'application/json' }
-      });
-      if (osRes.ok) {
-        const osData = await osRes.json();
-        globalLeaders = osData.results?.map((r: any) => ({
-          id: r.id,
-          name: r.caption,
-          country: r.properties?.country?.[0] || 'Unknown',
-          role: r.properties?.position?.[0] || 'Politician',
-        })).slice(0, 5) || [];
-      }
-    } catch (e) {
-      console.warn('Failed to fetch OpenSanctions data. Using fallback.');
-    }
-    if (globalLeaders.length === 0) {
-      globalLeaders = [
-        { id: '1', name: 'Joe Biden', country: 'United States', role: 'President' },
-        { id: '2', name: 'Emmanuel Macron', country: 'France', role: 'President' },
-        { id: '3', name: 'Olaf Scholz', country: 'Germany', role: 'Chancellor' },
-        { id: '4', name: 'Justin Trudeau', country: 'Canada', role: 'Prime Minister' },
-        { id: '5', name: 'Luiz Inácio Lula da Silva', country: 'Brazil', role: 'President' },
-      ];
-    }
+    let globalLeaders: GlobalLeader[] = [
+      { id: '1', name: 'Péter Magyar', country: 'Hungary', role: 'Prime Minister', timeRemaining: '3 yrs, 10 mos' },
+      { id: '2', name: 'Robert Fico', country: 'Slovakia', role: 'Prime Minister', timeRemaining: '1 yr, 4 mos' },
+      { id: '3', name: 'Volodymyr Zelenskyy', country: 'Ukraine', role: 'President', timeRemaining: 'Indefinite' },
+      { id: '4', name: 'Emmanuel Macron', country: 'France', role: 'President', timeRemaining: '11 mos' },
+      { id: '5', name: 'Donald Trump', country: 'United States', role: 'President', timeRemaining: '2 yrs, 7 mos' },
+    ];
     let globalParliaments: GlobalParliament[] = [];
     try {
       const ipuRes = await fetch('https://data.ipu.org/api/v1/parliaments', {
@@ -120,16 +108,51 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
       globalParliaments = [
         { country: 'United Kingdom', chamber: 'House of Commons', totalMembers: 650, womenPercentage: 34.6, nextElection: '2029' },
         { country: 'India', chamber: 'Lok Sabha', totalMembers: 543, womenPercentage: 14.9, nextElection: '2029' },
-        { country: 'Australia', chamber: 'House of Representatives', totalMembers: 151, womenPercentage: 38.4, nextElection: '2025' },
-        { country: 'Japan', chamber: 'House of Representatives', totalMembers: 465, womenPercentage: 9.7, nextElection: '2025' },
+        { country: 'Australia', chamber: 'House of Representatives', totalMembers: 151, womenPercentage: 38.4, nextElection: '2028' },
+        { country: 'Japan', chamber: 'House of Representatives', totalMembers: 465, womenPercentage: 9.7, nextElection: '2029' },
       ];
     }
+    
+    const ministers: Record<string, Minister[]> = {
+      'Hungary': [
+        { name: 'Péter Magyar', role: 'Prime Minister' },
+        { name: 'Bálint Ruff', role: "Minister of the Prime Minister's Office" },
+        { name: 'Anita Orbán', role: 'Minister of Foreign Affairs' },
+        { name: 'Dávid Vitézy', role: 'Minister of Transport and Investment' }
+      ],
+      'Slovakia': [
+        { name: 'Robert Fico', role: 'Prime Minister' },
+        { name: 'Juraj Blanár', role: 'Minister of Foreign and European Affairs' },
+        { name: 'Robert Kaliňák', role: 'Minister of Defence' },
+        { name: 'Ladislav Kamenický', role: 'Minister of Finance' }
+      ],
+      'Ukraine': [
+        { name: 'Yulia Svyrydenko', role: 'Prime Minister' },
+        { name: 'Mykhailo Fedorov', role: 'Minister of Defence' },
+        { name: 'Andrii Sybiha', role: 'Minister of Foreign Affairs' },
+        { name: 'Serhiy Marchenko', role: 'Minister of Finance' }
+      ],
+      'France': [
+        { name: 'Sébastien Lecornu', role: 'Prime Minister' },
+        { name: 'Laurent Nuñez', role: 'Minister of the Interior' },
+        { name: 'Catherine Vautrin', role: 'Minister of the Armed Forces' },
+        { name: 'Roland Lescure', role: 'Minister of Economics and Finance' }
+      ],
+      'USA': [
+        { name: 'Marco Rubio', role: 'Secretary of State' },
+        { name: 'Pete Hegseth', role: 'Secretary of Defense' },
+        { name: 'Scott Bessent', role: 'Secretary of the Treasury' },
+        { name: 'Pam Bondi', role: 'Attorney General' }
+      ]
+    };
+
     return {
       turnoutPercentage,
       processedPercentage,
       parties,
       globalLeaders,
       globalParliaments,
+      ministers,
     };
   }
   validateResponse(data: unknown): boolean {
@@ -142,7 +165,9 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
       'globalLeaders' in d &&
       Array.isArray(d.globalLeaders) &&
       'globalParliaments' in d &&
-      Array.isArray(d.globalParliaments)
+      Array.isArray(d.globalParliaments) &&
+      'ministers' in d &&
+      typeof d.ministers === 'object'
     );
   }
 }

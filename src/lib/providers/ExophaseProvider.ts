@@ -19,9 +19,14 @@ export class ExophaseProvider extends BaseDataSource<ExophaseData> {
   name = 'Exophase Profile Stats';
   category = 'Games';
   private username: string;
-  constructor(username: string) {
+  constructor(urlOrUsername: string) {
     super();
-    this.username = username;
+    let parsedUsername = urlOrUsername.trim();
+    const match = parsedUsername.match(/exophase\.com\/user\/([^/?]+)/);
+    if (match) {
+      parsedUsername = match[1];
+    }
+    this.username = parsedUsername;
   }
   async fetchData(): Promise<ExophaseData> {
     try {

@@ -11,6 +11,7 @@ import { SteamPersonalProvider } from '@/lib/providers/SteamPersonalProvider';
 import { ExophaseProvider } from '@/lib/providers/ExophaseProvider';
 import { SteamTopGamesProvider } from '@/lib/providers/SteamTopGamesProvider';
 import { YouTubePersonalProvider } from '@/lib/providers/YouTubePersonalProvider';
+import { LastFmArtistProvider } from '@/lib/providers/LastFmArtistProvider';
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -90,16 +91,13 @@ export async function GET(req: Request) {
           }
           if (user.favoriteArtist) {
             try {
-              let artistName = user.favoriteArtist;
-              const spotifyMatch = artistName.match(/open\.spotify\.com\/artist\/([^/?]+)/);
-              if (spotifyMatch) {
-                artistName = spotifyMatch[1];
+              const artistProvider = new LastFmArtistProvider(user.favoriteArtist);
+              const artistData = await artistProvider.fetchData();
+              if (artistData) {
+                personalData.artist = artistData;
               }
-              personalData.artist = {
-                name: artistName,
-                monthlyListeners: Math.floor(Math.random() * 50000000) + 1000000,
-              };
-            } catch {
+            } catch (e) {
+              console.error('Failed to fetch Last.fm Artist Data', e);
             }
           }
           if (user.trackerUrlR6 || user.trackerUrlRL || user.trackerUrlLoL || user.trackerUrlBF6 || user.trackerUrlFortnite) {

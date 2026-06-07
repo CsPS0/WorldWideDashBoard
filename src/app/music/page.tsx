@@ -6,8 +6,10 @@ import { MusicTrack } from '../DashboardClient';
 export default function MusicPage() {
   const [music, setMusic] = useState<MusicTrack[] | null>(null);
   const [personal, setPersonal] = useState<any>(null);
+  const [artist, setArtist] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [country, setCountry] = useState('Global');
+
   useEffect(() => {
     setLoading(true);
     fetch('/api/dashboard?music_country=' + encodeURIComponent(country), { cache: 'no-store' })
@@ -16,6 +18,9 @@ export default function MusicPage() {
         setMusic(data[`global_music_${country.replace(/\s+/g, '_')}`]);
         if (data['lastfm_personal']) {
           setPersonal(data['lastfm_personal']);
+        }
+        if (data['personal_data'] && data['personal_data'].artist) {
+          setArtist(data['personal_data'].artist);
         }
         setLoading(false);
       })
@@ -39,6 +44,42 @@ export default function MusicPage() {
   }
   return (
     <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+      <WidgetCard id="favorite-artist" title={artist ? `Your Favourite Artist: ${artist.name}` : "Favorite Artist"} icon={Music} delay={50} className="w-full xl:col-span-2">
+        {artist ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+            <div className="flex flex-col items-center justify-center py-8 bg-surface-inset border border-border-subtle rounded-xl h-full shadow-inner">
+              <div className="text-4xl font-black text-primary tracking-tight text-center px-4 leading-tight">{artist.name}</div>
+              <div className="text-accent-warm font-bold text-2xl mt-4">{formatNumber(artist.listeners)} <span className="text-sm font-medium text-secondary">Listeners</span></div>
+              <div className="text-muted text-sm mt-1.5 font-medium">{formatNumber(artist.playcount)} total plays</div>
+            </div>
+            
+            <div className="md:col-span-2 flex flex-col justify-center">
+              <h4 className="text-sm font-bold text-secondary uppercase tracking-wider mb-3 px-1">Top Tracks</h4>
+              <div className="flex flex-col gap-2.5">
+                {artist.topTracks.map((track: any, idx: number) => (
+                  <div key={idx} className="flex items-center gap-4 p-3 rounded-xl bg-surface-inset border border-border-subtle hover:bg-surface-card-hover transition-colors">
+                    <div className="w-6 text-center font-bold text-lg text-muted">{idx + 1}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-base font-bold text-primary truncate">{track.name}</div>
+                    </div>
+                    <div className="flex flex-col items-end shrink-0 pl-2">
+                      <div className="font-bold text-accent-warm text-lg">{formatNumber(track.playcount)}</div>
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-muted mt-0.5">plays</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-[200px] text-muted py-10 gap-3 text-sm">
+            <HelpCircle size={40} className="text-border-strong mb-2" />
+            <p>No Favorite Artist configured</p>
+            <p>Set a Last.fm Artist URL in Settings</p>
+          </div>
+        )}
+      </WidgetCard>
+
       <WidgetCard id="personal-music" title={personal ? `Listening Activity: ${personal.username}` : "Listening Activity"} icon={Music} delay={100} className="w-full" theme="accent">
         {personal ? (
           <div className="flex flex-col gap-3 p-4">
@@ -71,6 +112,7 @@ export default function MusicPage() {
           </div>
         )}
       </WidgetCard>
+
       <WidgetCard id="music" title={country === 'Global' ? 'Global Top 10 Music' : `Top 10 Music in ${country}`} icon={Music} delay={200} className="w-full">
         <div className="flex flex-wrap gap-2 px-4 pt-4 pb-2 border-b border-border-subtle mb-2">
           {['Global', 'USA', 'UK', 'France', 'Hungary', 'Romania'].map(c => (

@@ -16,6 +16,8 @@ import {
   ChevronLeft,
   Lock,
   BarChart2,
+  FileText,
+  Shield,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -233,7 +235,21 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 (pathname === '/settings' ? 'Settings' : 'Dashboard')}
             </h1>
           </div>
-          <div className="ml-auto relative">
+          <div className="ml-auto relative flex items-center gap-3">
+            <Link 
+              href="/privacy"
+              className="hidden sm:flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors cursor-pointer outline-none bg-surface-inset px-3 py-1.5 rounded-full border border-border-subtle hover:border-border-default"
+            >
+              <Shield size={14} className="text-muted" />
+              Privacy
+            </Link>
+            <Link 
+              href="/license"
+              className="hidden sm:flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors cursor-pointer outline-none bg-surface-inset px-3 py-1.5 rounded-full border border-border-subtle hover:border-border-default"
+            >
+              <FileText size={14} className="text-muted" />
+              License
+            </Link>
             <button 
               onClick={() => setStatusOpen(!statusOpen)}
               className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors cursor-pointer outline-none bg-surface-inset px-3 py-1.5 rounded-full border border-border-subtle hover:border-accent/50"

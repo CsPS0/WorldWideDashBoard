@@ -13,11 +13,14 @@ import {
   CheckCircle2,
   Link2,
   Camera,
+  Bitcoin,
+  ArrowLeftRight,
+  Landmark,
+  ChevronDown,
 } from 'lucide-react';
 type Tab = 'account' | 'integrations' | 'dashboard';
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<Tab>('account');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [password, setPassword] = useState('');
@@ -84,75 +87,64 @@ export default function SettingsPage() {
   }, []);
   const handleSave = async () => {
     setMessage(null);
-    if (activeTab === 'account' && password && password !== confirmPassword) {
+    if (password && password !== confirmPassword) {
       setMessage({ type: 'error', text: 'Passwords do not match.' });
       return;
     }
     setSaving(true);
     try {
-      if (activeTab === 'account') {
-        const payload: Record<string, string> = {};
-        if (password) payload.password = password;
-        if (avatarDirty) payload.avatarUrl = avatarUrl || '';
-        if (Object.keys(payload).length === 0) {
-          setMessage({ type: 'error', text: 'No changes to save.' });
-          setSaving(false);
-          return;
-        }
-        const res = await fetch('/api/auth/me', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (res.ok) {
-          setMessage({ type: 'success', text: 'Account updated.' });
-          setPassword('');
-          setConfirmPassword('');
-          setAvatarDirty(false);
-        } else {
-          const d = await res.json();
-          setMessage({ type: 'error', text: d.error || 'Failed to update.' });
-        }
-      } else if (activeTab === 'integrations') {
-        const res = await fetch('/api/auth/me', {
+      const promises = [];
+
+      const accountPayload: Record<string, string> = {};
+      if (password) accountPayload.password = password;
+      if (avatarDirty) accountPayload.avatarUrl = avatarUrl || '';
+      
+      if (Object.keys(accountPayload).length > 0) {
+        promises.push(
+          fetch('/api/auth/me', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(accountPayload),
+          }).then(async res => {
+            if (res.ok) {
+              setPassword('');
+              setConfirmPassword('');
+              setAvatarDirty(false);
+            } else {
+              const d = await res.json();
+              throw new Error(d.error || 'Failed to update account.');
+            }
+          })
+        );
+      }
+
+      promises.push(
+        fetch('/api/auth/me', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            steamId, 
-            steamApiKey,
-            exophaseUsername, 
-            youtubeHandle, 
-            favoriteArtist, 
-            lastFmUsername,
-            trackerUrlR6,
-            trackerUrlRL,
-            trackerUrlLoL,
-            trackerUrlBF6,
-            trackerUrlFortnite
+            steamId, steamApiKey, exophaseUsername, youtubeHandle, 
+            favoriteArtist, lastFmUsername, trackerUrlR6, trackerUrlRL, 
+            trackerUrlLoL, trackerUrlBF6, trackerUrlFortnite
           }),
-        });
-        if (res.ok) {
-          setMessage({ type: 'success', text: 'Integrations saved.' });
-        } else {
-          setMessage({ type: 'error', text: 'Failed to save integrations.' });
-        }
-      } else if (activeTab === 'dashboard') {
-        const res = await fetch('/api/auth/preferences', {
+        }).then(res => { if (!res.ok) throw new Error('Failed to save integrations.'); })
+      );
+
+      promises.push(
+        fetch('/api/auth/preferences', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             dashboardStyle,
             hiddenWidgets: JSON.stringify(hiddenWidgets),
           }),
-        });
-        if (res.ok) {
-          setMessage({ type: 'success', text: 'Dashboard preferences saved.' });
-        } else {
-          setMessage({ type: 'error', text: 'Failed to save preferences.' });
-        }
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'An unexpected error occurred.' });
+        }).then(res => { if (!res.ok) throw new Error('Failed to save preferences.'); })
+      );
+
+      await Promise.all(promises);
+      setMessage({ type: 'success', text: 'All settings saved successfully.' });
+    } catch (e: any) {
+      setMessage({ type: 'error', text: e.message || 'An unexpected error occurred.' });
     } finally {
       setSaving(false);
       setTimeout(() => setMessage(null), 3000);
@@ -170,32 +162,11 @@ export default function SettingsPage() {
       </div>
     );
   }
-  const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
-    { id: 'account', label: 'Account', icon: Lock },
-    { id: 'integrations', label: 'Integrations', icon: Link2 },
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
-  ];
   return (
-    <div className="w-full max-w-2xl">
-      <div className="flex gap-1 p-1 bg-surface-inset rounded-lg mb-6 w-fit">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => { setActiveTab(tab.id); setMessage(null); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? 'bg-accent/10 text-accent'
-                : 'text-muted hover:text-primary'
-            }`}
-          >
-            <tab.icon size={15} />
-            {tab.label}
-          </button>
-        ))}
-      </div>
+    <div className="w-full max-w-7xl mx-auto">
       {message && (
         <div
-          className={`flex items-center gap-2.5 p-3 rounded-lg mb-4 text-sm font-medium border ${
+          className={`flex items-center gap-2.5 p-3 rounded-lg mb-6 text-sm font-medium border ${
             message.type === 'success'
               ? 'bg-success/10 border-success/20 text-success'
               : 'bg-danger/10 border-danger/20 text-danger'
@@ -205,10 +176,12 @@ export default function SettingsPage() {
           {message.text}
         </div>
       )}
-      <div className="glass-card p-6 space-y-5">
-        {activeTab === 'account' && (
-          <>
-            <div className="flex items-center gap-5">
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div className="glass-card p-6 h-fit space-y-5">
+          <h2 className="text-lg font-bold text-primary mb-4 flex items-center gap-2"><Lock size={18} className="text-accent" /> Account Settings</h2>
+          <div className="flex items-center gap-5">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -285,155 +258,129 @@ export default function SettingsPage() {
                 />
               </div>
             </div>
-          </>
-        )}
-        {activeTab === 'integrations' && (
-          <div className="space-y-5">
-            <p className="text-sm text-secondary">Paste the full URL from your browser&apos;s address bar for each service.</p>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <Gamepad2 size={13} /> Steam Profile URL
-              </label>
-              <input
-                type="url"
-                value={steamId}
-                onChange={(e) => setSteamId(e.target.value)}
-                placeholder="https://steamcommunity.com/id/chonya"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-              <p className="text-[11px] text-muted">e.g. https://steamcommunity.com/id/yourname</p>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <Lock size={13} /> Steam Web API Key
-              </label>
-              <input
-                type="password"
-                value={steamApiKey}
-                onChange={(e) => setSteamApiKey(e.target.value)}
-                placeholder="Optional. Required for exact game count and hours"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-              <p className="text-[11px] text-muted">Get one for free at https://steamcommunity.com/dev/apikey</p>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <Gamepad2 size={13} /> Exophase Username
-              </label>
-              <input
-                type="text"
-                value={exophaseUsername}
-                onChange={(e) => setExophaseUsername(e.target.value)}
-                placeholder="e.g. CsPS"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <Music size={13} /> Last.fm Profile URL
-              </label>
-              <input
-                type="url"
-                value={lastFmUsername}
-                onChange={(e) => setLastFmUsername(e.target.value)}
-                placeholder="https://www.last.fm/user/CsPS0"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-              <p className="text-[11px] text-muted">e.g. https://www.last.fm/user/yourname</p>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <MonitorPlay size={13} /> YouTube Channel URL
-              </label>
-              <input
-                type="url"
-                value={youtubeHandle}
-                onChange={(e) => setYoutubeHandle(e.target.value)}
-                placeholder="https://www.youtube.com/@CsPS0"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-              <p className="text-[11px] text-muted">e.g. https://www.youtube.com/@YourChannel</p>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                <Music size={13} /> Spotify Artist URL
-              </label>
-              <input
-                type="url"
-                value={favoriteArtist}
-                onChange={(e) => setFavoriteArtist(e.target.value)}
-                placeholder="https://open.spotify.com/artist/4LZ4De2MoO3lP6QaNCfvcu"
-                className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-              />
-              <p className="text-[11px] text-muted">Open the artist on Spotify, click Share → Copy link, and paste it here.</p>
-            </div>
-            <div className="pt-6 border-t border-border-subtle mt-6 space-y-5">
-              <h3 className="text-primary font-bold tracking-wide">TRN TRACKER.GG</h3>
-              <p className="text-sm text-secondary -mt-3">Provide the full URL to your specific game profiles on tracker.gg</p>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                  <Gamepad2 size={13} /> R6 Siege Profile URL
-                </label>
-                <input
-                  type="url"
-                  value={trackerUrlR6}
-                  onChange={(e) => setTrackerUrlR6(e.target.value)}
-                  placeholder="https://tracker.gg/r6siege/profile/uplay/yourname/overview"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+        </div>
+
+        <div className="glass-card p-6 h-fit space-y-5">
+          <h2 className="text-lg font-bold text-primary mb-1 flex items-center gap-2"><Link2 size={18} className="text-accent" /> Integrations</h2>
+          <div className="space-y-3">
+            <p className="text-sm text-secondary mb-4">Click a category below to configure its API keys and profile URLs.</p>
+            
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><Gamepad2 size={16} className="text-accent" /> Gaming</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 space-y-5 border-t border-border-subtle bg-surface-base">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                    <Gamepad2 size={13} /> Steam Profile URL
+                  </label>
+                  <input type="url" value={steamId} onChange={(e) => setSteamId(e.target.value)} placeholder="https://steamcommunity.com/id/yourusername" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                    <Lock size={13} /> Steam Web API Key
+                  </label>
+                  <input type="password" value={steamApiKey} onChange={(e) => setSteamApiKey(e.target.value)} placeholder="Optional. Required for exact game count" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
+                    <Gamepad2 size={13} /> Exophase Profile URL
+                  </label>
+                  <input type="url" value={exophaseUsername} onChange={(e) => setExophaseUsername(e.target.value)} placeholder="https://www.exophase.com/user/yourusername/" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
+                
+                <h3 className="text-primary font-bold tracking-wide mt-6 border-t border-border-subtle pt-4 text-sm">TRN TRACKER.GG URLS</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-secondary uppercase tracking-wider">R6 Siege</label>
+                    <input type="url" value={trackerUrlR6} onChange={(e) => setTrackerUrlR6(e.target.value)} placeholder="https://tracker.gg/r6siege/profile/..." className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary outline-none focus:border-accent" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-secondary uppercase tracking-wider">Rocket League</label>
+                    <input type="url" value={trackerUrlRL} onChange={(e) => setTrackerUrlRL(e.target.value)} placeholder="https://rocketleague.tracker.network/..." className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary outline-none focus:border-accent" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-secondary uppercase tracking-wider">League of Legends</label>
+                    <input type="url" value={trackerUrlLoL} onChange={(e) => setTrackerUrlLoL(e.target.value)} placeholder="https://tracker.gg/lol/profile/..." className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary outline-none focus:border-accent" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-secondary uppercase tracking-wider">Battlefield 6</label>
+                    <input type="url" value={trackerUrlBF6} onChange={(e) => setTrackerUrlBF6(e.target.value)} placeholder="https://tracker.gg/bf2042/profile/..." className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary outline-none focus:border-accent" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-secondary uppercase tracking-wider">Fortnite</label>
+                    <input type="url" value={trackerUrlFortnite} onChange={(e) => setTrackerUrlFortnite(e.target.value)} placeholder="https://fortnitetracker.com/profile/..." className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary outline-none focus:border-accent" />
+                  </div>
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                  <Gamepad2 size={13} /> Rocket League Profile URL
-                </label>
-                <input
-                  type="url"
-                  value={trackerUrlRL}
-                  onChange={(e) => setTrackerUrlRL(e.target.value)}
-                  placeholder="https://rocketleague.tracker.network/rocket-league/profile/epic/yourname/overview"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+            </details>
+
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><MonitorPlay size={16} className="text-accent" /> Entertainment</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 space-y-4 border-t border-border-subtle bg-surface-base">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider">YouTube Channel URL</label>
+                  <input type="url" value={youtubeHandle} onChange={(e) => setYoutubeHandle(e.target.value)} placeholder="https://www.youtube.com/@yourchannel" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                  <Gamepad2 size={13} /> League of Legends Profile URL
-                </label>
-                <input
-                  type="url"
-                  value={trackerUrlLoL}
-                  onChange={(e) => setTrackerUrlLoL(e.target.value)}
-                  placeholder="https://tracker.gg/lol/profile/riot/NA/yourname%23TAG/overview"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+            </details>
+
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><Music size={16} className="text-accent" /> Music</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 space-y-4 border-t border-border-subtle bg-surface-base">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider">Last.fm Profile URL</label>
+                  <input type="url" value={lastFmUsername} onChange={(e) => setLastFmUsername(e.target.value)} placeholder="https://www.last.fm/user/yourusername" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider">Favorite Artist URL (Last.fm)</label>
+                  <input type="url" value={favoriteArtist} onChange={(e) => setFavoriteArtist(e.target.value)} placeholder="https://www.last.fm/music/Artist+Name" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                  <Gamepad2 size={13} /> Battlefield 6 Profile URL
-                </label>
-                <input
-                  type="url"
-                  value={trackerUrlBF6}
-                  onChange={(e) => setTrackerUrlBF6(e.target.value)}
-                  placeholder="https://tracker.gg/bf2042/profile/origin/yourname/overview"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+            </details>
+
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><Bitcoin size={16} className="text-accent" /> Crypto</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 border-t border-border-subtle bg-surface-base text-sm text-muted text-center italic py-6">
+                No external configuration required for Crypto yet.
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                  <Gamepad2 size={13} /> Fortnite Profile URL
-                </label>
-                <input
-                  type="url"
-                  value={trackerUrlFortnite}
-                  onChange={(e) => setTrackerUrlFortnite(e.target.value)}
-                  placeholder="https://fortnitetracker.com/profile/all/yourname"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+            </details>
+
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><ArrowLeftRight size={16} className="text-accent" /> Exchange</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 border-t border-border-subtle bg-surface-base text-sm text-muted text-center italic py-6">
+                No external configuration required for Exchange yet.
               </div>
-            </div>
+            </details>
+
+            <details className="group border border-border-subtle rounded-xl bg-surface-inset overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer font-bold text-primary p-3 select-none flex items-center justify-between hover:bg-surface-card-hover transition-colors">
+                <div className="flex items-center gap-2.5"><Landmark size={16} className="text-accent" /> Politics</div>
+                <ChevronDown size={16} className="text-muted group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="p-4 border-t border-border-subtle bg-surface-base text-sm text-muted text-center italic py-6">
+                No external configuration required for Politics yet.
+              </div>
+            </details>
+
           </div>
-        )}
-        {activeTab === 'dashboard' && (
+        </div>
+
+        <div className="glass-card p-6 h-fit space-y-6">
+          <h2 className="text-lg font-bold text-primary mb-4 flex items-center gap-2"><LayoutGrid size={18} className="text-accent" /> Dashboard Preferences</h2>
           <div className="space-y-6">
             <div className="mb-6">
               <label className="text-xs font-medium text-secondary uppercase tracking-wider mb-3 block">Dashboard Layout Options</label>
@@ -471,9 +418,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
-      <div className="flex justify-end mt-4">
+      
+      <div className="flex justify-end mt-6 sticky bottom-4 z-10">
         <button
           onClick={handleSave}
           disabled={saving}

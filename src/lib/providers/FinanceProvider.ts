@@ -18,6 +18,7 @@ export class FinanceProvider extends BaseDataSource<FinanceData> {
   id = 'finance_markets';
   name = 'Global Finance Markets';
   category = 'Finance';
+  isMock = true;
   async fetchData(): Promise<FinanceData> {
     try {
       const cryptoRes = await axios.get(

@@ -18,6 +18,7 @@ Klónozd a repository-t, majd futtasd a következő parancsokat a projekt gyök�
 bun install
 
 # 2. Környezeti változók beállítása (másold le a példát)
+# Figyelem: A globális modulokhoz a YOUTUBE_API_KEY és LASTFM_API_KEY kötelező!
 cp .env.example .env
 
 # 3. Adatbázis (SQLite Cache) inicializálása

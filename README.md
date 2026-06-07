@@ -11,6 +11,7 @@ A szoftver különlegessége az objektumorientált (OOP) architektúra, amely le
 - **Politika:** Magyar választási adatok és globális vezetői statisztikák.
 - **Pénzügy & Kripto:** Tőzsdei árfolyamok és kriptovaluta adatok (beleértve az egyedi Hawk Tuah Coint).
 - **Testreszabhatóság:** Dinamikus elrendezés (Kompakt vagy Teljes szélesség), dedikált Beállítások oldal a személyes API kulcsoknak.
+- **Biztonság és Jogi Nyilatkozatok:** Teljes értékű "Data & Privacy Policy" oldal a Mock és Live adatok átláthatóságáért, valamint beépített Open Source License megjelenítő.
 - **Design:** Prémium, üveg hatású (glassmorphism) sötét téma fluid Anime.js animációkkal és egyedi vizuális 404 hibaoldallal.
 
 ## Technológiai Stack
@@ -39,7 +40,7 @@ A projekt részletes technikai és vizuális terveit külön dokumentumok tartal
 
 ### 1. Helyi fejlesztés (Bun & Prisma)
 1. Klónozd a repository-t.
-2. Másold le a `.env.example` fájlt `.env` néven és (opcionálisan) töltsd ki a `YOUTUBE_API_KEY`-t.
+2. Másold le a `.env.example` fájlt `.env` néven és (kötelezően) töltsd ki a `YOUTUBE_API_KEY` és `LASTFM_API_KEY` értékeket. *(Megjegyzés: a személyes API kulcsokat, mint a Steam kulcs, nem ide kell beírni, hanem a felületen a Beállítások oldalon!)*
 3. Telepítsd a függőségeket:
    ```bash
    bun install
