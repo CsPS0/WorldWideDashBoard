@@ -94,7 +94,7 @@ export default function SteamPage() {
       <WidgetCard id="steam-detail" title="Steam Stats" icon={Gamepad2} delay={100} className="relative">
         <div className="absolute top-6 right-6">
           <select 
-            className="bg-[#111111] border border-[#292929] rounded px-3 py-1.5 text-sm font-semibold text-primary focus:outline-none focus:border-accent transition-colors cursor-pointer"
+            className="bg-surface-base border border-border-subtle rounded px-3 py-1.5 text-sm font-semibold text-primary focus:outline-none focus:border-accent transition-colors cursor-pointer"
             value={selectedApp}
             onChange={(e) => setSelectedApp(e.target.value)}
           >
@@ -168,7 +168,7 @@ export default function SteamPage() {
             {Object.keys(trn).length > 1 && (
               <div className="absolute top-6 right-6">
                 <select 
-                  className="bg-[#111111] border border-[#292929] rounded px-3 py-1.5 text-sm font-semibold text-primary focus:outline-none focus:border-accent transition-colors cursor-pointer"
+                  className="bg-surface-base border border-border-subtle rounded px-3 py-1.5 text-sm font-semibold text-primary focus:outline-none focus:border-accent transition-colors cursor-pointer"
                   value={selectedTrnGame}
                   onChange={(e) => setSelectedTrnGame(e.target.value)}
                 >

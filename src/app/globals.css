@@ -19,6 +19,25 @@
   --danger: #f87171;
 }
 
+:root.light {
+  --surface-base: #f2f2f2;
+  --surface-sidebar: #eaeaea;
+  --surface-card: #ffffff;
+  --surface-card-hover: #e8e8e8;
+  --surface-inset: #f7f7f7;
+  --border-subtle: #d0d0d0;
+  --border-default: #b0b0b0;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #888888;
+  --accent: #c44a1f;
+  --accent-glow: rgba(196, 74, 31, 0.15);
+  --accent-warm: #d85d30;
+  --accent-warm-glow: rgba(216, 93, 48, 0.15);
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
 @theme inline {
   --color-surface-base: var(--surface-base);
   --color-surface-sidebar: var(--surface-sidebar);

@@ -18,6 +18,8 @@ import {
   BarChart2,
   FileText,
   Shield,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -37,7 +39,26 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [apiStatuses, setApiStatuses] = useState<any[]>([]);
   const [showLockWarning, setShowLockWarning] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const pathname = usePathname();
+
+  useEffect(() => {
+    const isLight = document.documentElement.classList.contains('light');
+    setTheme(isLight ? 'light' : 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    if (newTheme === 'light') {
+      document.documentElement.classList.add('light');
+      localStorage.theme = 'light';
+    } else {
+      document.documentElement.classList.remove('light');
+      localStorage.theme = 'dark';
+    }
+  };
+
   useEffect(() => {
     fetch('/api/dashboard')
       .then(res => res.json())
@@ -250,6 +271,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <FileText size={14} className="text-muted" />
               License
             </Link>
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-surface-inset border border-border-subtle text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
             <button 
               onClick={() => setStatusOpen(!statusOpen)}
               className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors cursor-pointer outline-none bg-surface-inset px-3 py-1.5 rounded-full border border-border-subtle hover:border-accent/50"
@@ -259,7 +287,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               Live
             </button>
             {statusOpen && (
-              <div className="absolute right-0 top-full mt-3 w-72 glass-card bg-[#1a1a1a] border border-[#292929] rounded-xl shadow-2xl p-5 z-50 animate-slideUp">
+              <div className="absolute right-0 top-full mt-3 w-72 glass-card bg-surface-card border border-border-subtle rounded-xl shadow-2xl p-5 z-50 animate-slideUp">
                 <div className="flex justify-between items-center mb-4">
                   <h4 className="text-sm font-bold text-primary">System Status</h4>
                   <button onClick={() => setStatusOpen(false)} className="text-secondary hover:text-primary transition-colors"><X size={16}/></button>

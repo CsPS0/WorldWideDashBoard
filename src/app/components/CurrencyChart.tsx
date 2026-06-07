@@ -233,7 +233,7 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-sm text-secondary font-medium">Converted to {target}</label>
-            <div className="bg-[#1a1a1a] border-[#292929] border rounded-lg p-5 text-primary font-bold text-2xl break-all">
+            <div className="bg-surface-card border-border-subtle border rounded-lg p-5 text-primary font-bold text-2xl break-all">
               {((parseFloat(calcAmount) || 0) * currentRate).toLocaleString(undefined, { maximumFractionDigits: 2 })} {target}
             </div>
           </div>

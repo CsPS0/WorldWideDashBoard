@@ -39,7 +39,7 @@ export default function PoliticsPage() {
                 <div className="text-5xl font-bold text-primary mb-2">{politics.turnoutPercentage}%</div>
                 <div className="text-base text-secondary">Voter Turnout</div>
               </div>
-              <div className="flex flex-col justify-center items-center bg-[#1a1a1a] border-[#292929] border p-6 rounded-2xl">
+              <div className="flex flex-col justify-center items-center bg-surface-card border-border-subtle border p-6 rounded-2xl">
                 <Landmark size={28} className="text-accent-warm mb-3" />
                 <div className="text-4xl font-bold text-accent-warm mb-3 text-center">{politics.leadingParty}</div>
                 <div className="text-base text-secondary">Leading Party</div>

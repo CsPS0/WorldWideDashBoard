@@ -104,7 +104,7 @@ export default function DashboardClient() {
     <div className={`w-full space-y-8 pb-20 ${dashboardStyle === 'compact' ? 'max-w-6xl mx-auto' : ''}`}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 grid-flow-row-dense">
         {!hiddenWidgets.includes('crypto') && (
-          <Link href="/crypto" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/crypto" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>
@@ -133,7 +133,7 @@ export default function DashboardClient() {
           </Link>
         )}
         {!hiddenWidgets.includes('steam') && (
-          <Link href="/gaming" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/gaming" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>
@@ -155,7 +155,7 @@ export default function DashboardClient() {
           </Link>
         )}
         {!hiddenWidgets.includes('youtube') && (
-          <Link href="/entertainment" className="lg:col-span-1 lg:row-span-2 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/entertainment" className="lg:col-span-1 lg:row-span-2 md:col-span-1 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>
@@ -172,15 +172,15 @@ export default function DashboardClient() {
                 <div className="w-full mt-2">
                   <h3 className="font-bold text-xl text-primary mb-4">{personalYoutuber.name}</h3>
                   <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Subscribers</span>
                       <span className="text-accent-warm font-bold">{formatNumber(personalYoutuber.subscriberCount)}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Total Views</span>
                       <span className="text-primary font-bold">{formatNumber(personalYoutuber.viewCount)}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Videos</span>
                       <span className="text-primary font-bold">{formatNumber(personalYoutuber.videoCount)}</span>
                     </div>
@@ -195,15 +195,15 @@ export default function DashboardClient() {
                 <div className="w-full mt-2">
                   <h3 className="font-bold text-xl text-primary mb-4">{topYoutuber.name}</h3>
                   <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Subscribers</span>
                       <span className="text-accent-warm font-bold">{formatNumber(topYoutuber.subscriberCount)}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Total Views</span>
                       <span className="text-primary font-bold">{formatNumber(topYoutuber.viewCount)}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-[#1a1a1a] px-3 py-2 rounded-lg border border-[#292929]">
+                    <div className="flex justify-between items-center bg-surface-card px-3 py-2 rounded-lg border border-border-subtle">
                       <span className="text-secondary text-xs font-bold uppercase">Videos</span>
                       <span className="text-primary font-bold">{formatNumber(topYoutuber.videoCount)}</span>
                     </div>
@@ -216,7 +216,7 @@ export default function DashboardClient() {
           </Link>
         )}
         {!hiddenWidgets.includes('music') && (
-          <Link href="/music" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/music" className="lg:col-span-2 lg:row-span-1 md:col-span-2 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>
@@ -258,7 +258,7 @@ export default function DashboardClient() {
           </Link>
         )}
         {!hiddenWidgets.includes('politics') && (
-          <Link href="/politics" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/politics" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>
@@ -277,7 +277,7 @@ export default function DashboardClient() {
           </Link>
         )}
         {!hiddenWidgets.includes('exchange') && (
-          <Link href="/exchange" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-[#1a1a1a] border-[#292929] border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
+          <Link href="/exchange" className="lg:col-span-1 lg:row-span-1 md:col-span-1 group block bg-surface-card border-border-subtle border rounded-2xl p-6 hover:border-accent hover:shadow-xl hover:shadow-accent/5 transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
               <ArrowRight className="text-accent" />
             </div>

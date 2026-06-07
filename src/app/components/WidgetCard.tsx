@@ -24,7 +24,7 @@ export function WidgetCard({ title, icon: Icon, children, delay = 0, className =
       });
     }
   }, [delay]);
-  const themeClasses = 'bg-[#1a1a1a] border-[#292929] border text-primary';
+  const themeClasses = 'bg-surface-card border-border-subtle border text-primary';
   const iconBg = 'bg-accent/15 text-accent';
   const titleColor = 'text-primary';
   return (
