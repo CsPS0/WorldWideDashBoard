@@ -23,6 +23,7 @@ export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [originalPassword, setOriginalPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -96,7 +97,15 @@ export default function SettingsPage() {
       const promises = [];
 
       const accountPayload: Record<string, string> = {};
-      if (password) accountPayload.password = password;
+      if (password) {
+        if (!originalPassword) {
+          setMessage({ type: 'error', text: 'Please enter your original password.' });
+          setSaving(false);
+          return;
+        }
+        accountPayload.originalPassword = originalPassword;
+        accountPayload.password = password;
+      }
       if (avatarDirty) accountPayload.avatarUrl = avatarUrl || '';
       
       if (Object.keys(accountPayload).length > 0) {
@@ -107,6 +116,7 @@ export default function SettingsPage() {
             body: JSON.stringify(accountPayload),
           }).then(async res => {
             if (res.ok) {
+              setOriginalPassword('');
               setPassword('');
               setConfirmPassword('');
               setAvatarDirty(false);
@@ -236,26 +246,38 @@ export default function SettingsPage() {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider">New Password</label>
+                <label className="text-xs font-medium text-secondary uppercase tracking-wider">Original Password</label>
                 <input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter new password"
+                  value={originalPassword}
+                  onChange={(e) => setOriginalPassword(e.target.value)}
+                  placeholder="Current password"
                   className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
                 />
               </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-secondary uppercase tracking-wider">Confirm Password</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm password"
-                  className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider">New Password</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-secondary uppercase tracking-wider">Confirm Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm password"
+                    className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors"
+                  />
+                </div>
               </div>
             </div>
         </div>
