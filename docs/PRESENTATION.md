@@ -1,56 +1,38 @@
-# Prezentáció Vázlat (5 perc) - World Wide Dashboard
+# Prezentáció Vázlat / Speaker Notes - World Wide Dashboard
 
-Ez a dokumentum segít felkészülni a projekt bemutatójára. A prezentáció hossza összesen 5 perc, amit három részre bontottunk.
-
----
-
-## 1. Bevezetés (Csongor) - 1.5 perc
-**Téma:** Miért jött létre a projekt és miről szól?
-
-- **Problémafelvetés:** 
-    - "Sziasztok! Biztos ti is észrevettétek, hogy ha különböző adatokra (Steam statisztikák, YouTube trendek, tőzsdei árfolyamok vagy akár a magyar választási eredmények) vagytok kíváncsiak, rengeteg különböző oldalt kell végigböngésznetek."
-    - "Sokszor nehézkes a navigáció, és az adatok nem egy helyen érhetők el."
-- **A megoldás (A projekt célja):**
-    - "A **World Wide Dashboard** célja, hogy ezeket a különálló adatforrásokat egyetlen, modern és letisztult felületen egyesítse."
-    - "Egy olyan moduláris rendszert építünk, ahol a felhasználó saját maga döntheti el, milyen adatokat szeretne látni, és még a saját személyes fiókjait (Steam, Last.fm, Tracker.gg) is bekötheti."
-- **Főbb kategóriák:** Rövid felsorolás (Steam, YouTube és Zenei toplisták, Magyar választási adatok, Kripto és Deviza, Személyes Exophase adatok).
+Ez a dokumentum tartalmazza a hivatalos prezentációhoz tartozó beszédvázlatot. A szöveg felosztása pontosan követi a prezentáció (presentation.marp.md) diáinak sorrendjét.
 
 ---
 
-## 2. Frontend & Design (Ricsi) - 1.5 perc
-**Téma:** Felhasználói felület és élmény.
+## 1. dia: Címlap és Projekt Célja (Ricsi) - 🇭🇺 Magyarul
 
-- **Technológiai stack:** 
-    - "A felületet **Next.js** és **Tailwind CSS** segítségével készítjük el, ami garantálja a sebességet és a modern kinézetet."
-    - "Az animációkhoz az **Anime.js** könyvtárat használjuk, hogy a dashboard 'éljen' és reszponzív legyen."
-- **Felhasználói élmény (UX):**
-    - "A dashboard kártyákra (widgetekre) épül. Letisztult üveghatás (Glassmorphism), és reszponzív dizájn jellemzi."
-    - "Készítettem egy dedikált Beállítások (Settings) oldalt, ahol a felhasználók átkapcsolhatnak a kompakt és a teljes képernyős nézet között, valamint megadhatják az API kulcsaikat."
-  - Dinamikus sötét/világos téma (Light/Dark mode) üveghatással.
-  - Szigorúan a Coolors.co paletta 5 színére építve (Prussian Blue, Orange, Alabaster Grey, stb.): a legfontosabb információk (pl. aktuális játékosszám, zenei toplista vagy árfolyam) azonnal szembeötlőek."
-- **Interaktivitás és Jogosultság:** 
-    - "Kiemelt figyelmet fordítottam a transzparenciára: integráltam egy beépített MIT Licenc megtekintőt és egy dedikált Adatvédelmi Irányelvek (Data & Privacy) oldalt, amely tisztázza az élő és szimulált API-k működését."
-    - "Továbbá egy új, egyedi animált (oroszlános) 404 hibaoldalt is létrehoztam."
+* **Téma:** A bevezető, a projektünk alapötlete, és hogy miért pont ezt a témát választottuk.
+* **Javasolt szöveg:** 
+  "Tisztelt Tanárnők és Tanár Urak! / Tisztelt Vizsgabizottság! Amikor elkezdtünk gondolkozni a projekten, arra a következtetésre jutottunk, hogy a mindennapokban rengeteg különböző weboldalt kell használnunk az információk begyűjtésére. Ebből kifolyólag tűztük ki célul a World Wide Dashboard létrehozását. A projektünk alapvető küldetése, hogy egyetlen központosított, letisztult felületen egyesítse a legfontosabb személyes, szórakoztató és gazdasági adatokat."
 
 ---
 
-## 3. Backend & Architektúra (Zalán) - 2 perc
-**Téma:** Adatkezelés és technikai háttér.
+## 2-5. dia: Tech Stack és Architektúra (Csongor) - 🇬🇧 In English
 
-- **OOP Megközelítés (A tanári követelmény):**
-    - "A projekt alapja egy **objektumorientált architektúra**. Egy úgynevezett **Strategy Pattern**-t használunk az adatforrások kezelésére."
-    - "Minden adatforrás (Steam, YouTube, stb.) egy külön osztály, ami egy közös interfészt valósít meg. Ez teszi lehetővé, hogy bármikor könnyen hozzáadhassunk egy új modult a rendszerhez."
-- **Technikai háttér:**
-    - "A futtatáshoz a modern **Bun** runtime-ot használjuk, az adatok tárolására és gyorsítótárazására (caching) pedig a **Prisma** és **SQLite** párost."
-- **Adatgyűjtés:**
-    - "Ahol van hivatalos API (pl. Steam, YouTube), ott azt használjuk. Ahol nincs (pl. Exophase), ott egyedi adatgyűjtő algoritmusokat (scraping) írunk."
-- **Tesztelés (Kiemelt rész):** 
-    - "Készítettem egy C# alapú (xUnit) tesztkörnyezetet is, ami 30 különböző automatizált teszttel garantálja az OOP architektúrában lévő adatszolgáltatóink minőségét."
-- **Zárás:** "A rendszer Docker-kompatibilis, és a kód szigorúan mentes a kommentektől a tiszta Clean Code alapelvek miatt."
+* **Téma:** A technológiai háttér bemutatása (Nyelvek, Könyvtárak, API-k és Backend).
+* **Javasolt szöveg:**
+  * **(2-3. dia):** "To build this platform, we utilized modern industry standards. Our core framework is Next.js utilizing the App Router, built on React. We wrote the entire application in TypeScript for strict type safety, and we integrated Bun as our runtime environment. For data management, we utilized Prisma ORM."
+  * **(4-5. dia):** "We successfully integrated multiple external data sources, including the Steam Web API, YouTube Data API, and Finance APIs. To manage these elegantly on the backend, we utilized an Object-Oriented Strategy Pattern, strictly calling data via Server Actions to guarantee maximum modularity and security."
 
 ---
 
-## Időbeosztás összefoglaló:
-1. **Csongor:** 0:00 - 1:30
-2. **Ricsi:** 1:30 - 3:00
-3. **Zalán:** 3:00 - 5:00
+## 6. dia: Tesztelés (Zalán) - 🇭🇺 Magyarul
+
+* **Téma:** A szoftver tesztelése és stabilitása.
+* **Javasolt szöveg:** 
+  "Annak érdekében, hogy a szoftverünk ne csupán esztétikus, hanem robusztus és hibamentes is legyen, kiemelt hangsúlyt fektettünk a minőségbiztosításra. A backend folyamatainkat dedikált xUnit integrációs tesztekkel validáltuk, így a külső API-k meghibásodása esetén sem omlik össze a rendszerünk. Ezen felül átfogó manuális tesztelést is végeztünk a frontend felületen, nagy figyelmet fordítva a cross-browser kompatibilitásra és az API végpontok adatbiztonságára."
+
+---
+
+## 7-11. dia: Funkciók, UI és GYIK (Csongor) - 🇬🇧 In English
+
+* **Téma:** A weboldal funkcióinak, a felületnek (UI) a bemutatása, és a kérdések (FAQ) megválaszolása.
+* **Javasolt szöveg:**
+  * **(7-9. dia):** "Our application provides several core functionalities. Users can safely log in, link their gaming accounts to monitor live Steam statistics, connect their YouTube handles, and efficiently track global cryptocurrencies or political election data all from one single dashboard."
+  * **(10. dia):** "For the User Experience, we engineered a clean card-based layout featuring a dynamic Dark and Light mode switch, heavily optimized for full responsiveness and lazy-loading."
+  * **(11. dia):** "To address a few precise legal questions: First, **is this website legally publishable?** Yes, the site is publishable for portfolio and educational use. However, because we utilize official APIs, we strictly adhere to their Terms of Service, meaning we cannot monetize their data. Secondly, **do we have the legal rights?** We integrated a dedicated Privacy Policy and an MIT License viewer to ensure complete transparency regarding data handling. Thirdly, **is our web scraping legally compliant?** Yes, where official APIs are unavailable, we only scrape public, non-copyrighted statistical data and strictly limit our request rates to respect the target servers. Furthermore, **where is the signed-up users' data stored?** All sensitive user profiles, encrypted passwords, and API preferences are securely stored locally within an SQLite database managed by Prisma. **How can the application be deployed or run locally?** Because we built it with native Docker support and the Bun runtime, it can be spun up instantly using standard containerization or simply by running a single local command. Finally, **what is the foundation of our mock data?** Our mock data, such as election results or political statistics, is based on historically accurate data gathering and static JSON representations of public government statistics."
