@@ -6,8 +6,8 @@ export default function LandingPage() {
       <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent-warm mb-8 rounded-xl flex items-center justify-center transform rotate-3">
         <BarChart2 size={32} className="text-surface-base transform -rotate-3" />
       </div>
-      <h1 className="text-5xl font-bold text-primary mb-6 max-w-3xl leading-tight">
-        Your digital world, unified in one dashboard.
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-6 max-w-3xl leading-tight break-words sm:break-normal">
+        WorldWideDashBoard
       </h1>
       <p className="text-xl text-secondary mb-10 max-w-2xl">
         See your Steam stats, YouTube channel performance, crypto portfolio, and global music charts all in one simple place. No clutter, just the numbers you care about.
@@ -27,24 +27,7 @@ export default function LandingPage() {
           Sign in
         </Link>
       </div>
-      <div className="mt-20 pt-10 border-t border-border-subtle w-full max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div>
-          <div className="text-3xl font-bold text-primary mb-1">30+</div>
-          <div className="text-sm text-secondary">Live Metrics</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-primary mb-1">100%</div>
-          <div className="text-sm text-secondary">Automated Data</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-primary mb-1">0</div>
-          <div className="text-sm text-secondary">Tracking Scripts</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold text-primary mb-1">15ms</div>
-          <div className="text-sm text-secondary">Average Load Time</div>
-        </div>
-      </div>
+
     </div>
   );
 }

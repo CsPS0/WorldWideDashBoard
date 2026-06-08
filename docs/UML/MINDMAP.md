@@ -1,5 +1,5 @@
-## 1. Elmetérkép (Mindmap)
-A projekt teljes technológiai és funkcionális áttekintése. Jól mutatja a főbb modulokat és a használt technológiákat.
+## 1. Mindmap
+The complete technological and functional overview of the project. It clearly demonstrates the main modules and the technologies used.
 
 ```mermaid
 mindmap
@@ -8,27 +8,27 @@ mindmap
     Frontend
       Next.js 15+ App Router
       Tailwind CSS
-      Anime.js (Animációk)
-      Vizuális Nyelv
+      Anime.js (Animations)
+      Visual Language
         Glassmorphism
-        Sötét Téma (Dark Mode)
-    Architektúra (Core)
+        Dark Theme (Dark Mode)
+    Architecture (Core)
       DashboardManager
-      IDataSource Interfész
-      BaseDataSource Osztály
-    Adatforrások (Providers)
-      SteamProvider (Játékok)
-      YouTubeProvider (Videók)
-      PoliticsProvider (Választások)
-      FinanceProvider (Árfolyamok)
-      MusicProvider (Zene)
+      IDataSource Interface
+      BaseDataSource Class
+    Data Sources (Providers)
+      SteamProvider (Games)
+      YouTubeProvider (Videos)
+      PoliticsProvider (Elections)
+      FinanceProvider (Exchange Rates)
+      MusicProvider (Music)
       TRNProvider (Tracker Network)
       ExophaseProvider (Exophase)
-      SteamPersonalProvider (Saját Steam)
-      LastFmPersonalProvider (Saját LastFM)
-      YouTubePersonalProvider (Saját YouTube)
-      SteamTopGamesProvider (Top Játékok)
-    Adatbázis & Backend
+      SteamPersonalProvider (Personal Steam)
+      LastFmPersonalProvider (Personal LastFM)
+      YouTubePersonalProvider (Personal YouTube)
+      SteamTopGamesProvider (Top Games)
+    Database & Backend
       Prisma ORM
       SQLite
       Docker

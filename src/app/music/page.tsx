@@ -152,7 +152,7 @@ export default function MusicPage() {
                     Playcount
                     <HelpCircle size={12} className="text-muted cursor-help" />
                     <div className="absolute bottom-full right-0 mb-2 w-48 p-2 bg-surface-card border border-border-default rounded-lg text-xs text-secondary shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 text-center">
-                      All-time plays since release. Rank is based on this week's streams.
+                      All-time plays since release. Rank is based on this week&apos;s streams.
                     </div>
                   </div>
                 </div>

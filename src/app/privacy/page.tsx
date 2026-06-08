@@ -27,7 +27,6 @@ export default function PrivacyPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
-        {/* Real Data & APIs */}
         <div className="bg-surface-card border border-border-default rounded-2xl p-6 sm:p-8 shadow-xl">
           <div className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6">
             <Webhook size={24} />
@@ -60,7 +59,6 @@ export default function PrivacyPage() {
           </ul>
         </div>
 
-        {/* Mock Data */}
         <div className="bg-surface-card border border-border-default rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
             <Database size={160} />
@@ -88,7 +86,6 @@ export default function PrivacyPage() {
 
       </div>
 
-      {/* Required Settings Section */}
       <div className="bg-surface-card border border-border-default rounded-2xl p-6 sm:p-8 shadow-xl mt-8">
         <div className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6">
           <Settings2 size={24} />

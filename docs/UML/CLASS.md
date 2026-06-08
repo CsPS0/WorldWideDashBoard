@@ -1,5 +1,5 @@
-## 3. Osztálydiagram (Class Diagram)
-Részletes UML diagram a **Strategy Pattern** (Stratégia Tervezési Minta) megvalósításáról. Professzionális OOP kapcsolatokkal (Aggregáció, Megvalósítás, Öröklődés) és kardinalitással bővítve.
+## 3. Class Diagram
+Detailed UML diagram showing the implementation of the **Strategy Pattern**. Enhanced with professional OOP relationships (Aggregation, Realization, Inheritance) and cardinality.
 
 ```mermaid
 classDiagram
@@ -12,7 +12,6 @@ classDiagram
         +refreshData() void
     }
 
-
     class IDataSource {
         <<interface>>
         +String id
@@ -21,7 +20,6 @@ classDiagram
         +fetchData() Promise~any~
         +getData() any
     }
-
 
     class BaseDataSource {
         <<abstract>>
@@ -33,7 +31,6 @@ classDiagram
         +getData() any
         #handleError(error: Error) void
     }
-
 
     class SteamProvider {
         -String apiKey
@@ -85,15 +82,15 @@ classDiagram
     }
 
 
-    IDataSource <|.. BaseDataSource : Megvalósítja (Realization)
-    DashboardManager "1" o-- "*" IDataSource : Aggregál (1-to-Many)
+    IDataSource <|.. BaseDataSource : Realization
+    DashboardManager "1" o-- "*" IDataSource : Aggregation (1-to-Many)
     
-    BaseDataSource <|-- SteamProvider : Öröklődés
-    BaseDataSource <|-- YouTubeProvider : Öröklődés
-    BaseDataSource <|-- PoliticsProvider : Öröklődés
-    BaseDataSource <|-- FinanceProvider : Öröklődés
-    BaseDataSource <|-- MusicProvider : Öröklődés
-    BaseDataSource <|-- TRNProvider : Öröklődés
-    BaseDataSource <|-- ExophaseProvider : Öröklődés
-    BaseDataSource <|-- PersonalProviders : Öröklődés
+    BaseDataSource <|-- SteamProvider : Inheritance
+    BaseDataSource <|-- YouTubeProvider : Inheritance
+    BaseDataSource <|-- PoliticsProvider : Inheritance
+    BaseDataSource <|-- FinanceProvider : Inheritance
+    BaseDataSource <|-- MusicProvider : Inheritance
+    BaseDataSource <|-- TRNProvider : Inheritance
+    BaseDataSource <|-- ExophaseProvider : Inheritance
+    BaseDataSource <|-- PersonalProviders : Inheritance
 ```

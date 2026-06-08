@@ -43,7 +43,7 @@ export default function CryptoChart({ height = 300 }: { height?: number }) {
         if (!res.ok) throw new Error(`CoinGecko returned ${res.status}`);
         const data = await res.json();
         if (data.prices && data.prices.length > 0) {
-          let formattedData = data.prices.map((p: [number, number]) => {
+          const formattedData = data.prices.map((p: [number, number]) => {
             const d = new Date(p[0]);
             let dateStr = '';
             if (timeframe.days === 1) {
@@ -112,7 +112,6 @@ export default function CryptoChart({ height = 300 }: { height?: number }) {
     fetchHistory();
     return () => { isMounted = false; };
   }, [selectedCoin, timeIndex]);
-  const coinDetails = COINS.find(c => c.id === selectedCoin);
   const currentPrice = chartData.length > 0 ? chartData[chartData.length - 1].price : 0;
   return (
     <div className="w-full flex flex-col gap-6">

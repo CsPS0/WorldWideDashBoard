@@ -68,7 +68,7 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
       const turnoutData = await turnoutRes.json();
       turnoutPercentage = parseFloat(((turnoutData.data.megj / turnoutData.data.valp) * 100).toFixed(2));
       processedPercentage = turnoutData.data.feldar_csak_belf || 100;
-    } catch (error) {
+    } catch {
       console.warn('Failed to fetch Hungarian VTR data. Using fallback.');
       this.isMock = true;
       turnoutPercentage = 78.99;
@@ -79,7 +79,7 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
         { name: 'Mi Hazánk', listMandates: 6, individualMandates: 0, totalMandates: 6, listVotesPercentage: 5.63 },
       ];
     }
-    let globalLeaders: GlobalLeader[] = [
+    const globalLeaders: GlobalLeader[] = [
       { id: '1', name: 'Péter Magyar', country: 'Hungary', role: 'Prime Minister', timeRemaining: '3 yrs, 10 mos' },
       { id: '2', name: 'Robert Fico', country: 'Slovakia', role: 'Prime Minister', timeRemaining: '1 yr, 4 mos' },
       { id: '3', name: 'Volodymyr Zelenskyy', country: 'Ukraine', role: 'President', timeRemaining: 'Indefinite' },
@@ -101,7 +101,7 @@ export class PoliticsProvider extends BaseDataSource<PoliticsData> {
           nextElection: p.next_election_date || 'Unknown',
         })) || [];
       }
-    } catch (e) {
+    } catch {
       console.warn('Failed to fetch IPU Parline data. Using fallback.');
     }
     if (globalParliaments.length === 0) {

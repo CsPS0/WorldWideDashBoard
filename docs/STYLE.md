@@ -1,34 +1,34 @@
-# Stílusútmutató (Style Guide)
+# Style Guide
 
-Ez a dokumentum a projekt vizuális megjelenéséhez használt alapvető dizájnelemeket és színpalettát tartalmazza.
+This document contains the core design elements and color palette used for the visual appearance of the project.
 
-## Színpaletta
+## Color Palette
 
-A projekt egy modern, letisztult, sötét témájú (Dark Theme) színvilágot használ, amely a következőképpen épül fel:
+The project utilizes a modern, clean, Dark Theme color scheme, structured as follows:
 
 <div align="left">
 
-| Szín (Név) | HEX Kód | CSS Változó / Tailwind Token | Szerep |
+| Color (Name) | HEX Code | CSS Variable / Tailwind Token | Role |
 | :--- | :--- | :--- | :--- |
-| **Very Dark Gray** | `#111111` | `--surface-base` | Alkalmazás fő háttere |
-| **Dark Gray** | `#1a1a1a` | `--surface-card` | Kártyák, panelek háttere |
-| **Hover Gray** | `#222222` | `--surface-card-hover` | Kártyák interaktív (hover) állapota |
-| **Deep Border** | `#2a2a2a` | `--border-default` | Kártyák és elemek szegélyei |
-| **Orange** | `#e05a2b` | `--accent` | Kiemelés, gombok, ikonok, interakciók |
-| **Light Gray** | `#e0e0e0` | `--text-primary` | Elsődleges szöveg (Címsorok, fő tartalom) |
-| **Dim Gray** | `#888888` | `--text-secondary` | Másodlagos szöveg, metaadatok, ikonok |
+| **Very Dark Gray** | `#111111` | `--surface-base` | Main application background |
+| **Dark Gray** | `#1a1a1a` | `--surface-card` | Background for cards and panels |
+| **Hover Gray** | `#222222` | `--surface-card-hover` | Interactive (hover) state for cards |
+| **Deep Border** | `#2a2a2a` | `--border-default` | Borders for cards and elements |
+| **Orange** | `#e05a2b` | `--accent` | Highlights, buttons, icons, interactions |
+| **Light Gray** | `#e0e0e0` | `--text-primary` | Primary text (Headings, main content) |
+| **Dim Gray** | `#888888` | `--text-secondary` | Secondary text, metadata, icons |
 
-> **Szigorú Szabály:** A UI felületen *kizárólag* ezek az alapszínek és a belőlük származtatott transzparenciák szerepelhetnek. A rendszer ezeket automatikusan leképezi a Tailwind v4 szintaxisba.
+> **Strict Rule:** *Only* these base colors and their derived transparencies may appear on the UI surface. The system automatically maps these into the Tailwind v4 syntax.
 
 </div>
 
 ---
 
-## Használat a kódban
+## Usage in Code
 
 ### Tailwind CSS v4 & `globals.css`
 
-A projekt a **Tailwind CSS v4** verzióját használja, így a színek egyenesen a `src/app/globals.css` fájlban vannak definiálva `@theme inline` segítségével, így nincs szükség külön `tailwind.config.ts` fájlra.
+The project uses **Tailwind CSS v4**, so the colors are defined directly in the `src/app/globals.css` file using `@theme inline`, eliminating the need for a separate `tailwind.config.ts` file.
 
 ```css
 @theme inline {
@@ -49,32 +49,32 @@ A projekt a **Tailwind CSS v4** verzióját használja, így a színek egyenesen
 }
 ```
 
-Ezek a színek a JSX/TSX komponensekben közvetlenül használhatóak osztályokként, például:
-- Háttérhez: `bg-surface-card`, `bg-surface-base`
-- Szöveghez: `text-primary`, `text-secondary`, `text-accent`
-- Szegélyekhez: `border-border-default`
+These colors can be used directly as classes within JSX/TSX components, for example:
+- For backgrounds: `bg-surface-card`, `bg-surface-base`
+- For text: `text-primary`, `text-secondary`, `text-accent`
+- For borders: `border-border-default`
 
 ---
 
-## Tipográfia (Typography)
+## Typography
 
-A modern és letisztult megjelenés érdekében (a Next.js / Tailwind stackhez igazodva) ajánlott az alábbi megközelítés:
-- **Elsődleges betűtípus**: `Inter`, `Roboto`, `Outfit`, vagy `Geist` (alapértelmezett).
-- **Karakter**: Minimalista, jól olvasható, határozott hierarchiával (vastag címsorok, vékonyabb szövegtörzsek).
-- **Egyedi Ikonok**: Az operációs rendszer szintű emojik (pl. 🦅) helyett CSS által színezhető szöveges karaktereket (pl. Ħ) vagy nyers SVG-ket (`fill="currentColor"`) használunk, hogy minden tökéletesen illeszkedjen az `--accent` színhez.
+To ensure a modern and clean appearance (aligning with the Next.js / Tailwind stack), the following approach is recommended:
+- **Primary Font**: `Inter`, `Roboto`, `Outfit`, or `Geist` (default).
+- **Character**: Minimalist, highly legible, with a strong hierarchy (bold headings, thinner body text).
+- **Custom Icons**: Instead of OS-level emojis (e.g., 🦅), we use CSS-colorable text characters (e.g., Ħ) or raw SVGs (`fill="currentColor"`) to ensure everything perfectly matches the `--accent` color.
 
-## Formák és Elrendezés (Layout & Shapes)
+## Layout & Shapes
 
-A projekt a **Dark Mode Glassmorphism** & **Modern Flat** dizájnelveket követi:
-- **Kártya alapú elrendezés (Panel Layout)**: Az adatok, grafikonok és widgetek egyértelműen elkülönített, letisztult kártyákban jelennek meg (`.glass-card` osztály).
-- **Dinamikus Szélesség (Layout Constraints)**: A Dashboard támogatja a teljes képernyős (fluid) elrendezést, valamint a fókuszáltabb Kompakt nézetet is (amely a `max-w-6xl mx-auto` tailwind osztályokkal van középre igazítva).
-- **Sarokkerekítés (Corner Radius)**: Határozott, barátságos lekerekítések, például `rounded-xl` vagy `rounded-2xl`.
-- **Belső mélység (Inset)**: Használjunk `bg-surface-inset`-et a kártyákon belüli adatblokkok elkülönítéséhez.
-- **Különleges Nézetek (404 Page)**: A hibaoldalak szakítanak a hagyományos elrendezéssel; például a 404-es oldal egy teljesen egyedi, középre igazított "beszélő oroszlán" elrendezést használ, saját független animációkkal.
+The project follows **Dark Mode Glassmorphism** & **Modern Flat** design principles:
+- **Panel Layout**: Data, charts, and widgets are displayed in clearly separated, clean cards (using the `.glass-card` class).
+- **Layout Constraints**: The Dashboard supports both full-width (fluid) layout and a more focused Compact view (centered via `max-w-6xl mx-auto` tailwind classes).
+- **Corner Radius**: Distinct, friendly rounding, such as `rounded-xl` or `rounded-2xl`.
+- **Inset**: Use `bg-surface-inset` to separate data blocks within cards.
+- **Special Views (404 Page)**: Error pages break from traditional layouts; for example, the 404 page uses a completely unique, center-aligned "talking lion" layout with its own independent animations.
 
-## Animációk és Interakciók
+## Animations and Interactions
 
-Mivel a projekt használja az **Anime.js**-t és a Tailwindet, az UI-nak "élnie" kell:
-- **Kártya hover (Micro-interactions)**: A kártyákra történő rámutatáskor (hover) a szegély színe élénkebbé válik és a dobozárnyék megnő (a `glass-card` beépített effektjei).
-- **Tranzíciók**: Tailwind tranzíciók használata (pl. `transition-colors`, `duration-200`) gomboknál és linkeknél.
-- **Neon effektek**: A `.glow-accent` osztállyal különleges, fénylő árnyékhatást érhetünk el a kiemelt adatok körül.
+Since the project uses **Anime.js** and Tailwind, the UI must feel "alive":
+- **Micro-interactions (Card hover)**: When hovering over cards, the border color becomes more vibrant, and the box shadow increases (built-in effects of `glass-card`).
+- **Transitions**: Use Tailwind transitions (e.g., `transition-colors`, `duration-200`) on buttons and links.
+- **Neon effects**: The `.glow-accent` class can be used to achieve a special, glowing shadow effect around highlighted data.

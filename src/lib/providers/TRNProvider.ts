@@ -27,8 +27,10 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
   }
   async fetchData(): Promise<Record<string, GameStats> | null> {
     const results: Record<string, GameStats> = {};
+    let hasAnyUrl = false;
     for (const [gameId, url] of Object.entries(this.urls)) {
       if (!url || url.trim() === '') continue;
+      hasAnyUrl = true;
       let username = 'Unknown';
       let platform = 'unknown';
       try {
@@ -43,11 +45,21 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
           if (match) { platform = match[1]; username = match[2]; }
         }
         username = decodeURIComponent(username);
-      } catch (e) {
+      } catch {
         console.warn(`Failed to parse URL for ${gameId}: ${url}`);
       }
       results[gameId] = this.getMockDataForGame(gameId, username, platform);
     }
+    
+
+    if (!hasAnyUrl) {
+      const defaultGames = ['r6', 'rl', 'lol', 'bf2042', 'fortnite'];
+      const defaultName = 'RoyaleGamer';
+      for (const game of defaultGames) {
+        results[game] = this.getMockDataForGame(game, defaultName, 'pc');
+      }
+    }
+    
     this.isMock = true; 
     return Object.keys(results).length > 0 ? results : null;
   }
@@ -60,7 +72,7 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
         platform,
         username,
         level: 120 + seed,
-        rank: { name: 'Platinum II', mmr: 3450, iconUrl: 'https://trackercdn.com/cdn/tracker.gg/r6/user-badges/y7s1/plat-2.png' },
+        rank: { name: 'Platinum II', mmr: 3450 },
         primaryStats: [
           { label: 'Kills', value: (4210 + seed * 10).toLocaleString() },
           { label: 'K/D Ratio', value: (1.08 + (seed % 20) / 100).toFixed(2) },
@@ -75,7 +87,7 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
         platform,
         username,
         level: 85 + (seed % 50),
-        rank: { name: 'Champion I', mmr: 1045, iconUrl: 'https://trackercdn.com/cdn/tracker.gg/rocket-league/ranks/s4-16.png' },
+        rank: { name: 'Champion I', mmr: 1045 },
         primaryStats: [
           { label: 'Goals', value: (3450 + seed * 5).toLocaleString() },
           { label: 'Saves', value: (1840 + seed * 2).toLocaleString() },
@@ -90,7 +102,7 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
         platform,
         username,
         level: 340 + seed,
-        rank: { name: 'Diamond IV', mmr: '75 LP', iconUrl: 'https://trackercdn.com/cdn/tracker.gg/lol/ranks/diamond.png' },
+        rank: { name: 'Diamond IV', mmr: '75 LP' },
         primaryStats: [
           { label: 'KDA', value: (2.84 + (seed % 10) / 10).toFixed(2) },
           { label: 'CS/Min', value: (6.8 + (seed % 5) / 10).toFixed(1) },
@@ -120,7 +132,7 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
         platform,
         username,
         level: 215 + (seed % 100),
-        rank: { name: 'Elite', mmr: '45%', iconUrl: 'https://trackercdn.com/cdn/tracker.gg/fortnite/ranks/elite.png' },
+        rank: { name: 'Elite', mmr: '45%' },
         primaryStats: [
           { label: 'Wins', value: (142 + seed % 50).toLocaleString() },
           { label: 'K/D Ratio', value: (2.15 + (seed % 10) / 10).toFixed(2) },
@@ -138,7 +150,7 @@ export class TRNProvider extends BaseDataSource<Record<string, GameStats> | null
       primaryStats: []
     };
   }
-  validateResponse(data: unknown): boolean {
+  validateResponse(_data: unknown): boolean {
     return true; 
   }
 }

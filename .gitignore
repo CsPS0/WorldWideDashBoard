@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -51,19 +49,10 @@ next-env.d.ts
 *.db-journal
 /prisma/migrations/
 
-# images
-*.png
-!img/*.png
-/src/generated/prisma
-
 # .NET Tests
 tests/Dashboard.Tests/bin/
 tests/Dashboard.Tests/obj/
 Dashboard.Tests/bin/
 Dashboard.Tests/obj/
 
-# custom ignores
 TODO.md
-clean_users.js
-search.js
-exophase_test.html

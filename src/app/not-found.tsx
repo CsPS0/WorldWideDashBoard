@@ -192,7 +192,7 @@ export default function NotFound() {
               <div className="nf-animate nf-animate-delay-3" style={{ marginBottom: "32px" }}>
                 <div className="nf-bubble">
                   <p className="nf-quote">
-                    "We checked behind the coats, but no — this is not the way to Narnia."
+                    &quot;We checked behind the coats, but no &mdash; this is not the way to Narnia.&quot;
                     <span className="nf-quote-attr">— The Lion, probably</span>
                   </p>
                 </div>

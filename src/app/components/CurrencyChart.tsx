@@ -43,7 +43,7 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
         const data = await res.json();
         if (data.rates && Object.keys(data.rates).length > 0) {
           const rates = data.rates as Record<string, Record<string, number>>;
-          let formattedData = Object.entries(rates).map(([date, rateObj]) => {
+          const formattedData = Object.entries(rates).map(([date, rateObj]) => {
             const d = new Date(date);
             let dateStr = date;
             if (timeframe.days === 1) {
@@ -68,7 +68,7 @@ export default function CurrencyChart({ height = 300, showCalculator = false }: 
           'AUD': 1.65, 'CAD': 1.48, 'CHF': 0.98, 'CNY': 7.8, 'SEK': 11.6, 'NZD': 1.8
         };
         const approxRate = (baseRates[target] || 1) / (baseRates[base] || 1);
-        let mockData = [];
+        const mockData = [];
         let currentMockRate = approxRate;
         const dataPoints = 300; 
         const totalMs = timeframe.days * 24 * 60 * 60 * 1000;

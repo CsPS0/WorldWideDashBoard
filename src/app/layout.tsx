@@ -7,7 +7,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
-  title: "World Wide Dashboard",
+  title: "WorldWideDashBoard",
   description:
     "Real-time global insights — Steam, YouTube, crypto, currency exchange, music charts, and more.",
 };

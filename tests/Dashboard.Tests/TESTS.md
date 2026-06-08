@@ -1,6 +1,6 @@
 # Dashboard.Tests
 
-C# xUnit tesztek a `src/lib/core` és `src/lib/providers` TypeScript fájlok logikája alapján.
+C# xUnit tests based on the logic of the `src/lib/core` and `src/lib/providers` TypeScript files.
 
 ## Core
 
@@ -8,37 +8,37 @@ C# xUnit tesztek a `src/lib/core` és `src/lib/providers` TypeScript fájlok log
 
 * **GetProviders_ReturnsAllRegisteredProviders**
 
-  * Ellenőrzi, hogy a DashboardManager visszaadja az összes regisztrált providert.
+  * Verifies that the DashboardManager returns all registered providers.
 
 * **GetProviderById_ReturnsCorrectProvider**
 
-  * Ellenőrzi, hogy az adott azonosítóhoz a megfelelő provider kerül visszaadásra.
+  * Verifies that the correct provider is returned for a given identifier.
 
 * **GetProviderById_ReturnsNullForUnknownProvider**
 
-  * Ellenőrzi, hogy nem létező provider esetén a rendszer null értéket ad vissza.
+  * Verifies that a null value is returned for a non-existent provider.
 
 * **AddProvider_IncreasesProviderCount**
 
-  * Ellenőrzi, hogy új provider hozzáadásakor nő a tárolt providerek száma.
+  * Verifies that the stored provider count increases when a new provider is added.
 
 ### DataSourceTests.cs
 
 * **Metadata_IsStoredCorrectly**
 
-  * Ellenőrzi, hogy az adatforrás metaadatai megfelelően kerülnek eltárolásra.
+  * Verifies that the data source metadata is stored correctly.
 
 * **FetchData_ReturnsExpectedResult**
 
-  * Ellenőrzi, hogy az adatlekérő metódus a várt adatokat adja vissza.
+  * Verifies that the data fetching method returns the expected data.
 
 * **FetchData_ReturnsCollection**
 
-  * Ellenőrzi, hogy a visszakapott eredmény lista vagy gyűjtemény formátumú.
+  * Verifies that the returned result is in a list or collection format.
 
 * **FetchData_HandlesEmptyData**
 
-  * Ellenőrzi, hogy üres adathalmaz esetén sem történik hiba.
+  * Verifies that no error occurs even with an empty dataset.
 
 ---
 
@@ -48,103 +48,103 @@ C# xUnit tesztek a `src/lib/core` és `src/lib/providers` TypeScript fájlok log
 
 * **Metadata_IsCorrect**
 
-  * Ellenőrzi a provider azonosítóját, nevét és kategóriáját.
+  * Verifies the provider's identifier, name, and category.
 
 * **FetchData_ReturnsItems**
 
-  * Ellenőrzi, hogy az adatlekérés eredményt ad vissza.
+  * Verifies that the data fetch returns a result.
 
 * **FetchData_ContainsRequiredFields**
 
-  * Ellenőrzi, hogy minden elem tartalmazza a szükséges mezőket.
+  * Verifies that every item contains the necessary fields.
 
 * **FetchData_ReturnsSortedResults**
 
-  * Ellenőrzi, hogy az adatok megfelelő sorrendben érkeznek.
+  * Verifies that the data arrives in the correct order.
 
 ### MusicProviderTests.cs
 
 * **Metadata_IsCorrect**
 
-  * Ellenőrzi a provider alapvető metaadatait.
+  * Verifies the provider's basic metadata.
 
 * **FetchDataAsync_AssignsRanksStartingFromOne**
 
-  * Ellenőrzi, hogy a rangsorolás 1-től indul.
+  * Verifies that ranking starts from one.
 
 * **FetchDataAsync_SortsByTotalStreamsDescending**
 
-  * Ellenőrzi, hogy a zeneszámok hallgatottság szerint csökkenő sorrendben szerepelnek.
+  * Verifies that tracks are listed in descending order based on stream count.
 
 * **FetchDataAsync_ReturnsExpectedTrackCount**
 
-  * Ellenőrzi, hogy a várt számú zeneszám érkezik vissza.
+  * Verifies that the expected number of tracks is returned.
 
 ### PoliticsProviderTests.cs
 
 * **Metadata_IsCorrect**
 
-  * Ellenőrzi a provider azonosítóját és kategóriáját.
+  * Verifies the provider's identifier and category.
 
 * **FetchData_ReturnsPoliticalArticles**
 
-  * Ellenőrzi, hogy politikai témájú adatok érkeznek vissza.
+  * Verifies that political-themed data is returned.
 
 * **FetchData_ReturnsNonEmptyCollection**
 
-  * Ellenőrzi, hogy a visszaadott lista nem üres.
+  * Verifies that the returned list is not empty.
 
 * **FetchData_ContainsValidTitles**
 
-  * Ellenőrzi, hogy minden rekord rendelkezik címmel.
+  * Verifies that every record has a title.
 
 ### SteamProviderTests.cs
 
 * **Metadata_IsCorrect**
 
-  * Ellenőrzi a Steam provider metaadatait.
+  * Verifies the metadata of the Steam provider.
 
 * **FetchData_ReturnsGames**
 
-  * Ellenőrzi, hogy játékok listája érkezik vissza.
+  * Verifies that a list of games is returned.
 
 * **FetchData_SortsGamesByPlayers**
 
-  * Ellenőrzi, hogy a játékok játékosszám szerint vannak rendezve.
+  * Verifies that the games are sorted by player count.
 
 * **FetchData_ReturnsExpectedGameCount**
 
-  * Ellenőrzi a visszaadott játékok számát.
+  * Verifies the number of games returned.
 
 ### YouTubeProviderTests.cs
 
 * **Metadata_IsCorrect**
 
-  * Ellenőrzi a YouTube provider alapadatait.
+  * Verifies the basic data of the YouTube provider.
 
 * **FetchData_ReturnsVideos**
 
-  * Ellenőrzi, hogy videók listája érkezik vissza.
+  * Verifies that a list of videos is returned.
 
 * **FetchData_ContainsVideoTitles**
 
-  * Ellenőrzi, hogy minden videó rendelkezik címmel.
+  * Verifies that every video has a title.
 
 * **FetchData_ReturnsSortedResults**
 
-  * Ellenőrzi, hogy a videók a kívánt sorrendben érkeznek vissza.
+  * Verifies that the videos arrive in the desired order.
 
 ---
 
-## Futtatás
+## Execution
 
 ### Rider
 
-1. Nyisd meg a `Dashboard.Tests.csproj` fájlt.
-2. Várd meg a NuGet csomagok letöltését.
-3. Jobb klikk a projekten → **Run Tests**.
+1. Open the `Dashboard.Tests.csproj` file.
+2. Wait for the NuGet packages to download.
+3. Right-click on the project → **Run Tests**.
 
-### Terminál
+### Terminal
 
 ```bash
 cd Dashboard.Tests

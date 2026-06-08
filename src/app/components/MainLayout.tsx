@@ -226,7 +226,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 xl:hidden"
-          onClick={() => setMobileOpen(false)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setMobileOpen(false);
+          }}
         />
       )}
       <aside
@@ -245,10 +249,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 min-w-0 flex flex-col bg-surface-base">
         <header className="sticky top-0 z-30 flex items-center gap-4 px-4 sm:px-6 lg:px-8 h-16 bg-surface-base border-b border-border-subtle">
           <button
+            type="button"
             onClick={() => setMobileOpen(true)}
-            className="xl:hidden text-secondary hover:text-primary transition-colors"
+            className="xl:hidden flex items-center justify-center w-12 h-12 -ml-3 text-secondary hover:text-primary active:bg-surface-inset active:scale-95 rounded-full transition-all"
+            style={{ zIndex: 9999, position: 'relative', WebkitTapHighlightColor: 'transparent' }}
+            aria-label="Open Menu"
           >
-            <Menu size={20} />
+            <Menu size={28} className="pointer-events-none" />
           </button>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl font-bold text-primary">

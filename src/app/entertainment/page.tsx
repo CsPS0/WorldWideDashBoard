@@ -6,7 +6,6 @@ export default function YouTubePage() {
   const [youtube, setYoutube] = useState<any>(null);
   const [personalYoutube, setPersonalYoutube] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedYoutuber, setSelectedYoutuber] = useState('MrBeast');
   useEffect(() => {
     fetch('/api/dashboard')
       .then((res) => res.json())

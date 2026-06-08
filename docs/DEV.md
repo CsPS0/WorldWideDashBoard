@@ -1,69 +1,69 @@
-# Fejlesztői Dokumentáció - World Wide Dashboard
+# Developer Documentation - World Wide Dashboard
 
-## Projekt Indítása (Csapattagoknak)
+## Project Setup (For Team Members)
 
-Mivel a projektet többen fejlesztitek, fontos, hogy mindenkinél ugyanaz a környezet legyen beállítva. A projekt **Bun** runtime-ot használ a sebesség és a modern eszközök miatt.
+Since multiple people are developing the project, it is important that everyone has the same environment configured. The project uses the **Bun** runtime for speed and modern tooling.
 
-### Előfeltételek
-1. **Bun telepítése:**
+### Prerequisites
+1. **Install Bun:**
    - Windows (PowerShell): `powershell -c "irm bun.sh/install.ps1 | iex"`
-   - Fontos: Telepítés után indítsd újra a terminált, vagy add hozzá a PATH-hoz: `C:\Users\<felhasználónév>\.bun\bin`
-2. **Git elérés:** Győződj meg róla, hogy be tudsz lépni a közös GitLab/GitHub repository-ba.
+   - Important: After installation, restart your terminal or add it to your PATH: `C:\Users\<username>\.bun\bin`
+2. **Git Access:** Ensure you can log into the shared GitLab/GitHub repository.
 
-### Első lépések
-Klónozd a repository-t, majd futtasd a következő parancsokat a projekt gyökérmappájában:
+### First Steps
+Clone the repository, then run the following commands in the project root directory:
 
 ```bash
-# 1. Függőségek letöltése
+# 1. Download dependencies
 bun install
 
-# 2. Környezeti változók beállítása (másold le a példát)
-# Figyelem: A globális modulokhoz a YOUTUBE_API_KEY és LASTFM_API_KEY kötelező!
+# 2. Set up environment variables (copy the example)
+# Warning: For global modules, the YOUTUBE_API_KEY and LASTFM_API_KEY are mandatory!
 cp .env.example .env
 
-# 3. Adatbázis (SQLite Cache) inicializálása
+# 3. Initialize the database (SQLite Cache)
 bunx prisma migrate dev
 
-# 4. Fejlesztői szerver indítása
+# 4. Start the development server
 bun dev
 ```
-A weboldal a [http://localhost:3000](http://localhost:3000) címen lesz elérhető.
+The website will be available at [http://localhost:3000](http://localhost:3000).
 
 > [!TIP]
-> **Docker futtatás:** Ha nem akarsz Bun-nal bajlódni, csak futtasd a `docker-compose up --build` parancsot, ami felépíti a projektet és futtatja a 3000-es porton!
+> **Docker execution:** If you don't want to mess with Bun, just run the `docker-compose up --build` command, which builds the project and runs it on port 3000!
 
-## Architektúra és Rendszertervek (UML)
+## Architecture and System Designs (UML)
 
-A tanárok kérésére a projekt **objektumorientált** szemléletben készül. A rendszer vizuális felépítését és az adatáramlási folyamatokat a `docs/UML/` mappában található diagramok részletezik:
+Per the teachers' request, the project is built using an **object-oriented** approach. The visual structure of the system and the data flow processes are detailed in the diagrams found in the `docs/UML/` directory:
 
 > [!NOTE]
-> A diagramok **Mermaid.js** használatával készültek. A VS Code-ban a megfelelő kiegészítővel (vagy GitHub-on) grafikusan is megjelennek.
+> The diagrams were created using **Mermaid.js**. They will appear graphically in VS Code with the appropriate extension (or natively on GitHub).
 
-- **[Elmetérkép (Mindmap)](./UML/MINDMAP.md):** A projekt teljes technológiai és funkcionális áttekintése.
-- **[Adatlekérési Folyamat (Flowchart)](./UML/FLOWCHART.md):** Az adatáramlás életciklusa a kliens felülettől a külső API-kig.
-- **[Osztálydiagram (Class Diagram)](./UML/CLASS.md):** Részletes OOP terv a Strategy Pattern megvalósításáról (11 regisztrált adatforrással).
+- **[Mindmap](./UML/MINDMAP.md):** The complete technological and functional overview of the project.
+- **[Flowchart](./UML/FLOWCHART.md):** The lifecycle of data flow from the client interface to external APIs.
+- **[Class Diagram](./UML/CLASS.md):** Detailed OOP plan for the Strategy Pattern implementation (with 11 registered data sources).
 
 > [!IMPORTANT]
-> Zalán elkészítette a backend architektúra C# alapú tesztjeit (xUnit). A teszt mappa a `tests/Dashboard.Tests` alatt található, a futtatási jegyzőkönyv pedig a `docs/Tesztelesi Jegyzokonyv/tesztelési_jegyzőkönyv.md` fájlban érhető el!
+> Zalán has created the C#-based tests (xUnit) for the backend architecture. The test folder is located under `tests/Dashboard.Tests`, and the test execution report is available in the `docs/Tesztelesi Jegyzokonyv/tesztelési_jegyzőkönyv.md` file!
 
-A legfontosabb kódok a `src/lib/core` mappában találhatók:
+The most important code files are located in the `src/lib/core` directory:
 
-- **`IDataSource`**: Egy interfész, ami leírja, hogyan kell kinéznie egy adatforrásnak.
-- **`BaseDataSource`**: Egy absztrakt osztály, ami alapértelmezett hibakezelést és funkciókat biztosít.
-- **`DashboardManager`**: Ez az osztály fogja össze az összes modult (Steam, YouTube, stb.).
+- **`IDataSource`**: An interface describing what a data source must look like.
+- **`BaseDataSource`**: An abstract class providing default error handling and features.
+- **`DashboardManager`**: This class coordinates all the modules (Steam, YouTube, etc.).
 
-### Új modul hozzáadása (Példa)
-Ha új adatforrást akarsz hozzáadni, hozz létre egy új fájlt a `src/lib/providers/` mappában, ami kiterjeszti a `BaseDataSource` osztályt.
+### Adding a New Module (Example)
+If you want to add a new data source, create a new file in the `src/lib/providers/` folder that extends the `BaseDataSource` class.
 
-## Kódolási Szabályok
-- **Nyelv:** A kódváltozók és osztályok **angolul** készülnek.
-- **Szigorú Szabály (NINCS KOMMENT):** A projektben **SZIGORÚAN TILOS** bármilyen jellegű komment (// vagy /* */) elhelyezése a kódbázisban! Ennek érdekében a Next.js linter szabályai is módosításra kerültek az `.eslintrc.json` fájlban.
-- **Dokumentáció:** A README és a `docs/` mappa tartalma **magyarul** van a tanári követelmények miatt.
-- **Stílus:** Használjuk a Tailwind CSS-t a gyors és egységes UI érdekében.
+## Coding Standards
+- **Language:** Code variables and classes are written in **English**.
+- **Strict Rule (NO COMMENTS):** It is **STRICTLY FORBIDDEN** to place any kind of comments (// or /* */) in the codebase! To enforce this, Next.js linter rules have been modified in the `.eslintrc.json` file.
+- **Documentation:** The README and the contents of the `docs/` folder are written entirely in **English**.
+- **Style:** We use Tailwind CSS for a fast and consistent UI.
 
 ## Git Workflow
-1. Mindig csinálj egy `git pull`-t mielőtt elkezdesz dolgozni!
-2. Ha kész vagy egy funkcióval:
+1. Always run a `git pull` before you start working!
+2. When you finish a feature:
    ```bash
    git add .
    git commit -m "feat: add steam player count widget"

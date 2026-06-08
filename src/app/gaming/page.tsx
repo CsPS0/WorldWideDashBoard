@@ -6,7 +6,7 @@ export default function SteamPage() {
   const [steamPlayers, setSteamPlayers] = useState<Record<string, { player_count: number }>>({});
   const [selectedApp, setSelectedApp] = useState<string>('0');
   const [exophaseGames, setExophaseGames] = useState<any[]>([]);
-  const [exophaseUser, setExophaseUser] = useState<string>('');
+
   const [steamCharts, setSteamCharts] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<'online' | 'mostPlayed' | 'wishlisted'>('online');
   const [trn, setTrn] = useState<any | null>(null);
@@ -181,16 +181,17 @@ export default function SteamPage() {
             {trn[selectedTrnGame] && (
               <div className="p-4 flex flex-col justify-between gap-4 h-full mt-4">
                 <div className="flex items-center gap-4 bg-surface-inset p-3 rounded-xl border border-border-subtle">
-                  {trn[selectedTrnGame].rank.iconUrl ? (
+                  {trn[selectedTrnGame].rank.iconUrl && (
                     <img src={trn[selectedTrnGame].rank.iconUrl} alt={trn[selectedTrnGame].rank.name} className="w-12 h-12" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-surface-base flex items-center justify-center font-bold text-secondary text-sm">
-                      {trn[selectedTrnGame].rank.name.charAt(0)}
-                    </div>
                   )}
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-lg text-primary truncate">{trn[selectedTrnGame].username}</h3>
-                    <p className="text-sm text-secondary font-medium truncate">{trn[selectedTrnGame].rank.name}{trn[selectedTrnGame].rank.mmr !== 0 ? ` • ${trn[selectedTrnGame].rank.mmr}` : ''}</p>
+                  <div className="min-w-0 flex-1 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-surface-base border border-border-subtle flex items-center justify-center shrink-0">
+                      <User size={20} className="text-secondary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold text-lg text-primary truncate">{trn[selectedTrnGame].username}</h3>
+                      <p className="text-sm text-secondary font-medium truncate">{trn[selectedTrnGame].rank.name}{trn[selectedTrnGame].rank.mmr !== 0 ? ` • ${trn[selectedTrnGame].rank.mmr}` : ''}</p>
+                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
@@ -249,7 +250,6 @@ export default function SteamPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-bold text-primary truncate">{game.title}</h4>
-                  <p className="text-xs text-secondary mt-0.5">{game.developer}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs font-semibold text-accent bg-accent/10 px-2 py-0.5 rounded-full">
                       {game.statValue}

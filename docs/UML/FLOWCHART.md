@@ -1,15 +1,15 @@
-## 2. Adatlekérési Folyamat (Flowchart)
-Ez az ábra bemutatja az adatáramlás teljes életciklusát: a felhasználói interakciótól kezdve a lokális gyorsítótárazáson (cache) át a külső API-kig, majd vissza a UI-hoz.
+## 2. Data Fetching Process (Flowchart)
+This diagram illustrates the complete lifecycle of data flow: starting from user interaction, through local caching, out to external APIs, and back to the UI.
 
 ```mermaid
 flowchart TD
 
-    User((Felhasználó))
-    UI[Kliens Felület / Kártyák]
+    User((User))
+    UI[Client Interface / Cards]
     Manager{DashboardManager}
-    Cache[(Lokális Cache)]
+    Cache[(Local Cache)]
     
-    subgraph Adatforrások [Külső API Szolgáltatások]
+    subgraph DataSources [External API Services]
         Steam[Steam API]
         YT[YouTube API]
         Pol[Politics API]
@@ -20,24 +20,24 @@ flowchart TD
     end
 
 
-    User -->|Oldal megnyitása| UI
-    UI -->|fetchAllData metódus hívása| Manager
-    Manager -->|Keresés ID alapján| Cache
+    User -->|Open Page| UI
+    UI -->|Call fetchAllData method| Manager
+    Manager -->|Search by ID| Cache
     
-    Cache -- Adat friss és érvényes --> Manager
-    Cache -- Adat hiányzik vagy lejárt --> Steam & YT & Pol & Fin & Mus & Trn & Exo
+    Cache -- Data is fresh and valid --> Manager
+    Cache -- Data is missing or expired --> Steam & YT & Pol & Fin & Mus & Trn & Exo
     
-    Steam -->|Nyers adat| Manager
-    YT -->|Nyers adat| Manager
-    Pol -->|Nyers adat| Manager
-    Fin -->|Nyers adat| Manager
-    Mus -->|Nyers adat| Manager
-    Trn -->|Nyers adat| Manager
+    Steam -->|Raw Data| Manager
+    YT -->|Raw Data| Manager
+    Pol -->|Raw Data| Manager
+    Fin -->|Raw Data| Manager
+    Mus -->|Raw Data| Manager
+    Trn -->|Raw Data| Manager
     Exo -->|Scraped HTML| Manager
     
-    Manager -.->|Új adat mentése| Cache
-    Manager -->|Formázott objektumok| UI
-    UI -->|Animált renderelés Anime.js használatával| User
+    Manager -.->|Save new data| Cache
+    Manager -->|Formatted objects| UI
+    UI -->|Animated rendering using Anime.js| User
     
     classDef api fill:#14213d,stroke:#fca311,stroke-width:2px,color:#fff;
     class Steam,YT,Pol,Fin,Mus,Trn,Exo api;

@@ -8,9 +8,9 @@ import {
   MonitorPlay,
   Music,
   LayoutGrid,
-  List,
   AlertCircle,
   CheckCircle2,
+  HelpCircle,
   Link2,
   Camera,
   Bitcoin,
@@ -18,7 +18,6 @@ import {
   Landmark,
   ChevronDown,
 } from 'lucide-react';
-type Tab = 'account' | 'integrations' | 'dashboard';
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
@@ -239,7 +238,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => { setAvatarUrl(null); setAvatarDirty(true); }}
-                    className="text-xs text-danger hover:underline mt-0.5 ml-3"
+                    className="text-xs text-accent hover:underline mt-0.5 ml-3"
                   >
                     Remove
                   </button>
@@ -302,6 +301,17 @@ export default function SettingsPage() {
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-secondary uppercase tracking-wider flex items-center gap-1.5">
                     <Lock size={13} /> Steam Web API Key
+                    <div className="group/tooltip relative flex items-center">
+                      <HelpCircle size={13} className="text-muted hover:text-accent cursor-help transition-colors" />
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity duration-300 delay-[1000ms] group-hover/tooltip:delay-0 w-64 p-3 bg-surface-card border border-border-default rounded-lg shadow-xl text-xs text-primary z-50 text-center normal-case tracking-normal">
+                        Steam requires a personal Web API key to securely fetch your exact game library and playtimes. You can get yours for free at{' '}
+                        <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline font-bold">
+                          steamcommunity.com/dev/apikey
+                        </a>.
+                        <span className="text-secondary mt-1.5 block">When asked for a Domain Name, you can simply enter <strong className="text-primary">localhost</strong>.</span>
+                        <div className="absolute top-full left-0 w-full h-4 bg-transparent" />
+                      </div>
+                    </div>
                   </label>
                   <input type="password" value={steamApiKey} onChange={(e) => setSteamApiKey(e.target.value)} placeholder="Optional. Required for exact game count" className="w-full bg-surface-inset border border-border-subtle rounded-lg px-3 py-2 text-sm text-primary placeholder:text-muted outline-none focus:border-accent transition-colors" />
                 </div>

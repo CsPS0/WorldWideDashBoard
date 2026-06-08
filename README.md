@@ -1,68 +1,66 @@
 # World Wide Dashboard - Royale Team
 
-## Leírás
-A **World Wide Dashboard** egy modern, moduláris adatgyűjtő platform, amely egy helyen teszi elérhetővé a legfontosabb globális és lokális adatokat. A projekt célja a fragmentált adatforrások (SteamCharts, YouTube, pénzügyi hírek, választási adatok) egyesítése egy tisztán átlátható, testreszabható felületen. 
+## Description
+The **World Wide Dashboard** is a modern, modular data aggregation platform that makes the most important global and local data available in one place. The goal of the project is to unify fragmented data sources (SteamCharts, YouTube, financial news, election data) into a cleanly transparent, customizable interface.
 
-A szoftver különlegessége az objektumorientált (OOP) architektúra, amely lehetővé teszi új adatforrások (modulok) gyors és biztonságos hozzáadását.
+The defining feature of the software is its Object-Oriented (OOP) architecture, which allows for the rapid and secure integration of new data sources (modules).
 
-## Funkciók
-- **Játékok és Személyes Statisztikák:** Steam játékosszámok globális trendjei, valamint személyes Tracker.gg (R6, LoL, RL stb.) és Exophase (cross-platform játékidő) integrációk.
-- **Videó & Zene:** YouTube csatorna statisztikák és globális Top 10 zenei toplista (Last.fm, Spotify, SoundCloud adatokkal), plusz személyes Last.fm "Now Playing" követés.
-- **Politika:** Magyar választási adatok és globális vezetői statisztikák.
-- **Pénzügy & Kripto:** Tőzsdei árfolyamok és kriptovaluta adatok (beleértve az egyedi Hawk Tuah Coint).
-- **Testreszabhatóság:** Dinamikus elrendezés (Kompakt vagy Teljes szélesség), dedikált Beállítások oldal a személyes API kulcsoknak.
-- **Biztonság és Jogi Nyilatkozatok:** Teljes értékű "Data & Privacy Policy" oldal a Mock és Live adatok átláthatóságáért, valamint beépített Open Source License megjelenítő.
-- **Design:** Prémium, üveg hatású (glassmorphism) sötét téma fluid Anime.js animációkkal és egyedi vizuális 404 hibaoldallal.
+## Features
+- **Gaming and Personal Statistics:** Global trends in Steam player counts, alongside personal Tracker.gg (R6, LoL, RL, etc.) and Exophase (cross-platform playtime) integrations.
+- **Video & Music:** YouTube channel statistics and global Top 10 music charts (with Last.fm, Spotify, SoundCloud data), plus personal Last.fm "Now Playing" tracking.
+- **Politics:** Hungarian election data and global leadership statistics.
+- **Finance & Crypto:** Stock exchange rates and cryptocurrency data (including the unique Hawk Tuah Coin).
+- **Customizability:** Dynamic layout (Compact or Full width), and a dedicated Settings page for personal API keys.
+- **Security and Legal Declarations:** A fully-fledged "Data & Privacy Policy" page for transparency of Mock and Live data, as well as a built-in Open Source License viewer.
+- **Design:** Premium, card-based dark/light theme with fluid Anime.js animations and a unique visual 404 error page.
 
-## Technológiai Stack
+## Technology Stack
 - **Frontend/Backend:** Next.js 15+ (App Router)
 - **Runtime:** Bun
-- **Nyelv:** TypeScript (OOP szemléletben)
-- **Stílus:** Tailwind CSS
-- **Animációk:** Anime.js
-- **Adatkezelés:** Prisma + SQLite (Caching)
-- **Konténerizáció:** Docker
+- **Language:** TypeScript (OOP approach)
+- **Styling:** Tailwind CSS
+- **Animations:** Anime.js
+- **Data Management:** Prisma + SQLite (Caching)
+- **Containerization:** Docker
 
-## Rendszertervek és Dokumentáció
-A projekt részletes technikai és vizuális terveit külön dokumentumok tartalmazzák a `docs/` mappában:
+## System Designs and Documentation
+Detailed technical and visual plans for the project are contained in separate documents within the `docs/` directory:
 
 > [!NOTE]
-> A diagramok **Mermaid.js** használatával készültek. A VS Code-ban a megfelelő kiegészítővel (vagy GitHub-on) grafikusan is megjelennek.
+> The diagrams were created using **Mermaid.js**. They can be viewed graphically in VS Code with the appropriate extension (or natively on GitHub).
 
-- **[Elmetérkép (Mindmap)](./docs/UML/MINDMAP.md):** A projekt funkcionális áttekintése
-- **[Folyamatábra (Flowchart)](./docs/UML/FLOWCHART.md):** Az adatáramlás és lekérési folyamat
-- **[Osztálydiagram (Class Diagram)](./docs/UML/CLASS.md):** Objektumorientált (OOP) architektúra
-- **[Stílusútmutató (Style Guide)](./docs/STYLE.md):** Vizuális szabályok és design sablonok
+- **[Mindmap](./docs/UML/MINDMAP.md):** Functional overview of the project
+- **[Flowchart](./docs/UML/FLOWCHART.md):** Data flow and fetching process
+- **[Class Diagram](./docs/UML/CLASS.md):** Object-Oriented (OOP) architecture
+- **[Style Guide](./docs/STYLE.md):** Visual rules and design templates
 
+## How to run the project?
 
-
-## Hogyan futtasd a projektet?
-
-### 1. Helyi fejlesztés (Bun & Prisma)
-1. Klónozd a repository-t.
-2. Másold le a `.env.example` fájlt `.env` néven és (kötelezően) töltsd ki a `YOUTUBE_API_KEY` és `LASTFM_API_KEY` értékeket. *(Megjegyzés: a személyes API kulcsokat, mint a Steam kulcs, nem ide kell beírni, hanem a felületen a Beállítások oldalon!)*
-3. Telepítsd a függőségeket:
+### 1. Local Development (Bun & Prisma)
+1. Clone the repository.
+2. Copy the `.env.example` file to `.env` and (mandatory) fill in the `YOUTUBE_API_KEY` and `LASTFM_API_KEY` values. *(Note: personal API keys, such as the Steam key, should not be entered here, but rather on the Settings page within the UI!)*
+3. Install dependencies:
    ```bash
    bun install
    ```
-4. Futtasd a Prisma adatbázis migrációt (SQLite Cache):
+4. Run the Prisma database migration (SQLite Cache):
    ```bash
    bunx prisma migrate dev
    ```
-5. Indítsd el a fejlesztői szervert:
+5. Start the development server:
    ```bash
    bun dev
    ```
-6. Nyisd meg a böngészőben: `http://localhost:3000`
+6. Open in your browser: `http://localhost:3000`
 
-### 2. Konténerizált futtatás (Docker Compose)
-Ha Docker-t használsz, egyetlen paranccsal elindíthatod a teljes rendszert (Node.js/Bun környezet és adatbázis is automatikusan beállítódik):
+### 2. Containerized Execution (Docker Compose)
+If you use Docker, you can start the entire system with a single command (the Node.js/Bun environment and database are set up automatically):
 ```bash
 docker-compose up --build
 ```
-A weboldal a `http://localhost:3000` címen lesz elérhető.
+The website will be available at `http://localhost:3000`.
 
-## Csapat
-- **Solti Csongor Péter** - Lead fejlesztő / Fő Architektúra
-- **Páva Zalán** - Backend fejlesztő / Tesztelés
-- **Bodolai Richárd Tamás** - Fejlesztő segéd / Legidősebb csapattag
+## Team
+- **Solti Csongor Péter** - Lead Developer / Chief Architecture
+- **Páva Zalán** - Backend Developer / Testing
+- **Bodolai Richárd Tamás** - Assistant Developer / Oldest Team Member

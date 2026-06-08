@@ -11,7 +11,7 @@ interface WidgetCardProps {
   id?: string;
   theme?: 'default' | 'dark' | 'accent' | 'light';
 }
-export function WidgetCard({ title, icon: Icon, children, delay = 0, className = '', id, theme = 'default' }: WidgetCardProps) {
+export function WidgetCard({ title, icon: Icon, children, delay = 0, className = '', id }: WidgetCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (cardRef.current) {
