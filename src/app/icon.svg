@@ -5,11 +5,8 @@
       <stop offset="100%" stop-color="#ff8c42" />
     </linearGradient>
   </defs>
-  <!-- Rotate the whole container 3 degrees around the center -->
   <g transform="rotate(3, 32, 32)">
-    <!-- The rounded rectangle -->
     <rect x="0" y="0" width="64" height="64" rx="12" ry="12" fill="url(#grad)" />
-    <!-- The inner chart icon, rotated -3 degrees to stay perfectly vertical -->
     <g transform="translate(16, 16) rotate(-3, 16, 16)">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M5 21v-6"></path>
