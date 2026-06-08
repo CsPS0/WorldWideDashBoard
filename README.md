@@ -54,10 +54,18 @@ Detailed technical and visual plans for the project are contained in separate do
 6. Open in your browser: `http://localhost:3000`
 
 ### 2. Containerized Execution (Docker Compose)
-If you use Docker, you can start the entire system with a single command (the Node.js/Bun environment and database are set up automatically):
-```bash
-docker-compose up --build
-```
+If you use Docker, you can easily set up and run the entire environment. We recommend building the project (the service is named `wwdb` in the compose file) first without starting it automatically, and then launching it in the background:
+
+1. Build the container without starting it automatically:
+   ```bash
+   docker-compose up --build --no-start
+   ```
+2. Start the `wwdb` service in the background:
+   ```bash
+   docker-compose start wwdb
+   ```
+   *(To stop the service later, use `docker-compose stop wwdb`, or use `docker-compose down` to remove the container completely.)*
+
 The website will be available at `http://localhost:3000`.
 
 ## Team
