@@ -9,8 +9,8 @@ RUN mkdir -p /app/data
 RUN bunx prisma db push
 
 RUN bunx prisma generate
+ENV NODE_ENV=production
 RUN bun run build
-
 FROM oven/bun:1-slim
 WORKDIR /app
 COPY --from=builder /app/.next/standalone ./
