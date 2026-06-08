@@ -19,7 +19,6 @@ export default function SteamPage() {
       .then((data) => {
         setSteamPlayers(data['steam_players'] || {});
         if (data['exophase_stats']) {
-          setExophaseUser(data['exophase_stats'].username);
           setExophaseGames(data['exophase_stats'].games || []);
         }
         if (data['trn_gaming']) {
