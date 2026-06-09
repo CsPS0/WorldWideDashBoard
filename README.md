@@ -69,6 +69,6 @@ If you use Docker, you can easily set up and run the entire environment. We reco
 The website will be available at `http://localhost:3000`.
 
 ## Team
-- **Solti Csongor Péter** - Lead Developer / Chief Architecture
+- **Solti Csongor Péter** - Lead Developer / Chief Architecture - test asd
 - **Páva Zalán** - Backend Developer / Testing
 - **Bodolai Richárd Tamás** - Assistant Developer / Oldest Team Member
