@@ -1,3 +1,21 @@
+> [!NOTE]
+> **Archived Project / Alternatives:**
+> This repository is archived and no longer actively maintained. While the World Wide Dashboard was an educational exploration of modular full-stack data aggregation, there are much more mature, dedicated, and maintained alternatives available:
+>
+> - **Self-Hosted Dashboards & Home Labs:**
+>   - [Homepage](https://gethomepage.dev/) — Fast, modern, highly customizable application dashboard with native service integrations.
+>   - [Dashy](https://dashy.to/) — Feature-rich personal dashboard with widgets, status monitoring, and authentication.
+>   - [Grafana](https://grafana.com/) — Industry-standard operational dashboards, analytics, and time-series data visualization.
+> - **Gaming & Player Stats:**
+>   - [Tracker.gg](https://tracker.gg/) — Real-time stat tracking for competitive games (Valorant, R6, Apex, LoL).
+>   - [SteamDB](https://steamdb.info/) — Comprehensive Steam database, player counts, and price histories.
+>   - [Exophase](https://www.exophase.com/) — Cross-platform multi-network gaming profiles and achievement tracking.
+> - **Financial & Crypto Tracking:**
+>   - [TradingView](https://www.tradingview.com/) — Advanced financial charting and market screening.
+>   - [CoinGecko](https://www.coingecko.com/) & [CoinMarketCap](https://coinmarketcap.com/) — Comprehensive cryptocurrency market metrics and portfolio tracking.
+> - **Music Analytics:**
+>   - [Last.fm](https://www.last.fm/) & [Stats.fm](https://stats.fm/) — In-depth music listening history and streaming statistics.
+
 # World Wide Dashboard - Royale Team
 
 ## Description
