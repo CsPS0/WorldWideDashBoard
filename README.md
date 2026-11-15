@@ -1,5 +1,6 @@
-> [!NOTE]
-> **Archived Project / Alternatives:**
+> [!WARNING]
+> ## ARCHIVED
+> This repository is archived and no longer actively maintained. While the World Wide Dashboard was an educational exploration of modular full-stack data aggregation, there are much more mature, dedicated, and maintained alternatives available:
 > This repository is archived and no longer actively maintained. While the World Wide Dashboard was an educational exploration of modular full-stack data aggregation, there are much more mature, dedicated, and maintained alternatives available:
 >
 > - **Self-Hosted Dashboards & Home Labs:**
